@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mango.Service.Blog.Abstractions\Mango.Service.Blog.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mango.Core">
+      <HintPath>..\..\Lib\Mango.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Mango.EntityFramework">
+      <HintPath>..\..\Lib\Mango.EntityFramework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+
+</Project>
