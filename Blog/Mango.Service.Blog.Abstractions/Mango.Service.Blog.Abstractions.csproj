@@ -5,19 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Dto\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Mango.Core" Version="1.0.0" />
+    <PackageReference Include="Mango.EntityFramework" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Mango.EntityFramework">
-      <HintPath>..\..\Lib\Mango.EntityFramework.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

@@ -23,6 +23,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public int Status { get; set; }
 
         /// <summary>
+        /// 是否默认分类
+        /// </summary>
+        public int IsDefault { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

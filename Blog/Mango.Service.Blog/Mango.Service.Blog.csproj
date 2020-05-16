@@ -9,16 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Mango.Core">
-      <HintPath>..\..\Lib\Mango.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Mango.EntityFramework">
-      <HintPath>..\..\Lib\Mango.EntityFramework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
 

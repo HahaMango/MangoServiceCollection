@@ -13,6 +13,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
     public class Article : SnowFlakeEntity
     {
         /// <summary>
+        /// 作者Id
+        /// </summary>
+        public long UserId { get; set; }
+
+        /// <summary>
         /// 标题
         /// </summary>
         public string Title { get; set; }
@@ -41,6 +46,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         /// 点赞数
         /// </summary>
         public int Like { get; set; }
+
+        /// <summary>
+        /// 是否置顶
+        /// </summary>
+        public int IsTop { get; set; }
 
         /// <summary>
         /// 创建时间
