@@ -17,7 +17,6 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
-using Mango.Core.DataStructure;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using System;
 using System.Collections.Generic;
@@ -27,44 +26,36 @@ using System.Threading.Tasks;
 namespace Mango.Service.Blog.Abstractions.Services
 {
     /// <summary>
-    /// 文章服务接口
+    /// 文章缓存服务，缓存如点赞，阅读数等操作
     /// </summary>
-    public interface IArticleService
+    public interface IArticleCacheService
     {
         /// <summary>
-        /// 添加文章
+        /// 文章点赞缓存服务，点赞数存到redis，当达到设置阈值持久化到数据库
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult> AddArticleAsync(AddArticleRequest request, long userId);
+        Task<ApiResult> LikeCacheAsync(ArticleLikeRequest request);
 
         /// <summary>
-        /// 查询文章分页数据
+        /// 文章阅读数缓存服务，阅读数存到redis，当达到设置阈值持久化到数据库
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ApiResult<PageList<ArticlePageListResponse>>> QueryArticlePageAsync(ArticlePageRequest request);
+        Task<ApiResult> IncViewCacheAsync(IncArticleViewRequest request);
 
         /// <summary>
-        /// 查询文章详情
+        /// 查询点赞数
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="articleId"></param>
         /// <returns></returns>
-        Task<ApiResult<ArticleDetailResponse>> QueryArticleDetailAsync(ArticleDetailRequest request);
+        Task<ApiResult<int>> QueryDLikeAsync(long articleId);
 
         /// <summary>
-        /// 文章点赞
+        /// 查询阅读数
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="articleId"></param>
         /// <returns></returns>
-        Task<ApiResult> ArticleLikeAsync(ArticleLikeRequest request);
-
-        /// <summary>
-        /// 递增阅读数
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> IncViewAsync(IncArticleViewRequest request);
+        Task<ApiResult<int>> QueryDViewAsync(long articleId);
     }
 }

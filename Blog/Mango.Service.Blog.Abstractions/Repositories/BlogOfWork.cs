@@ -1,4 +1,5 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿using Mango.EntityFramework;
+/*--------------------------------------------------------------------------*/
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -18,30 +19,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mango.Core.ApiResponse;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Mango.Core.Enums;
+using System.Text;
 
-namespace Mango.Service.Blog.Controllers
+namespace Mango.Service.Blog.Abstractions.Repositories
 {
     /// <summary>
-    /// 文章Controller
+    /// 博客上下文工作单元
     /// </summary>
-    [ApiController]
-    public class ArticleController : ControllerBase
+    public class BlogOfWork : EfContextWork<BlogDbContext>
     {
-        [HttpGet("api/article/test")]
-        public async Task<ApiResult<string>> Test()
+        public BlogOfWork(BlogDbContext context) : base(context)
         {
-            return await Task.FromResult(new ApiResult<string>
-            {
-                Code = Code.Ok,
-                Message = "查询成功",
-                Data = "data"
-            });
+
         }
     }
 }

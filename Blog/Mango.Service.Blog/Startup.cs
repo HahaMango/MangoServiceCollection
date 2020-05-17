@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Mango.Core.Cache.Extension;
 using Mango.Core.Extension;
-using Mango.EntityFramework.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Mango.Service.Blog
 {
@@ -29,6 +22,10 @@ namespace Mango.Service.Blog
         {
             services.AddControllers();
             services.AddAutoMapper();
+            services.AddMangoRedis(op =>
+            {
+                op.ConnectionString = Configuration["RedisConnection"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

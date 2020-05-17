@@ -18,30 +18,33 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mango.Core.ApiResponse;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Mango.Core.Enums;
+using System.Text;
 
-namespace Mango.Service.Blog.Controllers
+namespace Mango.Service.Blog.Abstractions.CacheConfig
 {
     /// <summary>
-    /// 文章Controller
+    /// 文章缓存配置类
     /// </summary>
-    [ApiController]
-    public class ArticleController : ControllerBase
+    public static class ArticleCacheConfig
     {
-        [HttpGet("api/article/test")]
-        public async Task<ApiResult<string>> Test()
-        {
-            return await Task.FromResult(new ApiResult<string>
-            {
-                Code = Code.Ok,
-                Message = "查询成功",
-                Data = "data"
-            });
-        }
+        /// <summary>
+        /// 阅读数键值
+        /// </summary>
+        public static string VIEW_CACHE_KEY = "viewcachekey:";
+
+        /// <summary>
+        /// 点赞数键值
+        /// </summary>
+        public static string LIKE_CACHE_KEY = "likecachekey:";
+
+        /// <summary>
+        /// 阅读数持久化阈值
+        /// </summary>
+        public static int LIMIT_VIEW = 30;
+
+        /// <summary>
+        /// 点赞数持久化阈值
+        /// </summary>
+        public static int LIMIT_LIKE = 5;
     }
 }

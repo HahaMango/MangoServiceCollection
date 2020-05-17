@@ -31,6 +31,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
     public class Category : SnowFlakeEntity
     {
         /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UserId { get; set; }
+
+        /// <summary>
         /// 分类名称
         /// </summary>
         public string CategoryName { get; set; }

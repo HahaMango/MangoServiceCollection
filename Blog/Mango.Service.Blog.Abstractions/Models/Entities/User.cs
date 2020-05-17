@@ -71,6 +71,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public string Location { get; set; }
 
         /// <summary>
+        /// 状态 0：删除 1：正常
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

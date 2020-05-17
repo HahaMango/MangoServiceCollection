@@ -75,6 +75,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         public PageParm PageParm { get; set; }
 
         /// <summary>
+        /// 作者Id
+        /// </summary>
+        public long UserId { get;set; }
+
+        /// <summary>
         /// 文章标题
         /// </summary>
         public string Title { get; set; }
@@ -112,6 +117,23 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     #region 文章点赞请求类
 
     public class ArticleLikeRequest
+    {
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public long ArticleId { get; set; }
+
+        /// <summary>
+        /// -1：取消点赞 1：点赞
+        /// </summary>
+        public int State { get; set; }
+    }
+
+    #endregion
+
+    #region 文章浏览数增加请求
+
+    public class IncArticleViewRequest
     {
         /// <summary>
         /// 文章Id
