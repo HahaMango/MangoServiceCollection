@@ -51,13 +51,16 @@ namespace Mango.Service.Blog.Services
         private readonly IUserRepository _userRepository;
         private readonly IEfContextWork _work;
 
+        private readonly IArticleCacheService _articleCacheService;
+
         public ArticleService(
             ILogger<ArticleService> logger,
             IArticleRepository articleRepository,
             IArticleDetailRepository articleDetailRepository,
             IEfContextWork work,
             IUserRepository userRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IArticleCacheService articleCacheService)
         {
             _logger = logger;
             _articleRepository = articleRepository;
@@ -65,6 +68,7 @@ namespace Mango.Service.Blog.Services
             _work = work;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
+            _articleCacheService = articleCacheService;
         }
 
         /// <summary>
@@ -153,18 +157,7 @@ namespace Mango.Service.Blog.Services
             var response = new ApiResult();
             try
             {
-                var article = await _articleRepository.Table
-                    .FirstOrDefaultAsync(item => item.Id == request.ArticleId && item.Status == 1);
-                if (article == null)
-                {
-                    response.Code = Code.Error;
-                    response.Message = "文章不存在或被删除";
-                    return response;
-                }
-                article.Like += request.State;
-                article.UpdateTime = DateTime.Now;
-
-                await _work.SaveChangesAsync();
+                await _articleCacheService.EditLikeAsync(request);
 
                 response.Code = Code.Ok;
                 response.Message = "操作成功";
@@ -209,6 +202,8 @@ namespace Mango.Service.Blog.Services
                 articleDetailResponse.UserName = userName;
                 articleDetailResponse.Content = detail.Content;
                 articleDetailResponse.ContentType = detail.ContentType;
+                articleDetailResponse.Like = await _articleCacheService.QueryLikeAsync(article.Id);
+                articleDetailResponse.View = await _articleCacheService.QueryViewAsync(article.Id);
 
                 response.Code = Code.Ok;
                 response.Message = "查询成功";
@@ -254,6 +249,12 @@ namespace Mango.Service.Blog.Services
                     .Select(item => item.MapTo<ArticlePageListResponse>())
                     .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
+                foreach(var article in articles.Data)
+                {
+                    article.Like = await _articleCacheService.QueryLikeAsync(article.Id);
+                    article.View = await _articleCacheService.QueryViewAsync(article.Id);
+                }
+
                 response.Code = Code.Ok;
                 response.Message = "查询成功";
                 response.Data = articles;
@@ -278,19 +279,7 @@ namespace Mango.Service.Blog.Services
             var response = new ApiResult();
             try
             {
-                var article = await _articleRepository.Table
-                    .FirstOrDefaultAsync(item => item.Status == 1 && item.Id == request.ArticleId);
-                if(article == null)
-                {
-                    response.Code = Code.Error;
-                    response.Message = "文章不存在或被删除";
-                    return response;
-                }
-
-                article.View++;
-                article.UpdateTime = DateTime.Now;
-
-                await _work.SaveChangesAsync();
+                await _articleCacheService.IncViewAsync(request);
 
                 response.Code = Code.Ok;
                 response.Message = "操作成功";

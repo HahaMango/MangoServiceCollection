@@ -30,7 +30,7 @@ namespace Mango.Service.Blog.Repositories
     /// <summary>
     /// 文章分类仓储实现
     /// </summary>
-    public class CategoryRepository : EfRepository<BlogDbContext,Category>,IEfRepository<BlogDbContext,Category>
+    public class CategoryRepository : EfRepository<BlogDbContext,Category>,ICategoryRepository
     {
         public CategoryRepository(BlogDbContext context) : base(context)
         {

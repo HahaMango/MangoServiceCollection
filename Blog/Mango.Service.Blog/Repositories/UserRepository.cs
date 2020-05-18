@@ -30,7 +30,7 @@ namespace Mango.Service.Blog.Repositories
     /// <summary>
     /// 用户仓储实现类
     /// </summary>
-    public class UserRepository : EfRepository<BlogDbContext,User>,IEfRepository<BlogDbContext,User>
+    public class UserRepository : EfRepository<BlogDbContext,User>,IUserRepository
     {
         public UserRepository(BlogDbContext context) : base(context)
         {

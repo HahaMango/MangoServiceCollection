@@ -24,6 +24,7 @@ using Mango.Core.ApiResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mango.Core.Enums;
+using Mango.Service.Blog.Abstractions.Services;
 
 namespace Mango.Service.Blog.Controllers
 {
@@ -33,9 +34,17 @@ namespace Mango.Service.Blog.Controllers
     [ApiController]
     public class ArticleController : ControllerBase
     {
+        private readonly IArticleService _articleService;
+
+        public ArticleController(IArticleService articleService)
+        {
+            _articleService = articleService;
+        }
+
         [HttpGet("api/article/test")]
         public async Task<ApiResult<string>> Test()
         {
+
             return await Task.FromResult(new ApiResult<string>
             {
                 Code = Code.Ok,

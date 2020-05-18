@@ -30,7 +30,7 @@ namespace Mango.Service.Blog.Repositories
     /// <summary>
     /// 文章评论仓储实现
     /// </summary>
-    public class CommentRepository : EfRepository<BlogDbContext,Comment>,IEfRepository<BlogDbContext,Comment>
+    public class CommentRepository : EfRepository<BlogDbContext,Comment>,ICommentRepository
     {
         public CommentRepository(BlogDbContext context) : base(context)
         {

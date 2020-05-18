@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Mango.Service.Blog.Abstractions.Models.Dto
 {
@@ -33,6 +34,9 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     /// </summary>
     public class ArticlePageListResponse
     {
+        [JsonIgnore]
+        public long Id { get; set; }
+
         /// <summary>
         /// 文章标题
         /// </summary>

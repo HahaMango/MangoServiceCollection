@@ -30,7 +30,7 @@ namespace Mango.Service.Blog.Repositories
     /// <summary>
     /// 文章仓储接口实现
     /// </summary>
-    public class ArticleRepository : EfRepository<BlogDbContext,Article> ,IEfRepository<BlogDbContext,Article>
+    public class ArticleRepository : EfRepository<BlogDbContext,Article> , IArticleRepository
     {
         public ArticleRepository(BlogDbContext context) : base(context)
         {
