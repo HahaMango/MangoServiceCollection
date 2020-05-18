@@ -33,7 +33,7 @@ namespace Mango.Service.Blog
                 op.ConnectionString = Configuration["RedisConnection"];
             });
 
-            services.AddMangoDbContext<BlogDbContext, BlogOfWork>("server=localhost;database=mangosystem;user=root;password=228887");
+            services.AddMangoDbContext<BlogDbContext, BlogOfWork>(Configuration["MysqlConnection"]);
 
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IArticleDetailRepository, ArticleDetailRepository>();
