@@ -21,7 +21,7 @@ using Mango.Core.Cache.Abstractions;
 using Mango.Core.Enums;
 using Mango.Core.Serialization.Extension;
 using Mango.EntityFramework.Abstractions;
-using Mango.Service.Blog.Abstractions.CacheConfig;
+using Mango.Service.Blog.CacheConfig;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using Mango.Service.Blog.Abstractions.Repositories;
 using Mango.Service.Blog.Abstractions.Services;
@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 namespace Mango.Service.Blog.Services
 {
     /// <summary>
-    /// 文章缓存服务实现，（写回有问题，需重新设计）
+    /// 文章缓存服务实现
     /// </summary>
     public class ArticleCacheService : IArticleCacheService
     {
@@ -62,161 +62,100 @@ namespace Mango.Service.Blog.Services
         }
 
         /// <summary>
-        /// 新增文章阅读数缓存
+        /// 点赞
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<ApiResult> IncViewCacheAsync(IncArticleViewRequest request)
+        public async Task EditLikeAsync(ArticleLikeRequest request)
         {
-            var response = new ApiResult();
-            try
+            var key = $"{ArticleCacheConfig.LIKE_CACHE_KEY}{request.ArticleId}";
+            if (await RedisHelper.ExistsAsync(key))
             {
-                var key = $"{ArticleCacheConfig.VIEW_CACHE_KEY}{request.ArticleId}";
-                var isExists = await RedisHelper.ExistsAsync(key);
-                if (isExists)
-                {
-                    var view = await RedisHelper.GetAsync<int>(key);
-                    if(view +1 >= ArticleCacheConfig.LIMIT_VIEW)
-                    {
-                        //大于阈值，持久化到数据库
-                        var article = await _articleRepository.Table
-                            .FirstOrDefaultAsync(item => item.Status == 1 && item.Id == request.ArticleId);
-                        if(article == null)
-                        {
-                            await RedisHelper.DelAsync(key);
-                            response.Code = Code.Error;
-                            response.Message = "文章不存在或被删除";
-                            return response;
-                        }
-                        article.View += view + 1;
-                        article.UpdateTime = DateTime.Now;
-                        await RedisHelper.DelAsync(key);
-
-                        await _work.SaveChangesAsync();
-                    }
-                    response.Code = Code.Ok;
-                    response.Message = "操作成功";
-                    return response;
-                }
-                await RedisHelper.IncrByAsync(key);
-
-                response.Code = Code.Ok;
-                response.Message = "操作成功";
-                return response;
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError($"新增阅读数缓存异常;method={nameof(IncViewCacheAsync)};param={request.ToJson()};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"新增阅读数缓存异常：{ex.Message}";
-                return response;
-            }
-        }
-
-        /// <summary>
-        /// 文章点赞数缓存
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public async Task<ApiResult> LikeCacheAsync(ArticleLikeRequest request)
-        {
-            var response = new ApiResult();
-            try
-            {
-                var key = $"{ArticleCacheConfig.LIKE_CACHE_KEY}{request.ArticleId}";
-                var isExists = await RedisHelper.ExistsAsync(key);
-                if (isExists)
-                {
-                    var view = await RedisHelper.GetAsync<int>(key);
-                    if (view + request.State >= ArticleCacheConfig.LIMIT_LIKE)
-                    {
-                        //大于阈值，持久化到数据库
-                        var article = await _articleRepository.Table
-                            .FirstOrDefaultAsync(item => item.Status == 1 && item.Id == request.ArticleId);
-                        if (article == null)
-                        {
-                            await RedisHelper.DelAsync(key);
-                            response.Code = Code.Error;
-                            response.Message = "文章不存在或被删除";
-                            return response;
-                        }
-                        article.View = view + request.State;
-                        article.UpdateTime = DateTime.Now;
-                        await RedisHelper.DelAsync(key);
-
-                        await _work.SaveChangesAsync();
-                    }
-                    response.Code = Code.Ok;
-                    response.Message = "操作成功";
-                    return response;
-                }
                 await RedisHelper.IncrByAsync(key,request.State);
-
-                response.Code = Code.Ok;
-                response.Message = "操作成功";
-                return response;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"更新点赞数缓存异常;method={nameof(LikeCacheAsync)};param={request.ToJson()};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"更新点赞数缓存异常：{ex.Message}";
-                return response;
-            }
+            await ReadLikeFromDBAsync(key);
+            await RedisHelper.IncrByAsync(key,request.State);
         }
 
         /// <summary>
-        /// 获取文章点赞缓存
+        /// 增加阅读数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task IncViewAsync(IncArticleViewRequest request)
+        {
+            var key = $"{ArticleCacheConfig.VIEW_CACHE_KEY}{request.ArticleId}";
+            if (await RedisHelper.ExistsAsync(key))
+            {
+                await RedisHelper.IncrByAsync(key);
+            }
+            await ReadLikeFromDBAsync(key);
+            await RedisHelper.IncrByAsync(key);
+        }
+
+
+        /// <summary>
+        /// 查询点赞数缓存
         /// </summary>
         /// <param name="articleId"></param>
         /// <returns></returns>
-        public async Task<ApiResult<int>> QueryDLikeAsync(long articleId)
+        public async Task<int> QueryLikeAsync(long articleId)
         {
-            var response = new ApiResult<int>();
-            try
+            var key = $"{ArticleCacheConfig.LIKE_CACHE_KEY}{articleId}";
+            //缓存存在直接读缓存
+            if (await RedisHelper.ExistsAsync(key))
             {
-                var key = $"{ArticleCacheConfig.LIKE_CACHE_KEY}{articleId}";
-                var like = await RedisHelper.GetAsync<int>(key);
-
-                response.Code = Code.Ok;
-                response.Message = "查询成功";
-                response.Data = like;
-                return response;
+                return await RedisHelper.GetAsync<int>(key);
             }
-            catch(Exception ex)
-            {
-                _logger.LogError($"查询点赞数缓存异常;method={nameof(QueryDLikeAsync)};param={articleId};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"查询点赞数缓存异常：{ex.Message}";
-                return response;
-            }
+            //缓存不存在，先读进缓存
+            var like = await ReadLikeFromDBAsync(key);
+            return like;
         }
 
         /// <summary>
-        /// 获取文章阅读缓存
+        /// 查询阅读数缓存
         /// </summary>
         /// <param name="articleId"></param>
         /// <returns></returns>
-        public async Task<ApiResult<int>> QueryDViewAsync(long articleId)
+        public async Task<int> QueryViewAsync(long articleId)
         {
-            var response = new ApiResult<int>();
-            try
+            var key = $"{ArticleCacheConfig.VIEW_CACHE_KEY}{articleId}";
+            //缓存存在直接读缓存
+            if (await RedisHelper.ExistsAsync(key))
             {
-                var key = $"{ArticleCacheConfig.VIEW_CACHE_KEY}{articleId}";
-                var like = await RedisHelper.GetAsync<int>(key);
+                return await RedisHelper.GetAsync<int>(key);
+            }
+            //缓存不存在，先读进缓存
+            var view = await ReadViewFromDBAsync(key);
+            return view;
+        }
 
-                response.Code = Code.Ok;
-                response.Message = "查询成功";
-                response.Data = like;
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"查询阅读数缓存异常;method={nameof(QueryDViewAsync)};param={articleId};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"查询阅读数缓存异常：{ex.Message}";
-                return response;
-            }
+        /// <summary>
+        /// 从数据库读进redis
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private async Task<int> ReadLikeFromDBAsync(string key)
+        {
+            var id = key.Split(':')[1];
+            var article = await _articleRepository.TableNotTracking
+                .FirstOrDefaultAsync(item => item.Status == 1 && item.Id == Convert.ToInt64(id));
+            await RedisHelper.SetAsync(key, article.Like);
+            return article.Like;
+        }
+
+        /// <summary>
+        /// 从数据库读进redis
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private async Task<int> ReadViewFromDBAsync(string key)
+        {
+            var id = key.Split(':')[1];
+            var article = await _articleRepository.TableNotTracking
+                .FirstOrDefaultAsync(item => item.Status == 1 && item.Id == Convert.ToInt64(id));
+            await RedisHelper.SetAsync(key, article.View);
+            return article.View;
         }
     }
 }

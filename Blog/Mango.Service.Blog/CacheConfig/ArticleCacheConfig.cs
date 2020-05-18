@@ -16,47 +16,35 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.ApiResponse;
-using Mango.Service.Blog.Abstractions.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Mango.Service.Blog.Abstractions.Services
+namespace Mango.Service.Blog.CacheConfig
 {
     /// <summary>
-    /// 文章缓存服务，缓存如点赞，阅读数等操作
+    /// 文章缓存配置类
     /// </summary>
-    public interface IArticleCacheService
+    public static class ArticleCacheConfig
     {
+        /// <summary>
+        /// 阅读数键值
+        /// </summary>
+        public static string VIEW_CACHE_KEY = "viewcachekey:";
 
         /// <summary>
-        /// 查询点赞数
+        /// 点赞数键值
         /// </summary>
-        /// <param name="articleId"></param>
-        /// <returns></returns>
-        Task<int> QueryLikeAsync(long articleId);
+        public static string LIKE_CACHE_KEY = "likecachekey:";
 
         /// <summary>
-        /// 查询阅读数
+        /// 阅读数持久化阈值
         /// </summary>
-        /// <param name="articleId"></param>
-        /// <returns></returns>
-        Task<int> QueryViewAsync(long articleId);
+        public static int LIMIT_VIEW = 30;
 
         /// <summary>
-        /// 点赞
+        /// 点赞数持久化阈值
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task EditLikeAsync(ArticleLikeRequest request);
-
-        /// <summary>
-        /// 阅读数
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task IncViewAsync(IncArticleViewRequest request);
+        public static int LIMIT_LIKE = 5;
     }
 }
