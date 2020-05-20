@@ -42,6 +42,9 @@ namespace Mango.Service.Blog
 
             services.AddScoped<IArticleCacheService, ArticleCacheService>();
             services.AddScoped<IArticleService, ArticleService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IJobService, JobService>();
 
             services.AddHostedService<ArticleJobService>();
