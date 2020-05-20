@@ -16,72 +16,59 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.BaseEntity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Mango.Service.Blog.Abstractions.Models.Entities
+namespace Mango.Service.Blog.Abstractions.Models.Dto
 {
-    /// <summary>
-    /// 文章分类表
-    /// </summary>
-    [Table("category")]
-    public class Category : SnowFlakeEntity
+    public class CommentResponseDto
+    {
+    }
+
+    #region 文章评论分页相应类
+
+    public class CommentPageResponse
     {
         /// <summary>
-        /// 用户Id
+        /// 评论Id
+        /// </summary>
+        public long Id { get; set; }
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public long ArticleId { get; set; }
+
+        /// <summary>
+        /// 评论用户Id
         /// </summary>
         public long UserId { get; set; }
 
         /// <summary>
-        /// 分类名称
+        /// 评论用户Id
         /// </summary>
-        public string CategoryName { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
-        /// 状态 0：删除 1：正常
+        /// 评论内容
         /// </summary>
-        public int Status { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
-        /// 是否默认分类
+        /// 回复的评论
         /// </summary>
-        public int IsDefault { get; set; }
+        public List<CommentPageResponse> ReplyComments { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 评论点赞数
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public int Like { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 回复数
         /// </summary>
-        public DateTime? UpdateTime { get; set; }
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public string Creator { get; set; }
-
-        /// <summary>
-        /// 操作人
-        /// </summary>
-        public string Operator { get; set; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Category() { }
-
-        /// <summary>
-        /// 设置Id
-        /// </summary>
-        /// <param name="set"></param>
-        public Category(bool set)
-        {
-            base.SetId();
-        }
+        public int Reply { get; set; }
     }
+
+    #endregion
 }

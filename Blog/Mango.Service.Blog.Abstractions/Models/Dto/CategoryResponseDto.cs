@@ -16,33 +16,33 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.ApiResponse;
-using Mango.Core.DataStructure;
-using Mango.Service.Blog.Abstractions.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace Mango.Service.Blog.Abstractions.Services
+namespace Mango.Service.Blog.Abstractions.Models.Dto
 {
-    /// <summary>
-    /// 文章分类服务接口
-    /// </summary>
-    public interface ICategoryService
+    public class CategoryResponseDto
+    {
+
+    }
+
+    #region 类目分类列表响应类
+
+    public class CategoryPageResponse
     {
         /// <summary>
-        /// 添加分类
+        /// 分类Id
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddCategoryAsync(AddCategoryRequest request,long userId);
+        [JsonPropertyName("CategoryId")]
+        public long Id { get; set; }
 
         /// <summary>
-        /// 查询分类分页列表
+        /// 分类名称
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult<PageList<CategoryPageResponse>>> QueryCategoryPageAsync(CategoryPageRequest request,long userId); 
+        public string CategoryName { get; set; }
     }
+
+    #endregion
 }

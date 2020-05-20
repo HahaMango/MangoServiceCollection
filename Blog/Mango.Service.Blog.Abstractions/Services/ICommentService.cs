@@ -17,6 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
+using Mango.Core.DataStructure;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using System.Threading.Tasks;
 
@@ -34,5 +35,13 @@ namespace Mango.Service.Blog.Abstractions.Services
         /// <param name="userId">当前评论用户的Id,如果未登陆为0</param>
         /// <returns></returns>
         Task<ApiResult> ArticleCommentAsync(CommentRequest request, long userId);
+
+        /// <summary>
+        /// 查询文章评论分页列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApiResult<PageList<CommentPageResponse>>> QueryCommentPageAsync(CommentPageRequest request, long userId);
     }
 }

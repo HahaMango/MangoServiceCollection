@@ -1,4 +1,4 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿/*--------------------------------------------------------------------------
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -16,33 +16,44 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.ApiResponse;
 using Mango.Core.DataStructure;
-using Mango.Service.Blog.Abstractions.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Mango.Service.Blog.Abstractions.Services
+namespace Mango.Service.Blog.Abstractions.Models.Dto
 {
-    /// <summary>
-    /// 文章分类服务接口
-    /// </summary>
-    public interface ICategoryService
+    public class CategoryRequestDto
+    {
+
+    }
+
+    #region 添加类目
+
+    public class AddCategoryRequest
     {
         /// <summary>
-        /// 添加分类
+        /// 类目名称
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddCategoryAsync(AddCategoryRequest request,long userId);
+        public string CategoryName { get; set; }
 
         /// <summary>
-        /// 查询分类分页列表
+        /// 是否默认分类
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult<PageList<CategoryPageResponse>>> QueryCategoryPageAsync(CategoryPageRequest request,long userId); 
+        public int IsDefault { get; set; }
     }
+
+    #endregion
+
+    #region 获取类目列表
+
+    public class CategoryPageRequest
+    {
+        /// <summary>
+        /// 分页参数
+        /// </summary>
+        public PageParm PageParm { get; set; }
+    }
+
+    #endregion
 }

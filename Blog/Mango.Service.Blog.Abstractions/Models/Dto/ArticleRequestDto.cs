@@ -142,26 +142,4 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     }
 
     #endregion
-
-    #region 文章评论请求类
-
-    public class CommentRequest
-    {
-        /// <summary>
-        /// 文章Id
-        /// </summary>
-        public long ArticleId { get; set; }
-
-        /// <summary>
-        /// 评论显示用户名
-        /// </summary>
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// 评论内容
-        /// </summary>
-        public string Content { get; set; }
-    }
-
-    #endregion
 }

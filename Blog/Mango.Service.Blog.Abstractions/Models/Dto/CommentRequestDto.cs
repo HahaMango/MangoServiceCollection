@@ -1,4 +1,4 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿/*--------------------------------------------------------------------------
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -16,19 +16,21 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.BaseEntity;
+using Mango.Core.DataStructure;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Mango.Service.Blog.Abstractions.Models.Entities
+namespace Mango.Service.Blog.Abstractions.Models.Dto
 {
-    /// <summary>
-    /// 评论表
-    /// </summary>
-    [Table("comment")]
-    public class Comment:SnowFlakeEntity
+    public class CommentRequestDto
+    {
+    }
+
+
+    #region 文章评论请求类
+
+    public class CommentRequest
     {
         /// <summary>
         /// 文章Id
@@ -36,12 +38,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public long ArticleId { get; set; }
 
         /// <summary>
-        /// 评论用户Id
-        /// </summary>
-        public long UserId { get; set; }
-
-        /// <summary>
-        /// 评论用户Id
+        /// 评论显示用户名
         /// </summary>
         public string UserName { get; set; }
 
@@ -51,7 +48,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public string Content { get; set; }
 
         /// <summary>
-        /// 是否为回复评论
+        /// 是否回复
         /// </summary>
         public int IsReply { get; set; }
 
@@ -59,44 +56,24 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         /// 回复的评论Id
         /// </summary>
         public int? ReplyCommentId { get; set; }
-
-        /// <summary>
-        /// 状态 0：删除 1：正常
-        /// </summary>
-        public int Status { get; set; }
-
-        /// <summary>
-        /// 评论点赞数
-        /// </summary>
-        public int Like { get; set; }
-
-        /// <summary>
-        /// 回复数
-        /// </summary>
-        public int Reply { get; set; }
-
-        /// <summary>
-        /// 评论时间
-        /// </summary>
-        public DateTime CreateTime { get; set; }
-
-        /// <summary>
-        /// 更新评论时间
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Comment() { }
-
-        /// <summary>
-        /// 设置Id
-        /// </summary>
-        /// <param name="set"></param>
-        public Comment(bool set)
-        {
-            base.SetId();
-        }
     }
+
+    #endregion
+
+    #region 查询文章评论分页请求类
+
+    public class CommentPageRequest
+    {
+        /// <summary>
+        /// 分页参数
+        /// </summary>
+        public PageParm PageParm { get; set; }
+
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public long articleId { get; set; }
+    }
+
+    #endregion
 }
