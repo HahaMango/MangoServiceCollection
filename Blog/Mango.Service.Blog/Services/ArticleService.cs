@@ -245,7 +245,8 @@ namespace Mango.Service.Blog.Services
 
                 var articles = await _articleRepository.TableNotTracking
                     .Where(articleWhere)
-                    .OrderByDescending(item => item.CreateTime)
+                    .OrderByDescending(item => item.IsTop)
+                    .ThenByDescending(item => item.CreateTime)
                     .Select(item => item.MapTo<ArticlePageListResponse>())
                     .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
