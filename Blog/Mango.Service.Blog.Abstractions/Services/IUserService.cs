@@ -16,9 +16,13 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using Mango.Core.ApiResponse;
+using Mango.Service.Blog.Abstractions.Models.Dto;
+using Mango.Service.Blog.Abstractions.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mango.Service.Blog.Abstractions.Services
 {
@@ -27,5 +31,11 @@ namespace Mango.Service.Blog.Abstractions.Services
     /// </summary>
     public interface IUserService
     {
+        /// <summary>
+        /// 通过Id查询用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApiResult<UserInfoResponse>> QueryUserByIdAsync(long userId);
     }
 }
