@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mango.Core.Enums;
 using Mango.Service.Blog.Abstractions.Services;
+using Mango.Service.Blog.Abstractions.Models.Dto;
 
 namespace Mango.Service.Blog.Controllers
 {
@@ -41,16 +42,10 @@ namespace Mango.Service.Blog.Controllers
             _articleService = articleService;
         }
 
-        [HttpGet("api/article/test")]
-        public async Task<ApiResult<string>> Test()
+        [HttpGet("api/article/add")]
+        public async Task<ApiResult> AddArticleAsync(AddArticleRequest request)
         {
-
-            return await Task.FromResult(new ApiResult<string>
-            {
-                Code = Code.Ok,
-                Message = "查询成功",
-                Data = "data"
-            });
+            return await _articleService.AddArticleAsync(request, 1);
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 
 namespace Mango.Service.Blog
 {
@@ -27,6 +28,41 @@ namespace Mango.Service.Blog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            #region ÊÚÈ¨ÅäÖÃ
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", config =>
+                 {
+                     config.Authority = Configuration["AuthorityConfig:Server"];
+                     config.RequireHttpsMetadata = false;
+                     config.Audience = Configuration["AuthorityConfig:ApiName"];
+                     config.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                     {
+                         NameClaimType = "name",
+                         RoleClaimType = ClaimTypes.Role
+                     };
+                 });
+
+            #endregion
+
+            #region ¿çÓòÅäÖÃ
+
+            services.AddCors(config =>
+            {
+                config.AddPolicy("all", p =>
+                {
+                    p.SetIsOriginAllowed(op => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+
+            #endregion
+
+            #region »ù´¡²Ö´¢£¬·þÎñÅäÖÃ
+
             services.AddAutoMapper();
             services.AddMangoRedis(op =>
             {
@@ -48,6 +84,8 @@ namespace Mango.Service.Blog
             services.AddScoped<IJobService, JobService>();
 
             services.AddHostedService<ArticleJobService>();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,10 +96,13 @@ namespace Mango.Service.Blog
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("all");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
