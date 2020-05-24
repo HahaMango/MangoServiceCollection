@@ -63,7 +63,7 @@ namespace Mango.Service.Blog.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ApiResult> ArticleCommentAsync(CommentRequest request, long userId)
+        public async Task<ApiResult> ArticleCommentAsync(CommentRequest request, long? userId)
         {
             var response = new ApiResult();
             try
@@ -101,7 +101,7 @@ namespace Mango.Service.Blog.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ApiResult<PageList<CommentPageResponse>>> QueryCommentPageAsync(CommentPageRequest request, long userId)
+        public async Task<ApiResult<PageList<CommentPageResponse>>> QueryCommentPageAsync(CommentPageRequest request, long? userId)
         {
             var response = new ApiResult<PageList<CommentPageResponse>>();
             try

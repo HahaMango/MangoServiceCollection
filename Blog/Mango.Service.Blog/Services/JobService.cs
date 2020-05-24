@@ -69,9 +69,12 @@ namespace Mango.Service.Blog.Services
                     var viewKey = $"{ArticleCacheConfig.VIEW_CACHE_KEY}{article.Id}";
                     await WriteBackLikeCacheValue(article, likeKey);
                     await WriteBackViewCacheValue(article, viewKey);
+                    await _work.SaveChangesAsync();
+
+                    await RedisHelper.DelAsync(likeKey);
+                    await RedisHelper.DelAsync(viewKey);
                 }
 
-                await _work.SaveChangesAsync();
                 _logger.LogInformation("作业成功");
 
             }catch(Exception ex)

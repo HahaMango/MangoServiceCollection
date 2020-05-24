@@ -36,9 +36,9 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public long ArticleId { get; set; }
 
         /// <summary>
-        /// 评论用户Id
+        /// 评论用户Id，游客评论没有Id
         /// </summary>
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         /// <summary>
         /// 评论用户Id

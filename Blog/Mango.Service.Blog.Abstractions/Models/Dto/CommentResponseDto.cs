@@ -42,7 +42,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// <summary>
         /// 评论用户Id
         /// </summary>
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         /// <summary>
         /// 评论用户Id
