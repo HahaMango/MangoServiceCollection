@@ -75,6 +75,7 @@ namespace Mango.Service.Blog
             services.AddScoped<IArticleDetailRepository, ArticleDetailRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             services.AddScoped<IArticleCacheService, ArticleCacheService>();
             services.AddScoped<IArticleService, ArticleService>();
@@ -83,7 +84,7 @@ namespace Mango.Service.Blog
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IJobService, JobService>();
 
-            services.AddHostedService<ArticleJobService>();
+            //services.AddHostedService<ArticleJobService>();
 
             #endregion
         }
@@ -98,7 +99,7 @@ namespace Mango.Service.Blog
 
             app.UseCors("all");
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

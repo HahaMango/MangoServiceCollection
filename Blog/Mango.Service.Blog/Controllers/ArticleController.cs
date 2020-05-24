@@ -1,4 +1,4 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿/*--------------------------------------------------------------------------
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -16,24 +16,22 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mango.Core.ApiResponse;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Mango.Core.Enums;
-using Mango.Service.Blog.Abstractions.Services;
+using Mango.Core.ControllerAbstractions;
+using Mango.Core.DataStructure;
 using Mango.Service.Blog.Abstractions.Models.Dto;
+using Mango.Service.Blog.Abstractions.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Mango.Service.Blog.Controllers
 {
     /// <summary>
     /// 文章Controller
     /// </summary>
-    [ApiController]
-    public class ArticleController : ControllerBase
+    [Authorize]
+    public class ArticleController : MangoUserApiController
     {
         private readonly IArticleService _articleService;
 
@@ -42,10 +40,68 @@ namespace Mango.Service.Blog.Controllers
             _articleService = articleService;
         }
 
-        [HttpGet("api/article/add")]
-        public async Task<ApiResult> AddArticleAsync(AddArticleRequest request)
+        /// <summary>
+        /// 添加文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/article/add")]
+        public async Task<ApiResult> AddArticleAsync([FromBody]AddArticleRequest request)
         {
+            var user = GetUser();
+            if (user == null)
+            {
+                return AuthorizeError();
+            }
             return await _articleService.AddArticleAsync(request, 1);
+        }
+
+        /// <summary>
+        /// 查询文章分页
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/article/page")]
+        [AllowAnonymous]
+        public async Task<ApiResult<PageList<ArticlePageListResponse>>> QueryArticlePageAsync([FromBody]ArticlePageRequest request)
+        {
+            return await _articleService.QueryArticlePageAsync(request);
+        }
+
+        /// <summary>
+        /// 查询文章详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/article/detail")]
+        [AllowAnonymous]
+        public async Task<ApiResult<ArticleDetailResponse>> QueryArticleDetailAsync([FromBody]ArticleDetailRequest request)
+        {
+            return await _articleService.QueryArticleDetailAsync(request);
+        }
+
+        /// <summary>
+        /// 点赞或取消点赞
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/article/like")]
+        [AllowAnonymous]
+        public async Task<ApiResult> ArticleLikeAsync([FromBody]ArticleLikeRequest request)
+        {
+            return await _articleService.ArticleLikeAsync(request);
+        }
+
+        /// <summary>
+        /// 增加阅读数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/article/incview")]
+        [AllowAnonymous]
+        public async Task<ApiResult> ArticleIncViewAsync([FromBody]IncArticleViewRequest request)
+        {
+            return await _articleService.IncViewAsync(request);
         }
     }
 }

@@ -112,7 +112,8 @@ namespace Mango.Service.Blog.Services
                     CategoryId = defaultCategoryId,
                     Status = 1,
                     CreateTime = DateTime.Now,
-                    Creator = user.UserName
+                    Creator = user.UserName,
+                    UserId = userId
                 };
 
                 var detail = new ArticleDetail(true)

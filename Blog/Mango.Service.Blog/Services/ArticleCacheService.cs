@@ -72,6 +72,7 @@ namespace Mango.Service.Blog.Services
             if (await RedisHelper.ExistsAsync(key))
             {
                 await RedisHelper.IncrByAsync(key,request.State);
+                return;
             }
             await ReadLikeFromDBAsync(key);
             await RedisHelper.IncrByAsync(key,request.State);
@@ -88,6 +89,7 @@ namespace Mango.Service.Blog.Services
             if (await RedisHelper.ExistsAsync(key))
             {
                 await RedisHelper.IncrByAsync(key);
+                return;
             }
             await ReadLikeFromDBAsync(key);
             await RedisHelper.IncrByAsync(key);
