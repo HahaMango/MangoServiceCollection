@@ -16,7 +16,7 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.BaseEntity;
+using Mango.Core.EntityFramework.BaseEntity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

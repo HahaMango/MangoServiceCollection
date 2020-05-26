@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.Core.Authentication.Extension;
+using Mango.Core.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,20 @@ namespace Mango.Service.UserCenter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddAutoMapper();
+
+            services.AddMangoJwtHandler(options =>
+            {
+                options.Key = Configuration["Jwt:Key"];
+                options.Audience = Configuration["Jwt:Audience"];
+                options.Issuer = Configuration["Jwt:Issuer"];
+            }).AddMangoJwtAuthentication(options =>
+            {
+                options.Key = Configuration["Jwt:Key"];
+                options.Audiences = new string[] { Configuration["Jwt:Audience"] };
+                options.Issuers = new string[] { Configuration["Jwt:Issuer"] };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +56,7 @@ namespace Mango.Service.UserCenter
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
