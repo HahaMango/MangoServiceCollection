@@ -16,18 +16,24 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.Abstractions.Repositories;
+using Mango.EntityFramework.Repositories;
 using Mango.Service.UserCenter.Abstraction.Models.Entities;
+using Mango.Service.UserCenter.Abstraction.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Mango.Service.UserCenter.Abstraction.Repositories
+namespace Mango.Service.UserCenter.Repositories
 {
     /// <summary>
-    /// 角色表仓储接口
+    /// 用户密码仓储接口实现
     /// </summary>
-    public interface IRoleRepository : IEfRepository<UserCenterDbContext,Role>
+    public class UserPasswordRepository : EfRepository<UserCenterDbContext,UserPassword>,IUserPasswordRepository
     {
+        public UserPasswordRepository(UserCenterDbContext context) : base(context)
+        {
+
+        }
     }
 }

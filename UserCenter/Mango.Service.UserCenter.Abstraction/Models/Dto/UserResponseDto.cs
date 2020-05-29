@@ -16,19 +16,18 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.EntityFramework.BaseEntity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Mango.Service.UserCenter.Abstraction.Models.Entities
+namespace Mango.Service.UserCenter.Abstraction.Models.Dto
 {
-    /// <summary>
-    /// 用户表
-    /// </summary>
-    [Table("user")]
-    public class User : SnowFlakeEntity
+    class UserResponseDto
+    {
+    }
+
+    #region 用户信息相应类
+    public class UserInfoResponse
     {
         /// <summary>
         /// 用户名 (唯一的登陆用户名)
@@ -46,19 +45,9 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Entities
         public string Email { get; set; }
 
         /// <summary>
-        /// 邮箱是否认证 0：未认证 1：认证
-        /// </summary>
-        public int EmailConfirm { get; set; }
-
-        /// <summary>
         /// 手机号（每个手机号绑定一个用户）
         /// </summary>
         public string Phone { get; set; }
-
-        /// <summary>
-        /// 手机是否认证 0：未认证 1：认证
-        /// </summary>
-        public int PhoneConfirm { get; set; }
 
         /// <summary>
         /// 头像Url
@@ -71,39 +60,32 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Entities
         public string Remark { get; set; }
 
         /// <summary>
-        /// 状态 0：删除 1：正常
+        /// 密码强度
         /// </summary>
-        public int Status { get; set; }
+        public int PasswordStrength { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 用户绑定的第三方登陆提供商
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public List<ExternalLoginInfo> ExternalLoginInfos { get; set; }
 
         /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
-
-        /// <summary>
-        /// 最后登陆时间
+        /// 最近登陆时间
         /// </summary>
         public DateTime? LastLoginTime { get; set; }
-
-        /// <summary>
-        /// 最后登陆IP
-        /// </summary>
-        public string LastloginIP { get; set; }
-
-        public User() { }
-
-        /// <summary>
-        /// 设置Id
-        /// </summary>
-        /// <param name="set"></param>
-        public User(bool set)
-        {
-            base.SetId();
-        }
     }
+
+    public class ExternalLoginInfo
+    {
+        /// <summary>
+        /// 第三方登陆提供器显示名称
+        /// </summary>
+        public string ProviderDisplayName { get; set; }
+
+        /// <summary>
+        /// 第三方登陆提供商图片
+        /// </summary>
+        public string ProviderImageUrl { get; set; }
+    }
+    #endregion
 }

@@ -43,7 +43,7 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Entities
         /// <summary>
         /// 密码强度
         /// </summary>
-        public string PasswordStrength { get; set; }
+        public int PasswordStrength { get; set; }
 
         /// <summary>
         /// 使用状态 0：删除 1：正常（正在使用）

@@ -4,6 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mango.Core.Authentication.Extension;
 using Mango.Core.Extension;
+using Mango.EntityFramework.Extension;
+using Mango.Service.UserCenter.Abstraction.Repositories;
+using Mango.Service.UserCenter.Abstraction.Services;
+using Mango.Service.UserCenter.Repositories;
+using Mango.Service.UserCenter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +36,23 @@ namespace Mango.Service.UserCenter
 
             services.AddAutoMapper();
 
+            #region 跨域配置
+
+            services.AddCors(config =>
+            {
+                config.AddPolicy("all", p =>
+                {
+                    p.SetIsOriginAllowed(op => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+
+            #endregion
+
+            #region jwt配置
+
             services.AddMangoJwtHandler(options =>
             {
                 options.Key = Configuration["Jwt:Key"];
@@ -44,6 +66,22 @@ namespace Mango.Service.UserCenter
                 options.Audience = Configuration["Jwt:Audience"];
                 options.Issuer = Configuration["Jwt:Issuer"];
             });
+
+            #endregion
+
+            #region 仓储注入
+            //对于mysql和redis连接以后考虑放在配置中心
+            services.AddMangoDbContext<UserCenterDbContext, UserCenterOfWork>(Configuration["MysqlConnection"]);
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUserExternalLoginRepository, UserExternalLoginRepository>();
+            services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            #endregion
+
+            #region 服务注入
+            services.AddScoped<IUserService, UserService>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,8 +91,8 @@ namespace Mango.Service.UserCenter
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
+            app.UseCors("all");
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

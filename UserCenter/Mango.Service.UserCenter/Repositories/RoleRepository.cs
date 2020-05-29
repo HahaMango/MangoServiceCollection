@@ -16,18 +16,24 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.Abstractions.Repositories;
+using Mango.EntityFramework.Repositories;
 using Mango.Service.UserCenter.Abstraction.Models.Entities;
+using Mango.Service.UserCenter.Abstraction.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Mango.Service.UserCenter.Abstraction.Repositories
+namespace Mango.Service.UserCenter.Repositories
 {
     /// <summary>
-    /// 角色表仓储接口
+    /// 角色仓储接口实现
     /// </summary>
-    public interface IRoleRepository : IEfRepository<UserCenterDbContext,Role>
+    public class RoleRepository : EfRepository<UserCenterDbContext,Role>,IRoleRepository
     {
+        public RoleRepository(UserCenterDbContext context) : base(context)
+        {
+
+        }
     }
 }

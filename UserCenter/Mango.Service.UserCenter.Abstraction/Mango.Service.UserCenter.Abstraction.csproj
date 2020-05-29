@@ -9,8 +9,4 @@
     <PackageReference Include="Mango.EntityFramework" Version="1.0.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
