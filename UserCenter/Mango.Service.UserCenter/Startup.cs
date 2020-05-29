@@ -34,13 +34,15 @@ namespace Mango.Service.UserCenter
             services.AddMangoJwtHandler(options =>
             {
                 options.Key = Configuration["Jwt:Key"];
-                options.Audience = Configuration["Jwt:Audience"];
-                options.Issuer = Configuration["Jwt:Issuer"];
-            }).AddMangoJwtAuthentication(options =>
+                options.DefalutAudience = Configuration["Jwt:Audience"];
+                options.DefalutIssuer = Configuration["Jwt:Issuer"];
+            });
+
+            services.AddMangoJwtAuthentication(options =>
             {
                 options.Key = Configuration["Jwt:Key"];
-                options.Audiences = new string[] { Configuration["Jwt:Audience"] };
-                options.Issuers = new string[] { Configuration["Jwt:Issuer"] };
+                options.Audience = Configuration["Jwt:Audience"];
+                options.Issuer = Configuration["Jwt:Issuer"];
             });
         }
 

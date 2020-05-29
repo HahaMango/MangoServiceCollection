@@ -25,43 +25,28 @@ using System.Text;
 namespace Mango.Service.UserCenter.Abstraction.Models.Entities
 {
     /// <summary>
-    /// 用户表
+    /// 用户登陆密码表
     /// </summary>
-    [Table("user")]
-    public class User : SnowFlakeEntity
+    [Table("user_password")]
+    public class UserPassword : SnowFlakeEntity
     {
         /// <summary>
-        /// 用户名 (唯一的登陆用户名)
+        /// 用户Id
         /// </summary>
-        public string UserName { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// 密码哈希散列
         /// </summary>
-        public string NickName { get; set; }
+        public string PasswordHash { get; set; }
 
         /// <summary>
-        /// 邮箱（每个邮箱绑定一个用户）
+        /// 密码强度
         /// </summary>
-        public string Email { get; set; }
+        public string PasswordStrength { get; set; }
 
         /// <summary>
-        /// 手机号（每个手机号绑定一个用户）
-        /// </summary>
-        public string Phone { get; set; }
-
-        /// <summary>
-        /// 头像Url
-        /// </summary>
-        public string HeadUrl { get; set; }
-
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string Remark { get; set; }
-
-        /// <summary>
-        /// 状态 0：删除 1：正常
+        /// 使用状态 0：删除 1：正常（正在使用）
         /// </summary>
         public int Status { get; set; }
 
@@ -70,28 +55,13 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Entities
         /// </summary>
         public DateTime CreateTime { get; set; }
 
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
-
-        /// <summary>
-        /// 最后登陆时间
-        /// </summary>
-        public DateTime? LastLoginTime { get; set; }
-
-        /// <summary>
-        /// 最后登陆IP
-        /// </summary>
-        public string LastloginIP { get; set; }
-
-        public User() { }
+        public UserPassword() { }
 
         /// <summary>
         /// 设置Id
         /// </summary>
         /// <param name="set"></param>
-        public User(bool set)
+        public UserPassword(bool set)
         {
             base.SetId();
         }

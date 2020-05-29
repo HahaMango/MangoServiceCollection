@@ -25,45 +25,20 @@ using System.Text;
 namespace Mango.Service.UserCenter.Abstraction.Models.Entities
 {
     /// <summary>
-    /// 用户表
+    /// 角色表
     /// </summary>
-    [Table("user")]
-    public class User : SnowFlakeEntity
+    [Table("role")]
+    public class Role : SnowFlakeEntity
     {
         /// <summary>
-        /// 用户名 (唯一的登陆用户名)
+        /// 角色名称
         /// </summary>
-        public string UserName { get; set; }
+        public string RoleName { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// 角色类型
         /// </summary>
-        public string NickName { get; set; }
-
-        /// <summary>
-        /// 邮箱（每个邮箱绑定一个用户）
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// 手机号（每个手机号绑定一个用户）
-        /// </summary>
-        public string Phone { get; set; }
-
-        /// <summary>
-        /// 头像Url
-        /// </summary>
-        public string HeadUrl { get; set; }
-
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string Remark { get; set; }
-
-        /// <summary>
-        /// 状态 0：删除 1：正常
-        /// </summary>
-        public int Status { get; set; }
+        public int RoleType { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -71,27 +46,17 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Entities
         public DateTime CreateTime { get; set; }
 
         /// <summary>
-        /// 修改时间
+        /// 状态 0：删除 1：正常
         /// </summary>
-        public DateTime? UpdateTime { get; set; }
+        public int Status { get; set; }
 
-        /// <summary>
-        /// 最后登陆时间
-        /// </summary>
-        public DateTime? LastLoginTime { get; set; }
-
-        /// <summary>
-        /// 最后登陆IP
-        /// </summary>
-        public string LastloginIP { get; set; }
-
-        public User() { }
+        public Role() { }
 
         /// <summary>
         /// 设置Id
         /// </summary>
         /// <param name="set"></param>
-        public User(bool set)
+        public Role(bool set)
         {
             base.SetId();
         }
