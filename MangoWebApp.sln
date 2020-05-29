@@ -11,9 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.Blog.Abstract
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserCenter", "UserCenter", "{DD638889-A694-4A4A-9E84-27D2C646349F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.UserCenter.Abstraction", "UserCenter\Mango.Service.UserCenter.Abstraction\Mango.Service.UserCenter.Abstraction.csproj", "{F79474E4-DC81-4F2F-8BB2-3A1F613F5ADD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.UserCenter.Abstraction", "UserCenter\Mango.Service.UserCenter.Abstraction\Mango.Service.UserCenter.Abstraction.csproj", "{F79474E4-DC81-4F2F-8BB2-3A1F613F5ADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.UserCenter", "UserCenter\Mango.Service.UserCenter\Mango.Service.UserCenter.csproj", "{0B22523F-A8AB-4416-81CB-2685C8649191}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.UserCenter", "UserCenter\Mango.Service.UserCenter\Mango.Service.UserCenter.csproj", "{0B22523F-A8AB-4416-81CB-2685C8649191}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConfigCenter", "ConfigCenter", "{FE01D550-163B-46CF-985F-204675B8016F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.ConfigCenter.Abstraction", "ConfigCenter\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj", "{B926F1D4-056E-452E-962C-561603B57B9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.ConfigCenter", "ConfigCenter\Mango.Service.ConfigCenter\Mango.Service.ConfigCenter.csproj", "{9C8DE485-28AC-4C01-A7B2-06A843C1984F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +43,14 @@ Global
 		{0B22523F-A8AB-4416-81CB-2685C8649191}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B22523F-A8AB-4416-81CB-2685C8649191}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B22523F-A8AB-4416-81CB-2685C8649191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B926F1D4-056E-452E-962C-561603B57B9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B926F1D4-056E-452E-962C-561603B57B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B926F1D4-056E-452E-962C-561603B57B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B926F1D4-056E-452E-962C-561603B57B9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +60,8 @@ Global
 		{3AB3A435-870C-4659-9FE5-1B91CDF91D89} = {1CC9E621-BBC5-403A-ACDE-DB16D69A67B4}
 		{F79474E4-DC81-4F2F-8BB2-3A1F613F5ADD} = {DD638889-A694-4A4A-9E84-27D2C646349F}
 		{0B22523F-A8AB-4416-81CB-2685C8649191} = {DD638889-A694-4A4A-9E84-27D2C646349F}
+		{B926F1D4-056E-452E-962C-561603B57B9B} = {FE01D550-163B-46CF-985F-204675B8016F}
+		{9C8DE485-28AC-4C01-A7B2-06A843C1984F} = {FE01D550-163B-46CF-985F-204675B8016F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {186A46B2-AF5A-42FE-AD51-FBCF1955E43F}
