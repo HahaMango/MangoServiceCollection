@@ -11,6 +11,7 @@ using Mango.Service.UserCenter.Repositories;
 using Mango.Service.UserCenter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -81,6 +82,11 @@ namespace Mango.Service.UserCenter
 
             #region 服务注入
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserPasswordService, UserPasswordService>();
+            #endregion
+
+            #region 其他组件注入
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
         }
 

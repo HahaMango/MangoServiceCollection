@@ -26,37 +26,31 @@ using System.Threading.Tasks;
 namespace Mango.Service.UserCenter.Abstraction.Services
 {
     /// <summary>
-    /// 用户服务接口（注意：此处暂时采用绝对信任前端的方案，登出，修改密码等都将在前端主动丢弃jwt令牌。jwt维持其无状态的特性。）
+    /// 用户密码服务接口
     /// </summary>
-    public interface IUserService
+    public interface IUserPasswordService
     {
         /// <summary>
-        /// 用户名密码注册
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> SignUpWithUserNamePasswordAsync(UserNamePasswordSignUpRequest request);
-
-        /// <summary>
-        /// 用户名密码登陆
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult<string>> LoginWithUserNamePasswordAsync(UserNamePasswordLoginRequest request);
-
-        /// <summary>
-        /// 编辑用户信息
+        /// 修改用户密码
         /// </summary>
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult> EditUserInfoAsync(EditUserInfoRequest request, long userId);
+        Task<ApiResult> ChangePasswordAsync(ChangePasswordRequest request, long userId);
 
         /// <summary>
-        /// 通过用户Id查询用户信息
+        /// 验证密码
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
-        Task<ApiResult<UserInfoResponse>> QueryUserInfoById(long userId);
+        Task<bool> VerifyPasswordAsync(long userId, string password);
+
+        /// <summary>
+        /// 生成密码哈希散列
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        string PasswordToHash(string password);
     }
 }

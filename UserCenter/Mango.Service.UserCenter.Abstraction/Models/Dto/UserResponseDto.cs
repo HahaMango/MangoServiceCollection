@@ -67,7 +67,7 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Dto
         /// <summary>
         /// 用户绑定的第三方登陆提供商
         /// </summary>
-        public List<ExternalLoginInfo> ExternalLoginInfos { get; set; }
+        public IEnumerable<ExternalLoginInfo> ExternalLoginInfos { get; set; }
 
         /// <summary>
         /// 最近登陆时间

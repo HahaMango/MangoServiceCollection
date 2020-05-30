@@ -64,6 +64,11 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Dto
         /// </summary>
         [Required]
         public string Password { get; set; }
+
+        /// <summary>
+        /// 请求令牌的请求域
+        /// </summary>
+        public string Audience { get; set; }
     }
     #endregion
 
@@ -123,10 +128,10 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Dto
         public string OldPassword { get; set; }
 
         /// <summary>
-        /// 旧密码确认密码
+        /// 密码确认密码
         /// </summary>
         [Required]
-        public string OldPasswordConfirm { get; set; }
+        public string PasswordConfirm { get; set; }
     }
     #endregion
 }

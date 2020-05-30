@@ -36,10 +36,14 @@ namespace Mango.Service.UserCenter.Controllers
     public class UserController : MangoUserApiController
     {
         private readonly IUserService _userService;
+        private readonly IUserPasswordService _userPasswordService;
 
-        public UserController(IUserService userService)
+        public UserController(
+            IUserService userService,
+            IUserPasswordService userPasswordService)
         {
             _userService = userService;
+            _userPasswordService = userPasswordService;
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace Mango.Service.UserCenter.Controllers
             if (user == null)
                 return AuthorizeError();
 
-            return await _userService.ChangePasswordAsync(request, user.UserId);
+            return await _userPasswordService.ChangePasswordAsync(request, user.UserId);
         }
     }
 }
