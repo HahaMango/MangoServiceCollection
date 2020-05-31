@@ -17,8 +17,15 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
+using Mango.Core.Enums;
+using Mango.Core.Serialization.Extension;
+using Mango.EntityFramework.Abstractions;
 using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
+using Mango.Service.ConfigCenter.Abstraction.Repositories;
 using Mango.Service.ConfigCenter.Abstraction.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +38,62 @@ namespace Mango.Service.ConfigCenter.Services
     /// </summary>
     public class ModuleService : IModuleService
     {
-        public Task<ApiResult> AddModuleAsync(AddModuleRequest request, long userId)
+        private readonly ILogger<ModuleService> _logger;
+
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IEfContextWork _work;
+
+        public ModuleService(
+            ILogger<ModuleService> logger,
+            IModuleRepository moduleRepository,
+            IEfContextWork work)
         {
-            throw new NotImplementedException();
+            _logger = logger;
+            _moduleRepository = moduleRepository;
+            _work = work;
+        }
+
+        /// <summary>
+        /// 添加模块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> AddModuleAsync(AddModuleRequest request, long userId)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var isExist = await _moduleRepository.TableNotTracking
+                    .AnyAsync(item => item.Status == 1 && item.ModuleName == request.ModuleName);
+                if (isExist)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "模块已存在";
+                    return response;
+                }
+                var module = new Module(true)
+                {
+                    ModuleName = request.ModuleName,
+                    ModuleSecret = request.ModuleSecret,
+                    Status = 1,
+                    CreateTime = DateTime.Now
+                };
+
+                await _moduleRepository.InsertAsync(module);
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "添加成功";
+                return response;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"添加模块异常;method={nameof(AddModuleAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"添加模块异常：{ex.Message}";
+                return response;
+            }
         }
     }
 }

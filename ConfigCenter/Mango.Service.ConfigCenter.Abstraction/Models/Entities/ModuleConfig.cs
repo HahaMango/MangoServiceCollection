@@ -30,7 +30,7 @@ namespace Mango.Service.ConfigCenter.Abstraction.Models.Entities
         /// <summary>
         /// 模块Id
         /// </summary>
-        public string ModuleId { get; set; }
+        public long ModuleId { get; set; }
 
         /// <summary>
         /// mysql连接字符串
@@ -75,7 +75,7 @@ namespace Mango.Service.ConfigCenter.Abstraction.Models.Entities
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime UpdateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         public ModuleConfig() { }
 

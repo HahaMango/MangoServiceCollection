@@ -10,6 +10,7 @@ using Mango.Service.ConfigCenter.Repositories;
 using Mango.Service.ConfigCenter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -48,6 +49,10 @@ namespace Mango.Service.ConfigCenter
             services.AddScoped<IGlobalConfigService, GlobalConfigService>();
             services.AddScoped<IModuleConfigService, ModuleConfigService>();
             services.AddScoped<IModuleService, ModuleService>();
+            #endregion
+
+            #region 其他组件注入
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
 
             #region 跨域配置

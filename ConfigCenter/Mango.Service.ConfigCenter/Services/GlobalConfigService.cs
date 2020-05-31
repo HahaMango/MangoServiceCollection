@@ -17,8 +17,12 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
+using Mango.Core.Enums;
 using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
+using Mango.Service.ConfigCenter.Abstraction.Repositories;
 using Mango.Service.ConfigCenter.Abstraction.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +35,42 @@ namespace Mango.Service.ConfigCenter.Services
     /// </summary>
     public class GlobalConfigService : IGlobalConfigService
     {
-        public Task<ApiResult<GlobalConfig>> QueryGlobalConfigAsync()
+        private readonly ILogger<GlobalConfigService> _logger;
+
+        private readonly IGlobalConfigRepository _globalConfigRepository;
+
+        public GlobalConfigService(
+            ILogger<GlobalConfigService> logger,
+            IGlobalConfigRepository globalConfigRepository)
         {
-            throw new NotImplementedException();
+            _logger = logger;
+            _globalConfigRepository = globalConfigRepository;
+        }
+
+        /// <summary>
+        /// 查询全局配置
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<GlobalConfig>> QueryGlobalConfigAsync()
+        {
+            var response = new ApiResult<GlobalConfig>();
+            try
+            {
+                var config = await _globalConfigRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.Status == 1);
+
+                response.Code = Code.Ok;
+                response.Message = "查询成功";
+                response.Data = config;
+                return response;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"添加模块异常;method={nameof(QueryGlobalConfigAsync)};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"添加模块异常：{ex.Message}";
+                return response;
+            }
         }
     }
 }
