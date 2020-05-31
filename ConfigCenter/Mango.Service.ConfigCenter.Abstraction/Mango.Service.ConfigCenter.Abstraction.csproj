@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mango.Core" Version="1.0.13" />
+    <PackageReference Include="Mango.Core" Version="1.0.14" />
     <PackageReference Include="Mango.EntityFramework" Version="1.0.7" />
   </ItemGroup>
 

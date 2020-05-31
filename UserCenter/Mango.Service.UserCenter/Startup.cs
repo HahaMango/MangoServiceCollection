@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.Core.ApiResponse;
 using Mango.Core.Authentication.Extension;
 using Mango.Core.Extension;
 using Mango.Core.HttpService;
+using Mango.Core.Serialization.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Infrastructure.HttpService;
+using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
 using Mango.Service.UserCenter.Abstraction.Models.Entities;
 using Mango.Service.UserCenter.Abstraction.Repositories;
 using Mango.Service.UserCenter.Abstraction.Services;
@@ -37,6 +41,18 @@ namespace Mango.Service.UserCenter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //var globalConfigHttp = new JsonHttpService<ApiResult<GlobalConfig>>(new System.Net.Http.HttpClient());
+            //var moduleConfigHttp = new JsonHttpService<ApiResult<ModuleConfigResponse>>(new System.Net.Http.HttpClient());
+            ////»´æ÷≈‰÷√
+            //var globalConfigResponse = globalConfigHttp.GetAsync("https://localhost:5001/api/configcenter/global").Result;
+            ////ƒ£øÈ≈‰÷√
+            //var queryConfig = new QueryModuleConfigRequest
+            //{
+            //    ModuleName = "Mango.Blog",
+            //    ModuleSecret = "mango.blog"
+            //};
+            //var moduleConfigResponse = moduleConfigHttp.PostAsync("https://localhost:5001/api/configcenter/queryconfig", queryConfig.ToJson()).Result;
 
             services.AddAutoMapper();
 
