@@ -37,13 +37,5 @@ namespace Mango.Service.ConfigCenter.Abstraction.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<ApiResult> AddModuleAsync(AddModuleRequest request,long userId);
-
-        /// <summary>
-        /// 添加模块配置
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddModuleConfigAsync(AddModuleConfigRequest request,long userId);
     }
 }

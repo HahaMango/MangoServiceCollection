@@ -17,7 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
-using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,23 +26,10 @@ using System.Threading.Tasks;
 namespace Mango.Service.ConfigCenter.Abstraction.Services
 {
     /// <summary>
-    /// 模块配置服务接口
+    /// 全局配置服务接口
     /// </summary>
-    public interface IModuleConfigService
+    public interface IGlobalConfigService
     {
-        /// <summary>
-        /// 查询模块配置
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        Task<ApiResult<ModuleConfigResponse>> QueryModuleConfigAsync(QueryModuleConfigRequest config);
-
-        /// <summary>
-        /// 添加模块配置
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddModuleConfigAsync(AddModuleConfigRequest request, long userId);
+        Task<ApiResult<GlobalConfig>> QueryGlobalConfigAsync();
     }
 }

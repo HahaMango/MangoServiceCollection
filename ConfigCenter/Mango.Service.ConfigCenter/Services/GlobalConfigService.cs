@@ -17,32 +17,23 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
-using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
+using Mango.Service.ConfigCenter.Abstraction.Services;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mango.Service.ConfigCenter.Abstraction.Services
+namespace Mango.Service.ConfigCenter.Services
 {
     /// <summary>
-    /// 模块配置服务接口
+    /// 全局配置服务接口实现
     /// </summary>
-    public interface IModuleConfigService
+    public class GlobalConfigService : IGlobalConfigService
     {
-        /// <summary>
-        /// 查询模块配置
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        Task<ApiResult<ModuleConfigResponse>> QueryModuleConfigAsync(QueryModuleConfigRequest config);
-
-        /// <summary>
-        /// 添加模块配置
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddModuleConfigAsync(AddModuleConfigRequest request, long userId);
+        public Task<ApiResult<GlobalConfig>> QueryGlobalConfigAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

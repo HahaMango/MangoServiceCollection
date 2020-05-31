@@ -45,6 +45,16 @@ namespace Mango.Service.ConfigCenter.Abstraction.Models.Dto
     public class AddModuleConfigRequest
     {
         /// <summary>
+        /// 模块名称(全局唯一)
+        /// </summary>
+        public string ModuleName { get; set; }
+
+        /// <summary>
+        /// 模块密码
+        /// </summary>
+        public string ModuleSecret { get; set; }
+
+        /// <summary>
         /// mysql连接字符串
         /// </summary>
         public string MysqlConnectionString { get; set; }

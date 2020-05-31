@@ -17,32 +17,38 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
-using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.Core.ControllerAbstractions;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
+using Mango.Service.ConfigCenter.Abstraction.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mango.Service.ConfigCenter.Abstraction.Services
+namespace Mango.Service.ConfigCenter.Controllers
 {
     /// <summary>
-    /// 模块配置服务接口
+    /// 全局配置controller
     /// </summary>
-    public interface IModuleConfigService
+    public class GlobalConfigController : MangoUserApiController
     {
-        /// <summary>
-        /// 查询模块配置
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        Task<ApiResult<ModuleConfigResponse>> QueryModuleConfigAsync(QueryModuleConfigRequest config);
+        private readonly IGlobalConfigService _globalConfigService;
+
+        public GlobalConfigController(
+            IGlobalConfigService globalConfigService)
+        {
+            _globalConfigService = globalConfigService;
+        }
 
         /// <summary>
-        /// 添加模块配置
+        /// 查询全局配置
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult> AddModuleConfigAsync(AddModuleConfigRequest request, long userId);
+        [HttpGet("api/configcenter/global")]
+        public async Task<ApiResult<GlobalConfig>> QueryGlobalConfigAsync()
+        {
+            return await _globalConfigService.QueryGlobalConfigAsync();
+        }
     }
 }

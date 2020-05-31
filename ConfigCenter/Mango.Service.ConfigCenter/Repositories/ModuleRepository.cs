@@ -16,33 +16,24 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.ApiResponse;
-using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
+using Mango.EntityFramework.Repositories;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
+using Mango.Service.ConfigCenter.Abstraction.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mango.Service.ConfigCenter.Abstraction.Services
+namespace Mango.Service.ConfigCenter.Repositories
 {
     /// <summary>
-    /// 模块配置服务接口
+    /// 模块仓储接口实现
     /// </summary>
-    public interface IModuleConfigService
+    public class ModuleRepository : EfRepository<ConfigCenterDbContext,Module>,IModuleRepository
     {
-        /// <summary>
-        /// 查询模块配置
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        Task<ApiResult<ModuleConfigResponse>> QueryModuleConfigAsync(QueryModuleConfigRequest config);
+        public ModuleRepository(ConfigCenterDbContext context) : base(context)
+        {
 
-        /// <summary>
-        /// 添加模块配置
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<ApiResult> AddModuleConfigAsync(AddModuleConfigRequest request, long userId);
+        }
     }
 }

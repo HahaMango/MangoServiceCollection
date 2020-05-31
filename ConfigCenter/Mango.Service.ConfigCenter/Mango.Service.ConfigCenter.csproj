@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj" />
   </ItemGroup>
 
