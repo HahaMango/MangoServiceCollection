@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.Core.Extension;
+using Mango.EntityFramework.Extension;
+using Mango.Service.ConfigCenter.Abstraction.Repositories;
+using Mango.Service.ConfigCenter.Abstraction.Services;
+using Mango.Service.ConfigCenter.Repositories;
+using Mango.Service.ConfigCenter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +32,36 @@ namespace Mango.Service.ConfigCenter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAutoMapper();
+
+            #region 添加数据库
+            services.AddMangoDbContext<ConfigCenterDbContext, ConfigCenterOfWork>(Configuration["MysqlConnection"]);
+            #endregion
+
+            #region 添加仓储
+            services.AddScoped<IGlobalConfigRepository, GlobalConfigRepository>();
+            services.AddScoped<IModuleConfigRepository, ModuleConfigRepository>();
+            services.AddScoped<IModuleRepository, ModuleRepository>();
+            #endregion
+
+            #region 添加服务
+            services.AddScoped<IGlobalConfigService, GlobalConfigService>();
+            services.AddScoped<IModuleConfigService, ModuleConfigService>();
+            services.AddScoped<IModuleService, ModuleService>();
+            #endregion
+
+            #region 跨域配置
+            services.AddCors(config =>
+            {
+                config.AddPolicy("all", p =>
+                {
+                    p.SetIsOriginAllowed(op => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,8 +71,8 @@ namespace Mango.Service.ConfigCenter
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
+            app.UseCors("all");
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
