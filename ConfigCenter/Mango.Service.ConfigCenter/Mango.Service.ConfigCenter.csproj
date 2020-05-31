@@ -3,7 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>84a4ab7d-5efa-49af-b679-23fb0dd7f16e</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj" />
