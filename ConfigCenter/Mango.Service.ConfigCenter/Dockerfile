@@ -7,8 +7,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["ConfigCenter/Mango.Service.ConfigCenter/Mango.Service.ConfigCenter.csproj", "ConfigCenter/Mango.Service.ConfigCenter/"]
-COPY ["ConfigCenter/Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "ConfigCenter/Mango.Service.ConfigCenter.Abstraction/"]
+COPY ["Mango.Service.ConfigCenter.csproj", "ConfigCenter/Mango.Service.ConfigCenter/"]
+COPY ["../Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "ConfigCenter/Mango.Service.ConfigCenter.Abstraction/"]
 RUN dotnet restore "ConfigCenter/Mango.Service.ConfigCenter/Mango.Service.ConfigCenter.csproj"
 COPY . .
 WORKDIR "/src/ConfigCenter/Mango.Service.ConfigCenter"
