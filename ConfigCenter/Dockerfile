@@ -11,6 +11,7 @@ COPY ["Mango.Service.ConfigCenter/Mango.Service.ConfigCenter.csproj", "Mango.Ser
 COPY ["Mango.Service.ConfigCenter/NuGet.config", "Mango.Service.ConfigCenter/"]
 COPY ["Lib/", "Lib/"]
 COPY ["Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "Mango.Service.ConfigCenter.Abstraction/"]
+COPY ["Mango.Service.ConfigCenter.Abstraction/NuGet.config", "Mango.Service.ConfigCenter.Abstraction/"]
 RUN dotnet restore "Mango.Service.ConfigCenter/Mango.Service.ConfigCenter.csproj"
 COPY . .
 WORKDIR "/src/Mango.Service.ConfigCenter"
