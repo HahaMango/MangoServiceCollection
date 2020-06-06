@@ -16,7 +16,8 @@ stages:
   displayName: Build image
   jobs:  
   - job: Build
-    displayName: Build
+    condition: true
+    displayName: mango_config_center_build
     pool:
       vmImage: 'ubuntu-latest'
     steps:
