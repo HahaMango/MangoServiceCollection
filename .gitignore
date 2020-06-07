@@ -341,3 +341,5 @@ healthchecksdb
 *.key
 *.crt
 *.rnd
+
+secrets.json
