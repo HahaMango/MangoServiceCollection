@@ -8,6 +8,7 @@ using Mango.Core.Extension;
 using Mango.Core.HttpService;
 using Mango.Core.Serialization.Extension;
 using Mango.EntityFramework.Extension;
+using Mango.Infrastructure.Helper;
 using Mango.Infrastructure.HttpService;
 using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
 using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
@@ -33,28 +34,45 @@ namespace Mango.Service.UserCenter
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var globalConfigRespose = HttpHelper.GetAsync<ApiResult<GlobalConfig>>("http://configcenter.hahamango.cn/api/configcenter/global").Result;
+            if (!globalConfigRespose.IsSuccessStatusCode)
+            {
+                throw new Exception("访问配置中心异常");
+            }
+            if (globalConfigRespose.Data.Code != Core.Enums.Code.Ok)
+            {
+                throw new Exception($"查询全局配置异常,{globalConfigRespose.Data.Message}");
+            }
+            GlobalConfig = globalConfigRespose.Data.Data;
+
+            var configRequest = new QueryModuleConfigRequest
+            {
+                ModuleName = "Mango.UserCenter",
+                ModuleSecret = "mango.usercenter"
+            };
+            var moduleConfigResponse = HttpHelper.PostAsync<ApiResult<ModuleConfigResponse>>("http://configcenter.hahamango.cn/api/configcenter/queryconfig", configRequest.ToJson()).Result;
+            if (!moduleConfigResponse.IsSuccessStatusCode)
+            {
+                throw new Exception("访问配置中心异常");
+            }
+            if (moduleConfigResponse.Data.Code != Core.Enums.Code.Ok)
+            {
+                throw new Exception($"查询模块配置异常，{moduleConfigResponse.Data.Message}");
+            }
+            ModuleConfig = moduleConfigResponse.Data.Data;
         }
 
         public IConfiguration Configuration { get; }
+
+        public GlobalConfig GlobalConfig { get; }
+
+        public ModuleConfigResponse ModuleConfig { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            //var globalConfigHttp = new JsonHttpService<ApiResult<GlobalConfig>>(new System.Net.Http.HttpClient());
-            //var moduleConfigHttp = new JsonHttpService<ApiResult<ModuleConfigResponse>>(new System.Net.Http.HttpClient());
-            ////全局配置
-            //var globalConfigResponse = globalConfigHttp.GetAsync("https://localhost:5001/api/configcenter/global").Result;
-            ////模块配置
-            //var queryConfig = new QueryModuleConfigRequest
-            //{
-            //    ModuleName = "Mango.Blog",
-            //    ModuleSecret = "mango.blog"
-            //};
-            //var moduleConfigResponse = moduleConfigHttp.PostAsync("https://localhost:5001/api/configcenter/queryconfig", queryConfig.ToJson()).Result;
-
-            services.AddAutoMapper();
 
             #region 跨域配置
 
@@ -75,23 +93,23 @@ namespace Mango.Service.UserCenter
 
             services.AddMangoJwtHandler(options =>
             {
-                options.Key = Configuration["Jwt:Key"];
-                options.DefalutAudience = Configuration["Jwt:Audience"];
-                options.DefalutIssuer = Configuration["Jwt:Issuer"];
+                options.Key = GlobalConfig.JWTKey;
+                options.DefalutAudience = ModuleConfig.ValidAudience;
+                options.DefalutIssuer = ModuleConfig.ValidIssuer;
             });
 
             services.AddMangoJwtAuthentication(options =>
             {
-                options.Key = Configuration["Jwt:Key"];
-                options.Audience = Configuration["Jwt:Audience"];
-                options.Issuer = Configuration["Jwt:Issuer"];
+                options.Key = GlobalConfig.JWTKey;
+                options.Audience = ModuleConfig.ValidAudience;
+                options.Issuer = ModuleConfig.ValidIssuer;
             });
 
             #endregion
 
             #region 仓储注入
             //对于mysql和redis连接以后考虑放在配置中心
-            services.AddMangoDbContext<UserCenterDbContext, UserCenterOfWork>(Configuration["MysqlConnection"]);
+            services.AddMangoDbContext<UserCenterDbContext, UserCenterOfWork>(ModuleConfig.MysqlConnectionString);
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserExternalLoginRepository, UserExternalLoginRepository>();
             services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
@@ -106,6 +124,7 @@ namespace Mango.Service.UserCenter
 
             #region 其他组件注入
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddAutoMapper();
             #endregion
         }
 
@@ -116,11 +135,9 @@ namespace Mango.Service.UserCenter
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("all");
-            //app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors("all");
             app.UseAuthentication();
             app.UseAuthorization();
 
