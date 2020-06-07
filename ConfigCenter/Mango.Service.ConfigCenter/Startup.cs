@@ -88,9 +88,8 @@ namespace Mango.Service.ConfigCenter
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("all");
-
             app.UseRouting();
+            app.UseCors("all");
             app.UseAuthorization();
 
             app.Use(async (httpContext, next) =>
