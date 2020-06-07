@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.Core.ApiResponse;
 using Mango.Core.Extension;
+using Mango.Core.Serialization.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Service.ConfigCenter.Abstraction.Repositories;
 using Mango.Service.ConfigCenter.Abstraction.Services;
@@ -44,12 +47,14 @@ namespace Mango.Service.ConfigCenter
             services.AddScoped<IGlobalConfigRepository, GlobalConfigRepository>();
             services.AddScoped<IModuleConfigRepository, ModuleConfigRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddScoped<IIPWhiteListRepository, IPWhiteListRepository>();
             #endregion
 
             #region 添加服务
             services.AddScoped<IGlobalConfigService, GlobalConfigService>();
             services.AddScoped<IModuleConfigService, ModuleConfigService>();
             services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IIPWhiteListService, IPWhiteListService>();
             #endregion
 
             #region 其他组件注入
@@ -83,10 +88,31 @@ namespace Mango.Service.ConfigCenter
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("all");
-
             app.UseRouting();
+            app.UseCors("all");
             app.UseAuthorization();
+
+            app.Use(async (httpContext, next) =>
+            {
+                var response = new ApiResult();
+                var ipService = httpContext.RequestServices.GetService<IIPWhiteListService>();
+                var list = await ipService.QueryVaildIPList();
+                var currentIP = httpContext.Connection.RemoteIpAddress.ToString();
+                if(list.Code != Core.Enums.Code.Ok)
+                {
+                    response.Code = list.Code;
+                    response.Message = list.Message;
+                }
+                if(!list.Data.Any(item => item == currentIP))
+                {
+                    httpContext.Response.StatusCode = 401;
+                    httpContext.Response.ContentType = "application/json";
+                    response.Code = Core.Enums.Code.Unauthorized;
+                    response.Message = $"{currentIP} 该IP无访问权限";
+                    await httpContext.Response.WriteAsync(response.ToJson());
+                }
+                await next.Invoke();
+            });
 
             app.UseEndpoints(endpoints =>
             {
