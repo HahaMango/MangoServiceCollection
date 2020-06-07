@@ -84,7 +84,6 @@ namespace Mango.Service.ConfigCenter
             }
 
             app.UseCors("all");
-            //app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseAuthorization();
