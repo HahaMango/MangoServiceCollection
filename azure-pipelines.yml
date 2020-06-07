@@ -15,16 +15,19 @@ stages:
 - stage: Build
   displayName: Build image
   jobs:  
-  - job: Build
-    displayName: Build
+  - job: config_center_build
+    displayName: ConfigCenterBuild
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'secrets.json'
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)/Lib'
+        SourceFolder: '$(Agent.TempDirectory)'
         Contents: '**'
-        TargetFolder: '$(Build.SourcesDirectory)/ConfigCenter/Lib'
+        TargetFolder: '$(Build.SourcesDirectory)/ConfigCenter/Mango.Service.ConfigCenter'
     - task: Docker@2
       displayName: Build an image
       inputs:
@@ -32,3 +35,9 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/ConfigCenter/Dockerfile'
         tags: |
           $(tag)
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/configcenter'
+        command: 'push'

@@ -1,5 +1,7 @@
 # MangoServiceCollection
 
+[![Build Status](https://dev.azure.com/q932104843/MangoServiceCollection/_apis/build/status/HahaMango.MangoServiceCollection?branchName=master)](https://dev.azure.com/q932104843/MangoServiceCollection/_build/latest?definitionId=6&branchName=master)
+
 ## 结构介绍
 
 每个项目均由一个`Asp.net core`项目和一个`类库`项目组成，类库项目中`Modles`文件夹存放数据库实体，Dto对象等，`Repositories`文件夹存放项目相关实体的仓储接口，`Services`文件夹存放服务接口。
@@ -24,4 +26,4 @@
 
 ## Mango.Service.ConfigCenter
 
-（计划中）
+提供全局配置和单独模块配置
