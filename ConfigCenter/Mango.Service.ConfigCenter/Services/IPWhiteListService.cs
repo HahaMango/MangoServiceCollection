@@ -30,7 +30,9 @@ using System.Threading.Tasks;
 namespace Mango.Service.ConfigCenter.Services
 {
     /// <summary>
-    /// ip白名单服务实现
+    /// ip白名单服务实现（Startup.cs里面被管道中间件使用）
+    /// 
+    /// 后期性能不好再考虑改用redis
     /// </summary>
     public class IPWhiteListService : IIPWhiteListService
     {
