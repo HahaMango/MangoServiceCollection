@@ -49,6 +49,41 @@ namespace Mango.Service.ConfigCenter.Services
         }
 
         /// <summary>
+        /// 指定Ip是否匹配（暂时模糊匹配，以后改掩码匹配）
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> IsMatchAsync(string ip)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var ips = await _iPWhiteListRepository.TableNotTracking
+                    .Select(item => item.IP)
+                    .ToListAsync();
+                foreach(var i in ips)
+                {
+                    if(i == ip)
+                    {
+                        response.Code = Code.Ok;
+                        response.Message = "匹配成功";
+                        return response;
+                    }
+                }
+                response.Code = Code.Error;
+                response.Message = "匹配失败";
+                return response;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"IP白名单匹配异常;method={nameof(QueryVaildIPList)};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"IP白名单匹配异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
         /// 查询允许的ip地址
         /// </summary>
         /// <returns></returns>
