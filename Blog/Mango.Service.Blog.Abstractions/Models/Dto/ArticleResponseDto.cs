@@ -34,7 +34,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     /// </summary>
     public class ArticlePageListResponse
     {
-        [JsonIgnore]
+        //[JsonIgnore]
         public long Id { get; set; }
 
         /// <summary>
