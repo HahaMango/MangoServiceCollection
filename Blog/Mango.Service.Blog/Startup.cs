@@ -1,4 +1,5 @@
 using Mango.Core.Cache.Extension;
+using Mango.Core.Converter;
 using Mango.Core.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Service.Blog.Abstractions.Repositories;
@@ -27,7 +28,16 @@ namespace Mango.Service.Blog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o=>
+                {
+                    o.JsonSerializerOptions.Converters.Add(new IntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableIntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new LongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableLongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
+                });
 
             #region  ⁄»®≈‰÷√
 

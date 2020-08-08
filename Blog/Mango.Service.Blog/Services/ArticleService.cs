@@ -248,13 +248,24 @@ namespace Mango.Service.Blog.Services
                     .Where(articleWhere)
                     .OrderByDescending(item => item.IsTop)
                     .ThenByDescending(item => item.CreateTime)
-                    .Select(item => item.MapTo<ArticlePageListResponse>())
+                    .Select(item => new ArticlePageListResponse
+                    {
+                        Id = item.Id.ToString(),
+                        Title = item.Title,
+                        Describe = item.Describe,
+                        CategoryId = item.CategoryId,
+                        View=  item.View,
+                        Comment = item.Comment,
+                        Like = item.Like,
+                        IsTop = item.IsTop,
+                        CreateTime = item.CreateTime
+                    })
                     .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
                 foreach(var article in articles.Data)
                 {
-                    article.Like = await _articleCacheService.QueryLikeAsync(article.Id);
-                    article.View = await _articleCacheService.QueryViewAsync(article.Id);
+                    article.Like = await _articleCacheService.QueryLikeAsync(Convert.ToInt64(article.Id));
+                    article.View = await _articleCacheService.QueryViewAsync(Convert.ToInt64(article.Id));
                 }
 
                 response.Code = Code.Ok;
