@@ -74,8 +74,6 @@ namespace Mango.Service.Blog.Services
                     UserId = userId,
                     UserName = request.UserName,
                     Content = request.Content,
-                    IsReply = request.IsReply,
-                    ReplyCommentId = request.ReplyCommentId,
                     CreateTime = DateTime.Now,
                     Status = 1
                 };
@@ -91,6 +89,51 @@ namespace Mango.Service.Blog.Services
                 _logger.LogError($"添加评论异常;method={nameof(ArticleCommentAsync)};param={request.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"添加评论异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 回复评论
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> ArticleSubCommentAsync(CommentReplyRequest request, long? userId)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var comment = new Comment(true)
+                {
+                    ArticleId = request.ArticleId,
+                    UserId = userId,
+                    UserName = request.UserName,
+                    Content = request.Content,
+                    CreateTime = DateTime.Now,
+                    IsReply = 1,
+                    ReplyCommentId = request.ReplyCommentId,
+                    Status = 1
+                };
+                if (request.ReplySubCommentId.HasValue)
+                {
+                    comment.IsSubReply = 1;
+                    comment.ReplySubCommentId = request.ReplySubCommentId.Value;
+                    comment.ReplySubUserId = request.ReplySubUserId;
+                    comment.ReplySubUserName = request.ReplySubUserName;
+                }
+                await _commentRepository.InsertAsync(comment);
+                await _efContextWork.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "评论成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"添加回复评论异常;method={nameof(ArticleCommentAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"添加回复评论异常：{ex.Message}";
                 return response;
             }
         }
@@ -124,7 +167,7 @@ namespace Mango.Service.Blog.Services
                 {
                     var replyComments = await (from rc in _commentRepository.TableNotTracking
                                                where rc.IsReply == 1 && rc.ReplyCommentId == c.Id && rc.Status == 1
-                                               select new CommentPageResponse
+                                               select new CommentSubPageResponse
                                                {
                                                    Id = c.Id,
                                                    ArticleId = c.ArticleId,
@@ -132,7 +175,10 @@ namespace Mango.Service.Blog.Services
                                                    Content = c.Content,
                                                    Like = c.Like,
                                                    Reply = c.Reply,
-                                                   UserName = c.UserName
+                                                   UserName = c.UserName,
+                                                   CreateTime = c.CreateTime,
+                                                   SubReplyUserId = rc.ReplySubUserId,
+                                                   SubReplyUserName = rc.ReplySubUserName
                                                }).ToListAsync();
                     c.ReplyComments = replyComments;
                 }

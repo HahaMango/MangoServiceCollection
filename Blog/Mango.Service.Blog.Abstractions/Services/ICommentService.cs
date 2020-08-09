@@ -37,6 +37,14 @@ namespace Mango.Service.Blog.Abstractions.Services
         Task<ApiResult> ArticleCommentAsync(CommentRequest request, long? userId);
 
         /// <summary>
+        /// 文章回复
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApiResult> ArticleSubCommentAsync(CommentReplyRequest request, long? userId);
+
+        /// <summary>
         /// 查询文章评论分页列表
         /// </summary>
         /// <param name="request"></param>

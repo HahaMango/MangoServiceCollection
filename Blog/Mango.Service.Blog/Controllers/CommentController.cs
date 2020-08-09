@@ -59,6 +59,22 @@ namespace Mango.Service.Blog.Controllers
         }
 
         /// <summary>
+        /// 添加文章子评论
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> AddReplyCommentAsync([FromBody]CommentReplyRequest request)
+        {
+            var userId = default(long?);
+            var user = GetUser();
+            if(user != null)
+            {
+                userId = user.UserId;
+            }
+            return await _commentService.ArticleSubCommentAsync(request, userId);
+        }
+
+        /// <summary>
         /// 查询文章评论分页
         /// </summary>
         /// <param name="request"></param>

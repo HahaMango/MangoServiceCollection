@@ -57,7 +57,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// <summary>
         /// 回复的评论
         /// </summary>
-        public List<CommentPageResponse> ReplyComments { get; set; }
+        public List<CommentSubPageResponse> ReplyComments { get; set; }
 
         /// <summary>
         /// 评论点赞数
@@ -68,7 +68,63 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// 回复数
         /// </summary>
         public int Reply { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 
+    public class CommentSubPageResponse
+    {
+        /// <summary>
+        /// 评论Id
+        /// </summary>
+        public long Id { get; set; }
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public long ArticleId { get; set; }
+
+        /// <summary>
+        /// 评论用户Id
+        /// </summary>
+        public long? UserId { get; set; }
+
+        /// <summary>
+        /// 子评论用户Id
+        /// </summary>
+        public long? SubReplyUserId { get; set; }
+
+        /// <summary>
+        /// 评论用户Id
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 子评论回复用户名
+        /// </summary>
+        public string SubReplyUserName { get; set; }
+
+        /// <summary>
+        /// 评论内容
+        /// </summary>
+        public string Content { get; set; }
+
+        /// <summary>
+        /// 评论点赞数
+        /// </summary>
+        public int Like { get; set; }
+
+        /// <summary>
+        /// 回复数
+        /// </summary>
+        public int Reply { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+    }
     #endregion
 }
