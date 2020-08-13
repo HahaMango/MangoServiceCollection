@@ -150,7 +150,7 @@ namespace Mango.Service.Blog.Services
             try
             {
                 var comments = await (from c in _commentRepository.TableNotTracking
-                                      where c.ArticleId == request.articleId && c.Status == 1
+                                      where c.ArticleId == request.ArticleId && c.Status == 1
                                       orderby c.CreateTime descending
                                       select new CommentPageResponse
                                       {
@@ -167,6 +167,7 @@ namespace Mango.Service.Blog.Services
                 {
                     var replyComments = await (from rc in _commentRepository.TableNotTracking
                                                where rc.IsReply == 1 && rc.ReplyCommentId == c.Id && rc.Status == 1
+                                               orderby rc.CreateTime descending
                                                select new CommentSubPageResponse
                                                {
                                                    Id = c.Id,
@@ -179,8 +180,9 @@ namespace Mango.Service.Blog.Services
                                                    CreateTime = c.CreateTime,
                                                    SubReplyUserId = rc.ReplySubUserId,
                                                    SubReplyUserName = rc.ReplySubUserName
-                                               }).ToListAsync();
-                    c.ReplyComments = replyComments;
+                                               })
+                                               .FirstOrDefaultAsync();
+                    c.FirstReplyComment = replyComments;
                 }
 
                 response.Code = Code.Ok;
@@ -193,6 +195,50 @@ namespace Mango.Service.Blog.Services
                 _logger.LogError($"查询评论分页异常;method={nameof(ArticleCommentAsync)};param={request.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"查询评论分页异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 查询子评论分页
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<PageList<CommentSubPageResponse>>> QuerySubCommentPageAsync(SubCommentPageRequest request, long? userId)
+        {
+            var response = new ApiResult<PageList<CommentSubPageResponse>>();
+            try
+            {
+                var subComments = await (from c in _commentRepository.TableNotTracking
+                                         where c.Reply == 1 && c.ReplyCommentId == request.CommentId && c.Status == 1
+                                         orderby c.CreateTime descending
+                                         select new CommentSubPageResponse
+                                         {
+                                             Id = c.Id,
+                                             ArticleId = c.ArticleId,
+                                             UserId = c.UserId,
+                                             SubReplyUserId = c.ReplySubUserId,
+                                             UserName = c.UserName,
+                                             SubReplyUserName = c.ReplySubUserName,
+                                             SubReplyCommentId = c.ReplySubCommentId,
+                                             Content = c.Content,
+                                             Like = c.Like,
+                                             Reply = c.Reply,
+                                             CreateTime = c.CreateTime
+                                         })
+                                         .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
+
+                response.Code = Code.Ok;
+                response.Message = "查询成功";
+                response.Data = subComments;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"查询子评论分页异常;method={nameof(QuerySubCommentPageAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"查询子评论分页异常：{ex.Message}";
                 return response;
             }
         }

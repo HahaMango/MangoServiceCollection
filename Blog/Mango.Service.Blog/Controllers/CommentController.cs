@@ -21,6 +21,7 @@ using Mango.Core.ControllerAbstractions;
 using Mango.Core.DataStructure;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using Mango.Service.Blog.Abstractions.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/comment/add")]
+        [Authorize]
         public async Task<ApiResult> AddCommentAsync([FromBody]CommentRequest request)
         {
             var userId = default(long?);
@@ -63,6 +65,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize]
         public async Task<ApiResult> AddReplyCommentAsync([FromBody]CommentReplyRequest request)
         {
             var userId = default(long?);
@@ -83,6 +86,17 @@ namespace Mango.Service.Blog.Controllers
         public async Task<ApiResult<PageList<CommentPageResponse>>> QueryCommentPageAsync([FromBody]CommentPageRequest request)
         {
             return await _commentService.QueryCommentPageAsync(request, null);
+        }
+
+        /// <summary>
+        /// 查询文章子评论分页
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("api/comment/page")]
+        public async Task<ApiResult<PageList<CommentSubPageResponse>>> QuerySubCommentPageAsync([FromBody]SubCommentPageRequest request)
+        {
+            return await _commentService.QuerySubCommentPageAsync(request, null);
         }
     }
 }

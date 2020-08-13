@@ -111,7 +111,10 @@ namespace Mango.Service.ConfigCenter
                     response.Message = $"{currentIP} 该IP无访问权限";
                     await httpContext.Response.WriteAsync(response.ToJson());
                 }
-                await next.Invoke();
+                if (!httpContext.Response.HasStarted)
+                {
+                    await next.Invoke();
+                }
             });
 
             app.UseEndpoints(endpoints =>

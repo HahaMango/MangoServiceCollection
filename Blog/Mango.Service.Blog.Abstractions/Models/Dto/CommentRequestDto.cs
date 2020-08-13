@@ -102,8 +102,23 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// <summary>
         /// 文章Id
         /// </summary>
-        public long articleId { get; set; }
+        public long ArticleId { get; set; }
     }
 
+    #endregion
+
+    #region 查询子评论分页请求类
+    public class SubCommentPageRequest
+    {
+        /// <summary>
+        /// 分页参数
+        /// </summary>
+        public PageParm PageParm { get; set; }
+
+        /// <summary>
+        /// 评论ID
+        /// </summary>
+        public long CommentId { get; set; }
+    }
     #endregion
 }

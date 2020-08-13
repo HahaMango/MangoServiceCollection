@@ -26,7 +26,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     {
     }
 
-    #region 文章评论分页相应类
+    #region 文章评论分页响应类
 
     public class CommentPageResponse
     {
@@ -57,7 +57,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// <summary>
         /// 回复的评论
         /// </summary>
-        public List<CommentSubPageResponse> ReplyComments { get; set; }
+        public CommentSubPageResponse FirstReplyComment { get; set; }
 
         /// <summary>
         /// 评论点赞数
@@ -92,9 +92,14 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         public long? UserId { get; set; }
 
         /// <summary>
-        /// 子评论用户Id
+        /// 子评论回复用户Id
         /// </summary>
         public long? SubReplyUserId { get; set; }
+
+        /// <summary>
+        /// 子评论回复的评论Id
+        /// </summary>
+        public long? SubReplyCommentId { get; set; }
 
         /// <summary>
         /// 评论用户Id
