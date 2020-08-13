@@ -34,8 +34,8 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     /// </summary>
     public class ArticlePageListResponse
     {
-        [JsonIgnore]
-        public long Id { get; set; }
+        //[JsonIgnore]
+        public string Id { get; set; }
 
         /// <summary>
         /// 文章标题
@@ -84,6 +84,11 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
 
     public class ArticleDetailResponse
     {
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public string Id { get; set; }
+
         /// <summary>
         /// 文章标题
         /// </summary>

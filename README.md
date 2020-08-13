@@ -27,3 +27,7 @@
 ## Mango.Service.ConfigCenter
 
 提供全局配置和单独模块配置，IP白名单。拦截在IP白名单外的地址访问。
+
+## Mango.Service.Image
+
+***计划中，第一版提供功能图片的增删查改，快速缩略图。***

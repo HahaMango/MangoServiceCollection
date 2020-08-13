@@ -1,4 +1,5 @@
 using Mango.Core.Cache.Extension;
+using Mango.Core.Converter;
 using Mango.Core.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Service.Blog.Abstractions.Repositories;
@@ -8,6 +9,7 @@ using Mango.Service.Blog.Repositories;
 using Mango.Service.Blog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +29,16 @@ namespace Mango.Service.Blog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o=>
+                {
+                    o.JsonSerializerOptions.Converters.Add(new IntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableIntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new LongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableLongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
+                });
 
             #region  ⁄»®≈‰÷√
 
@@ -92,6 +103,11 @@ namespace Mango.Service.Blog
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

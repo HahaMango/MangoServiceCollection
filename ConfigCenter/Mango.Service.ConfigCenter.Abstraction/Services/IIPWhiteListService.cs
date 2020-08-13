@@ -34,5 +34,12 @@ namespace Mango.Service.ConfigCenter.Abstraction.Services
         /// </summary>
         /// <returns></returns>
         Task<ApiResult<List<string>>> QueryVaildIPList();
+
+        /// <summary>
+        /// 指定IP是否匹配
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        Task<ApiResult> IsMatchAsync(string ip);
     }
 }

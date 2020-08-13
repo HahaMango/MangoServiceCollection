@@ -56,9 +56,29 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
         public int IsReply { get; set; }
 
         /// <summary>
+        /// 是否子评论回复 0：子评论 1：子评论回复
+        /// </summary>
+        public int IsSubReply { get; set; }
+
+        /// <summary>
+        /// 回复的子评论Id
+        /// </summary>
+        public long? ReplySubCommentId { get; set; }
+
+        /// <summary>
+        /// 回复的子评论用户Id
+        /// </summary>
+        public long? ReplySubUserId { get; set; }
+
+        /// <summary>
+        /// 回复的子评论用户名
+        /// </summary>
+        public string ReplySubUserName { get; set; }
+
+        /// <summary>
         /// 回复的评论Id
         /// </summary>
-        public int? ReplyCommentId { get; set; }
+        public long? ReplyCommentId { get; set; }
 
         /// <summary>
         /// 状态 0：删除 1：正常

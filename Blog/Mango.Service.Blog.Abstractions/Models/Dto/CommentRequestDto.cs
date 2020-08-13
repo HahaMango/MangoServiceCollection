@@ -38,7 +38,28 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         public long ArticleId { get; set; }
 
         /// <summary>
-        /// 评论显示用户名
+        /// 评论显示用户名（匿名用户需要传）
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 评论内容
+        /// </summary>
+        public string Content { get; set; }
+    }
+
+    #endregion
+
+    #region 回复评论请求类
+    public class CommentReplyRequest
+    {
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public long ArticleId { get; set; }
+
+        /// <summary>
+        /// 评论显示用户名（匿名用户需要传）
         /// </summary>
         public string UserName { get; set; }
 
@@ -48,16 +69,25 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         public string Content { get; set; }
 
         /// <summary>
-        /// 是否回复
-        /// </summary>
-        public int IsReply { get; set; }
-
-        /// <summary>
         /// 回复的评论Id
         /// </summary>
-        public int? ReplyCommentId { get; set; }
-    }
+        public long ReplyCommentId { get; set; }
 
+        /// <summary>
+        /// 回复的子评论Id（回复子评论时要传）
+        /// </summary>
+        public long? ReplySubCommentId { get; set; }
+
+        /// <summary>
+        /// 回复的子评论用户Id（回复子评论时要传）
+        /// </summary>
+        public long? ReplySubUserId { get; set; }
+
+        /// <summary>
+        /// 回复的子评论的用户名（匿名用户时显示此名称）
+        /// </summary>
+        public string ReplySubUserName { get; set; }
+    }
     #endregion
 
     #region 查询文章评论分页请求类
@@ -72,8 +102,23 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// <summary>
         /// 文章Id
         /// </summary>
-        public long articleId { get; set; }
+        public long ArticleId { get; set; }
     }
 
+    #endregion
+
+    #region 查询子评论分页请求类
+    public class SubCommentPageRequest
+    {
+        /// <summary>
+        /// 分页参数
+        /// </summary>
+        public PageParm PageParm { get; set; }
+
+        /// <summary>
+        /// 评论ID
+        /// </summary>
+        public long CommentId { get; set; }
+    }
     #endregion
 }

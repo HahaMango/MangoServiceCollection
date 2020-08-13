@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mango.Core" Version="2.0.9" />
+    <PackageReference Include="Mango.Core" Version="2.0.15" />
     <PackageReference Include="Mango.EntityFramework" Version="2.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />

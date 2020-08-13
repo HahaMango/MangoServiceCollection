@@ -96,22 +96,22 @@ namespace Mango.Service.ConfigCenter
             {
                 var response = new ApiResult();
                 var ipService = httpContext.RequestServices.GetService<IIPWhiteListService>();
-                var list = await ipService.QueryVaildIPList();
                 var currentIP = httpContext.Connection.RemoteIpAddress.ToString();
-                if(list.Code != Core.Enums.Code.Ok)
+                var list = await ipService.IsMatchAsync(currentIP);
+                if (list.Code != Core.Enums.Code.Ok)
                 {
                     response.Code = list.Code;
                     response.Message = list.Message;
-                }
-                if(!list.Data.Any(item => item == currentIP))
-                {
                     httpContext.Response.StatusCode = 401;
                     httpContext.Response.ContentType = "application/json";
                     response.Code = Core.Enums.Code.Unauthorized;
                     response.Message = $"{currentIP} 该IP无访问权限";
                     await httpContext.Response.WriteAsync(response.ToJson());
                 }
-                await next.Invoke();
+                if (!httpContext.Response.HasStarted)
+                {
+                    await next.Invoke();
+                }
             });
 
             app.UseEndpoints(endpoints =>
