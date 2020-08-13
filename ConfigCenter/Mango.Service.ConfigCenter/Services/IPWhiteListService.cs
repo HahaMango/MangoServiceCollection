@@ -58,20 +58,26 @@ namespace Mango.Service.ConfigCenter.Services
             var response = new ApiResult();
             try
             {
-                var ips = await _iPWhiteListRepository.TableNotTracking
-                    .Select(item => item.IP)
-                    .ToListAsync();
-                foreach(var i in ips)
+                var isAccept = await _iPWhiteListRepository.TableNotTracking
+                    .AnyAsync(item => item.IP == ip);
+                if (!isAccept)
                 {
-                    if(i == ip)
+                    if (ip.Contains('.'))
                     {
-                        response.Code = Code.Ok;
-                        response.Message = "匹配成功";
-                        return response;
+                        var ipArray = ip.Split('.');
+                        ip = $"{ipArray[0]}.{ipArray[1]}.{ipArray[2]}";
+                        isAccept = await _iPWhiteListRepository.TableNotTracking
+                            .AnyAsync(item => item.IP.Contains(ip));
+                        if (!isAccept)
+                        {
+                            response.Code = Code.Error;
+                            response.Message = "匹配失败";
+                            return response;
+                        }
                     }
                 }
-                response.Code = Code.Error;
-                response.Message = "匹配失败";
+                response.Code = Code.Ok;
+                response.Message = "匹配成功";
                 return response;
             }
             catch(Exception ex)
