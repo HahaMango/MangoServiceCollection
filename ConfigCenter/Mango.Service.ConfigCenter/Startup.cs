@@ -98,6 +98,7 @@ namespace Mango.Service.ConfigCenter
                 var response = new ApiResult();
                 var ipService = httpContext.RequestServices.GetService<IIPWhiteListService>();
                 var currentIP = httpContext.Connection.RemoteIpAddress.ToString();
+                currentIP = "193.134.12.1";
                 var list = await ipService.IsMatchAsync(currentIP);
                 if (list.Code != Core.Enums.Code.Ok)
                 {
@@ -105,7 +106,7 @@ namespace Mango.Service.ConfigCenter
                     httpContext.Response.ContentType = "application/json; charset=utf-8";
                     response.Code = Core.Enums.Code.Unauthorized;
                     response.Message = $"{currentIP} 该IP无访问权限";
-                    Console.WriteLine(response.ToJsonUtf8());
+                    Console.WriteLine("日志："+response.ToJsonUtf8());
                     await httpContext.Response.WriteAsync(response.ToJsonUtf8());
                 }
                 if (!httpContext.Response.HasStarted)
