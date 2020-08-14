@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Mango.Core.ApiResponse;
 using Mango.Core.Extension;
@@ -106,7 +107,7 @@ namespace Mango.Service.ConfigCenter
                     httpContext.Response.ContentType = "application/json";
                     response.Code = Core.Enums.Code.Unauthorized;
                     response.Message = $"{currentIP} 该IP无访问权限";
-                    await httpContext.Response.WriteAsync(response.ToJson());
+                    await httpContext.Response.WriteAsync(response.ToJson(), Encoding.UTF8);
                 }
                 if (!httpContext.Response.HasStarted)
                 {
