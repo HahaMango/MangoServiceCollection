@@ -104,7 +104,7 @@ namespace Mango.Service.ConfigCenter
                     response.Code = list.Code;
                     response.Message = list.Message;
                     httpContext.Response.StatusCode = 401;
-                    httpContext.Response.ContentType = "application/json";
+                    httpContext.Response.ContentType = "application/json; charset=utf-8";
                     response.Code = Core.Enums.Code.Unauthorized;
                     response.Message = $"{currentIP} 该IP无访问权限";
                     await httpContext.Response.WriteAsync(response.ToJson(), Encoding.UTF8);
