@@ -2,7 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.7-bionic AS base
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
-RUN ENV LANG=C.UTF-8
+RUN ENV LANG C.UTF-8
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
