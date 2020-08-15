@@ -3,12 +3,12 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.7-bionic AS base
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 # 如果安装 language-pack-zh-hans 失败，那么需要更新下系统。
-#RUN apt-get update & apt-get upgrade。
+RUN sudo apt-get update & sudo apt-get upgrade。
 # 安装字符集
-#RUN apt-get install -y language-pack-zh-hans;
+RUN sudo apt-get install -y language-pack-zh-hans;
 # 添加中文支持
 # zh_CN.UTF-8 等于 zh_CN.utf8
-#RUN locale-gen zh_CN.UTF-8;
+RUN locale-gen zh_CN.UTF-8;
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
