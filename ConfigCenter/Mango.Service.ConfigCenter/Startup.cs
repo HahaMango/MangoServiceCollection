@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,29 +40,29 @@ namespace Mango.Service.ConfigCenter
             services.AddControllers();
             services.AddAutoMapper();
 
-            #region Ìí¼ÓÊı¾İ¿â
+            #region æ·»åŠ æ•°æ®åº“
             services.AddMangoDbContext<ConfigCenterDbContext, ConfigCenterOfWork>(Configuration["MysqlConnection"]);
             #endregion
 
-            #region Ìí¼Ó²Ö´¢
+            #region æ·»åŠ ä»“å‚¨
             services.AddScoped<IGlobalConfigRepository, GlobalConfigRepository>();
             services.AddScoped<IModuleConfigRepository, ModuleConfigRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IIPWhiteListRepository, IPWhiteListRepository>();
             #endregion
 
-            #region Ìí¼Ó·şÎñ
+            #region æ·»åŠ æœåŠ¡
             services.AddScoped<IGlobalConfigService, GlobalConfigService>();
             services.AddScoped<IModuleConfigService, ModuleConfigService>();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddScoped<IIPWhiteListService, IPWhiteListService>();
             #endregion
 
-            #region ÆäËû×é¼ş×¢Èë
+            #region å…¶ä»–ç»„ä»¶æ³¨å…¥
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
 
-            #region ¿çÓòÅäÖÃ
+            #region è·¨åŸŸé…ç½®
             services.AddCors(config =>
             {
                 config.AddPolicy("all", p =>
@@ -104,9 +104,9 @@ namespace Mango.Service.ConfigCenter
                     httpContext.Response.StatusCode = 401;
                     httpContext.Response.ContentType = "application/json; charset=utf-8";
                     response.Code = Core.Enums.Code.Unauthorized;
-                    response.Message = $"{currentIP} ¸ÃIPÎŞ·ÃÎÊÈ¨ÏŞ";
+                    response.Message = $"{currentIP} è¯¥IPæ— è®¿é—®æƒé™";
                     Console.OutputEncoding = Encoding.UTF8;
-                    Console.WriteLine("ÈÕÖ¾£º"+response.ToJsonUtf8());
+                    Console.WriteLine("æ—¥å¿—ï¼š"+response.ToJsonUtf8());
                     var stream = new StreamWriter(httpContext.Response.Body, Encoding.UTF8);
                     await stream.WriteAsync(response.ToJsonUtf8());
                     await stream.FlushAsync();
