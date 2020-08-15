@@ -1,13 +1,13 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.7-bionic AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:latest AS base
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
-RUN ENV LANG C.UTF-8
+ENV LANG C.UTF-8
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.401-bionic AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:latest AS build
 WORKDIR /src
 COPY ["Mango.Service.ConfigCenter/Mango.Service.ConfigCenter.csproj", "Mango.Service.ConfigCenter/"]
 COPY ["Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "Mango.Service.ConfigCenter.Abstraction/"]
