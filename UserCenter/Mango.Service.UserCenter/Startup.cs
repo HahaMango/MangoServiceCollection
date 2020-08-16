@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mango.Core.ApiResponse;
 using Mango.Core.Authentication.Extension;
+using Mango.Core.Converter;
 using Mango.Core.Extension;
 using Mango.Core.HttpService;
 using Mango.Core.Serialization.Extension;
@@ -73,7 +74,16 @@ namespace Mango.Service.UserCenter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o =>
+                {
+                    o.JsonSerializerOptions.Converters.Add(new IntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableIntConverter());
+                    o.JsonSerializerOptions.Converters.Add(new LongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableLongConverter());
+                    o.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                    o.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
+                });
 
             #region øÁ”Ú≈‰÷√
 

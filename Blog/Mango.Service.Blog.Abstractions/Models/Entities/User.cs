@@ -27,7 +27,7 @@ namespace Mango.Service.Blog.Abstractions.Models.Entities
     /// <summary>
     /// 用户表
     /// </summary>
-    [Table("user")]
+    [Table("blog_user")]
     public class User:SnowFlakeEntity
     {
         /// <summary>

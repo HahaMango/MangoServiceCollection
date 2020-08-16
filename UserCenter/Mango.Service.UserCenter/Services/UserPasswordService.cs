@@ -149,7 +149,8 @@ namespace Mango.Service.UserCenter.Services
             var userPassword = await _userPasswordRepository.TableNotTracking
                 .FirstOrDefaultAsync(item => item.UserId == userId && item.Status == 1);
 
-            if (PasswordToHash(password) != userPassword.PasswordHash)
+            var s = PasswordToHash(password);
+            if (s != userPassword.PasswordHash)
                 return false;
             return true;
         }

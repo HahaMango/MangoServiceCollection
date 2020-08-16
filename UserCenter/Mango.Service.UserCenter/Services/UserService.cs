@@ -187,6 +187,7 @@ namespace Mango.Service.UserCenter.Services
 
                 response.Code = Code.Ok;
                 response.Message = "登陆成功";
+                response.Data = token;
                 return response;
             }
             catch(Exception ex)
@@ -258,7 +259,8 @@ namespace Mango.Service.UserCenter.Services
                 var user = new User(true)
                 {
                     UserName = request.UserName,
-                    CreateTime = DateTime.Now
+                    CreateTime = DateTime.Now,
+                    Status = 1
                 };
                 var userPassword = new UserPassword(true)
                 {

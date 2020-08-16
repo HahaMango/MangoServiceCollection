@@ -1,18 +1,23 @@
+using Mango.Core.ApiResponse;
+using Mango.Core.Authentication.Extension;
 using Mango.Core.Cache.Extension;
 using Mango.Core.Converter;
 using Mango.Core.Extension;
 using Mango.EntityFramework.Extension;
+using Mango.Infrastructure.Helper;
 using Mango.Service.Blog.Abstractions.Repositories;
 using Mango.Service.Blog.Abstractions.Services;
 using Mango.Service.Blog.Job;
 using Mango.Service.Blog.Repositories;
 using Mango.Service.Blog.Services;
+using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Security.Claims;
 
 namespace Mango.Service.Blog
@@ -22,9 +27,22 @@ namespace Mango.Service.Blog
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var globalConfigRespose = HttpHelper.GetAsync<ApiResult<GlobalConfig>>("http://configcenter.hahamango.cn/api/configcenter/global").Result;
+            if (!globalConfigRespose.IsSuccessStatusCode)
+            {
+                throw new Exception("访问配置中心异常");
+            }
+            if (globalConfigRespose.Data.Code != Core.Enums.Code.Ok)
+            {
+                throw new Exception($"查询全局配置异常,{globalConfigRespose.Data.Message}");
+            }
+            GlobalConfig = globalConfigRespose.Data.Data;
         }
 
         public IConfiguration Configuration { get; }
+
+        public GlobalConfig GlobalConfig { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -42,18 +60,12 @@ namespace Mango.Service.Blog
 
             #region 授权配置
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", config =>
-                 {
-                     config.Authority = Configuration["AuthorityConfig:Server"];
-                     config.RequireHttpsMetadata = false;
-                     config.Audience = Configuration["AuthorityConfig:ApiName"];
-                     config.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                     {
-                         NameClaimType = "name",
-                         RoleClaimType = ClaimTypes.Role
-                     };
-                 });
+            services.AddMangoJwtAuthentication(options =>
+            {
+                options.Key = GlobalConfig.JWTKey;
+                options.Audience = "mango.blog";
+                options.Issuer = "hahamango.cn";
+            });
 
             #endregion
 

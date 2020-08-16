@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ConfigCenter\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj" />
     <ProjectReference Include="..\Mango.Service.Blog.Abstractions\Mango.Service.Blog.Abstractions.csproj" />
   </ItemGroup>
 
