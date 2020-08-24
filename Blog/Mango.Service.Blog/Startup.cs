@@ -48,7 +48,7 @@ namespace Mango.Service.Blog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddJsonOptions(o=>
+                .AddJsonOptions(o =>
                 {
                     o.JsonSerializerOptions.Converters.Add(new IntConverter());
                     o.JsonSerializerOptions.Converters.Add(new NullableIntConverter());
@@ -60,11 +60,10 @@ namespace Mango.Service.Blog
 
             #region ÊÚÈ¨ÅäÖÃ
 
-            services.AddMangoJwtAuthentication(options =>
+            services.AddMangoJwtPolicy(new string[] { "client","admin" }, new string[] { "mango.blog","mango.admin" }, opt =>
             {
-                options.Key = GlobalConfig.JWTKey;
-                options.Audience = "mango.blog";
-                options.Issuer = "hahamango.cn";
+                opt.Key = GlobalConfig.JWTKey;
+                opt.Issuer = "hahamango.cn";
             });
 
             #endregion
