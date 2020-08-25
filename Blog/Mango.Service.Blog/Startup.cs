@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace Mango.Service.Blog
@@ -60,7 +61,13 @@ namespace Mango.Service.Blog
 
             #region ÊÚÈ¨ÅäÖÃ
 
-            services.AddMangoJwtPolicy(new string[] { "client","admin" }, new string[] { "mango.blog","mango.admin" }, opt =>
+            var policyKeyPair = new Dictionary<string, string>
+            {
+                {"client","mango.blog" },
+                {"admin","mango.admin" }
+            };
+
+            services.AddMangoJwtPolicy(policyKeyPair, opt =>
             {
                 opt.Key = GlobalConfig.JWTKey;
                 opt.Issuer = "hahamango.cn";
