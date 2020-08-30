@@ -17,7 +17,7 @@ stages:
   displayName: Build image
   jobs:  
   - job: config_center_build
-    condition: eq('${{service}}', 'configcenter')
+    condition: eq('${{variables.service}}', 'configcenter')
     displayName: ConfigCenterBuild
     pool:
       vmImage: 'ubuntu-latest'
@@ -48,7 +48,7 @@ stages:
           $(tag)
 
   - job: blog_build
-    condition: eq('${{service}}', 'blog')
+    condition: eq('${{variables.service}}', 'blog')
     displayName: BlogBuild
     pool:
       vmImage: 'ubuntu-latest'
