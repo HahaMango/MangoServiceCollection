@@ -39,13 +39,15 @@ namespace Mango.Service.Blog.Controllers
             _articleService = articleService;
         }
 
+        #region 后台接口
+
         /// <summary>
-        /// 添加文章
+        /// 后台添加文章
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [Authorize(Policy = "admin")]
-        [HttpPost("api/article/add")]
+        [HttpPost("api/admin/article/add")]
         public async Task<ApiResult> AddArticleAsync([FromBody]AddArticleRequest request)
         {
             var user = GetUser();
@@ -57,12 +59,69 @@ namespace Mango.Service.Blog.Controllers
         }
 
         /// <summary>
+        /// 后台 查询文章详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "admin")]
+        [HttpPost("api/admin/article/detail")]
+        public async Task<ApiResult<AdminArticleDetailResponse>> QueryAdminArticleDetailAsync(AdminArticleDetailRequest request)
+        {
+            var user = GetUser();
+            if (user == null)
+            {
+                return AuthorizeError<AdminArticleDetailResponse>();
+            }
+
+            return await _articleService.QueryAdminArticleDetailAsync(request);
+        }
+
+        /// <summary>
+        /// 后台 编辑文章详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "admin")]
+        [HttpPost("api/admin/article/edit")]
+        public async Task<ApiResult> AdminEditArticleAsync(AdminEditArticleRequest request)
+        {
+            var user = GetUser();
+            if (user == null)
+            {
+                return AuthorizeError();
+            }
+
+            return await _articleService.AdminEditArticleAsync(request, user.UserId, user.UserName);
+        }
+
+        /// <summary>
+        /// 后台 删除文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "admin")]
+        [HttpPost("api/admin/article/delete")]
+        public async Task<ApiResult> AdminDeleteArticleAsync(AdminDeleteArticleRequest request)
+        {
+            var user = GetUser();
+            if (user == null)
+            {
+                return AuthorizeError();
+            }
+
+            return await _articleService.AdminDeleteArticleAsync(request, user.UserId, user.UserName);
+        }
+
+        #endregion
+
+        #region 前端接口
+
+        /// <summary>
         /// 查询文章分页
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/article/page")]
-        [AllowAnonymous]
         public async Task<ApiResult<PageList<ArticlePageListResponse>>> QueryArticlePageAsync([FromBody]ArticlePageRequest request)
         {
             return await _articleService.QueryArticlePageAsync(request);
@@ -74,7 +133,6 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/article/detail")]
-        [AllowAnonymous]
         public async Task<ApiResult<ArticleDetailResponse>> QueryArticleDetailAsync([FromBody]ArticleDetailRequest request)
         {
             return await _articleService.QueryArticleDetailAsync(request);
@@ -86,7 +144,6 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/article/like")]
-        [AllowAnonymous]
         public async Task<ApiResult> ArticleLikeAsync([FromBody]ArticleLikeRequest request)
         {
             return await _articleService.ArticleLikeAsync(request);
@@ -98,10 +155,11 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/article/incview")]
-        [AllowAnonymous]
         public async Task<ApiResult> ArticleIncViewAsync([FromBody]IncArticleViewRequest request)
         {
             return await _articleService.IncViewAsync(request);
         }
+
+        #endregion
     }
 }

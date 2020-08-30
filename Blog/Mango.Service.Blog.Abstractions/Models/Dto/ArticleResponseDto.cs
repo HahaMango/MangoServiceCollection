@@ -141,4 +141,56 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     }
 
     #endregion
+
+    #region 后台-文章详情响应类
+
+    public class AdminArticleDetailResponse
+    {
+        /// <summary>
+        /// 文章Id
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 文章标题
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 作者Id
+        /// </summary>
+        public long UserId { get; set; }
+
+        /// <summary>
+        /// 作者昵称
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 文章内容
+        /// </summary>
+        public string Content { get; set; }
+
+        /// <summary>
+        /// 文章格式类型 0:MD
+        /// </summary>
+        public int ContentType { get; set; }
+
+        /// <summary>
+        /// 文章分类Id
+        /// </summary>
+        public long CategoryId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 是否置顶
+        /// </summary>
+        public int IsTop { get; set; }
+    }
+
+    #endregion
 }
