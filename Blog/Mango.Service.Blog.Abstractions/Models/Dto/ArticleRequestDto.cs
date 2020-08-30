@@ -142,4 +142,54 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     }
 
     #endregion
+
+    #region 后台-查询文章详情
+    public class AdminArticleDetailRequest
+    {
+        /// <summary>
+        /// 文章ID
+        /// </summary>
+        public long ArticleId { get; set; }
+    }
+    #endregion
+
+    #region 后台-编辑文章
+    public class AdminEditArticleRequest
+    {
+        /// <summary>
+        /// 文章ID
+        /// </summary>
+        public long ArticleId { get; set; }
+        
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 文章描述
+        /// </summary>
+        public string Desc { get; set; }
+
+        /// <summary>
+        /// 是否置顶
+        /// </summary>
+        public int IsTop { get; set; }
+
+        /// <summary>
+        /// 文章内容
+        /// </summary>
+        public string Content { get; set; }
+    }
+    #endregion
+
+    #region 后台-删除
+    public class AdminDeleteArticleRequest
+    {
+        /// <summary>
+        /// 文章ID
+        /// </summary>
+        public long ArticleId { get; set; }
+    }
+    #endregion
 }

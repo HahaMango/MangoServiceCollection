@@ -306,5 +306,139 @@ namespace Mango.Service.Blog.Services
                 return response;
             }
         }
+
+        /// <summary>
+        /// 后台-查询文章详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<AdminArticleDetailResponse>> QueryAdminArticleDetailAsync(AdminArticleDetailRequest request)
+        {
+            var response = new ApiResult<AdminArticleDetailResponse>();
+            try
+            {
+                var article = await _articleRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.Id == request.ArticleId && item.Status == 1);
+                if (article == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "文章不存在或被删除";
+                    return response;
+                }
+                var detail = await _articleDetailRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.ArticleId == request.ArticleId && item.Status == 1);
+
+                var userName = await _userRepository.TableNotTracking
+                    .Where(item => item.Id == article.UserId && item.Status == 1)
+                    .Select(item => item.UserName)
+                    .FirstOrDefaultAsync();
+
+                var articleDetailResponse = article.MapTo<AdminArticleDetailResponse>();
+                articleDetailResponse.UserName = userName;
+                articleDetailResponse.Content = detail.Content;
+                articleDetailResponse.ContentType = detail.ContentType;
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                response.Data = articleDetailResponse;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"查询文章详情异常;method={nameof(QueryAdminArticleDetailAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"查询文章详情异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 后台-编辑文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> AdminEditArticleAsync(AdminEditArticleRequest request,long userId,string userName)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var article = await _articleRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.ArticleId && item.Status == 1 && item.UserId == userId);
+                var detail = await _articleDetailRepository.Table
+                    .FirstOrDefaultAsync(item => item.ArticleId == request.ArticleId && item.Status == 1);
+                if(article == null || detail == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无文章";
+                    return response;
+                }
+
+                article.Title = request.Title;
+                article.Describe = request.Desc;
+                article.IsTop = request.IsTop;
+                detail.Content = request.Content;
+
+                article.UpdateTime = DateTime.Now;
+                article.Operator = userName;
+                detail.UpdateTime = DateTime.Now;
+                detail.Operator = userName;
+
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"编辑文章异常;method={nameof(AdminEditArticleAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"编辑文章异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 后台-删除文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> AdminDeleteArticleAsync(AdminDeleteArticleRequest request,long userId,string userName)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var article = await _articleRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.ArticleId && item.Status == 1 && item.UserId == userId);
+                var detail = await _articleDetailRepository.Table
+                    .FirstOrDefaultAsync(item => item.ArticleId == request.ArticleId && item.Status == 1);
+                if (article == null || detail == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无文章";
+                    return response;
+                }
+
+                article.Status = 0;
+                article.UpdateTime = DateTime.Now;
+                article.Operator = userName;
+                detail.Status = 0;
+                detail.UpdateTime = DateTime.Now;
+                detail.Operator = userName;
+
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"删除文章异常;method={nameof(AdminDeleteArticleAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"删除文章异常：{ex.Message}";
+                return response;
+            }
+        }
     }
 }

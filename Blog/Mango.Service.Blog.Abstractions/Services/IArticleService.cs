@@ -66,5 +66,26 @@ namespace Mango.Service.Blog.Abstractions.Services
         /// <param name="request"></param>
         /// <returns></returns>
         Task<ApiResult> IncViewAsync(IncArticleViewRequest request);
+
+        /// <summary>
+        /// 后台-查询文章详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResult<AdminArticleDetailResponse>> QueryAdminArticleDetailAsync(AdminArticleDetailRequest request);
+
+        /// <summary>
+        /// 后台-编辑文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResult> AdminEditArticleAsync(AdminEditArticleRequest request,long userId, string userName);
+
+        /// <summary>
+        /// 后台-删除文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResult> AdminDeleteArticleAsync(AdminDeleteArticleRequest request, long userId, string userName);
     }
 }
