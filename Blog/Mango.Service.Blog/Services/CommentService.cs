@@ -71,12 +71,19 @@ namespace Mango.Service.Blog.Services
                 var comment = new Comment(true)
                 {
                     ArticleId = request.ArticleId,
-                    UserId = userId,
-                    UserName = request.UserName,
                     Content = request.Content,
                     CreateTime = DateTime.Now,
                     Status = 1
                 };
+                if (userId.HasValue)
+                {
+                    comment.UserId = userId.Value;
+                    comment.UserName = (await _userRepository.TableNotTracking.FirstOrDefaultAsync(item => item.Id == userId.Value))?.UserName;
+                }
+                else
+                {
+                    comment.UserName = request.UserName;
+                }
                 await _commentRepository.InsertAsync(comment);
                 await _efContextWork.SaveChangesAsync();
 
@@ -107,20 +114,29 @@ namespace Mango.Service.Blog.Services
                 var comment = new Comment(true)
                 {
                     ArticleId = request.ArticleId,
-                    UserId = userId,
-                    UserName = request.UserName,
                     Content = request.Content,
                     CreateTime = DateTime.Now,
                     IsReply = 1,
                     ReplyCommentId = request.ReplyCommentId,
                     Status = 1
                 };
+
                 if (request.ReplySubCommentId.HasValue)
                 {
                     comment.IsSubReply = 1;
                     comment.ReplySubCommentId = request.ReplySubCommentId.Value;
                     comment.ReplySubUserId = request.ReplySubUserId;
                     comment.ReplySubUserName = request.ReplySubUserName;
+                }
+
+                if (userId.HasValue)
+                {
+                    comment.UserId = userId.Value;
+                    comment.UserName = (await _userRepository.TableNotTracking.FirstOrDefaultAsync(item => item.Id == userId.Value))?.UserName;
+                }
+                else
+                {
+                    comment.UserName = request.UserName;
                 }
                 await _commentRepository.InsertAsync(comment);
                 await _efContextWork.SaveChangesAsync();
@@ -150,7 +166,7 @@ namespace Mango.Service.Blog.Services
             try
             {
                 var comments = await (from c in _commentRepository.TableNotTracking
-                                      where c.ArticleId == request.ArticleId && c.Status == 1
+                                      where c.ArticleId == request.ArticleId && c.Status == 1 && c.IsReply == 0
                                       orderby c.CreateTime descending
                                       select new CommentPageResponse
                                       {
@@ -160,7 +176,8 @@ namespace Mango.Service.Blog.Services
                                           Content = c.Content,
                                           Like = c.Like,
                                           Reply = c.Reply,
-                                          UserName = c.UserName
+                                          UserName = c.UserName,
+                                          CreateTime = c.CreateTime
                                       }).ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
                 foreach(var c in comments.Data)
@@ -170,16 +187,17 @@ namespace Mango.Service.Blog.Services
                                                orderby rc.CreateTime descending
                                                select new CommentSubPageResponse
                                                {
-                                                   Id = c.Id,
-                                                   ArticleId = c.ArticleId,
-                                                   UserId = c.UserId,
-                                                   Content = c.Content,
-                                                   Like = c.Like,
-                                                   Reply = c.Reply,
-                                                   UserName = c.UserName,
-                                                   CreateTime = c.CreateTime,
+                                                   Id = rc.Id,
+                                                   ArticleId = rc.ArticleId,
+                                                   UserId = rc.UserId,
+                                                   Content = rc.Content,
+                                                   Like = rc.Like,
+                                                   Reply = rc.Reply,
+                                                   UserName = rc.UserName,
+                                                   CreateTime = rc.CreateTime,
                                                    SubReplyUserId = rc.ReplySubUserId,
-                                                   SubReplyUserName = rc.ReplySubUserName
+                                                   SubReplyUserName = rc.ReplySubUserName,
+                                                   SubReplyCommentId = rc.ReplySubCommentId
                                                })
                                                .FirstOrDefaultAsync();
                     c.FirstReplyComment = replyComments;
@@ -211,7 +229,7 @@ namespace Mango.Service.Blog.Services
             try
             {
                 var subComments = await (from c in _commentRepository.TableNotTracking
-                                         where c.Reply == 1 && c.ReplyCommentId == request.CommentId && c.Status == 1
+                                         where c.IsReply == 1 && c.ReplyCommentId == request.CommentId && c.Status == 1
                                          orderby c.CreateTime descending
                                          select new CommentSubPageResponse
                                          {
