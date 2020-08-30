@@ -20,6 +20,7 @@ using Mango.Core.ApiResponse;
 using Mango.Core.ControllerAbstractions;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using Mango.Service.Blog.Abstractions.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace Mango.Service.Blog.Controllers
     /// <summary>
     /// 用户信息controller
     /// </summary>
+    [Authorize(Policy = "client")]
     public class UserController : MangoUserApiController
     {
         private readonly IUserService _userService;

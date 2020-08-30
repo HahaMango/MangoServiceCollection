@@ -86,9 +86,14 @@ namespace Mango.Service.Blog.Services
                     Status = 1,
                     CreateTime = DateTime.Now,
                     Creator = user.UserName,
-                    UserId = userId,
-                    IsDefault = request.IsDefault,
+                    UserId = userId
                 };
+                var hasDefault = await _categoryRepository.TableNotTracking
+                    .AnyAsync(item => item.Status == 1 && item.UserId == userId && item.IsDefault == 1);
+                if (!hasDefault)
+                {
+                    category.IsDefault = 1;
+                }
                 await _categoryRepository.InsertAsync(category);
                 await _efContextWork.SaveChangesAsync();
 

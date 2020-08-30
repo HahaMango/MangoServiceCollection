@@ -30,7 +30,6 @@ namespace Mango.Service.Blog.Controllers
     /// <summary>
     /// 文章Controller
     /// </summary>
-    [Authorize]
     public class ArticleController : MangoUserApiController
     {
         private readonly IArticleService _articleService;
@@ -45,6 +44,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Policy = "admin")]
         [HttpPost("api/article/add")]
         public async Task<ApiResult> AddArticleAsync([FromBody]AddArticleRequest request)
         {
@@ -53,7 +53,7 @@ namespace Mango.Service.Blog.Controllers
             {
                 return AuthorizeError();
             }
-            return await _articleService.AddArticleAsync(request, 1);
+            return await _articleService.AddArticleAsync(request, user.UserId);
         }
 
         /// <summary>

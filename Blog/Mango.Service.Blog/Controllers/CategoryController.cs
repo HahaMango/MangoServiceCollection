@@ -33,7 +33,6 @@ namespace Mango.Service.Blog.Controllers
     /// <summary>
     /// 文章类别controller
     /// </summary>
-    [Authorize]
     public class CategoryController : MangoUserApiController
     {
         private readonly ICategoryService _categoryService;
@@ -49,6 +48,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/category/add")]
+        [Authorize(Policy = "admin")]
         public async Task<ApiResult> AddCategoryAsync([FromBody]AddCategoryRequest request)
         {
             var user = GetUser();
@@ -65,6 +65,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("api/category/page")]
+        [Authorize(Policy = "admin")]
         public async Task<ApiResult<PageList<CategoryPageResponse>>> QueryCategoryPageAsync([FromBody]CategoryPageRequest request)
         {
             var user = GetUser();
