@@ -1,0 +1,26 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:latest AS base
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+ENV LANG C.UTF-8
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/core/sdk:latest AS build
+WORKDIR /src
+COPY ["Blog/Mango.Service.Blog/Mango.Service.Blog.csproj", "Blog/Mango.Service.Blog/"]
+COPY ["Blog/Mango.Service.Blog.Abstractions/Mango.Service.Blog.Abstractions.csproj", "Blog/Mango.Service.Blog.Abstractions/"]
+COPY ["ConfigCenter/Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "ConfigCenter/Mango.Service.ConfigCenter.Abstraction/"]
+RUN dotnet restore "Blog/Mango.Service.Blog/Mango.Service.Blog.csproj"
+COPY . .
+WORKDIR "/src/Blog/Mango.Service.Blog"
+RUN dotnet build "Mango.Service.Blog.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Mango.Service.Blog.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Mango.Service.Blog.dll"]

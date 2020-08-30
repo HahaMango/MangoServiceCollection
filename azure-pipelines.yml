@@ -10,12 +10,14 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  service: blog
 
 stages:
 - stage: Build
   displayName: Build image
   jobs:  
   - job: config_center_build
+    condition: eq('$(service)', 'configcenter')
     displayName: ConfigCenterBuild
     pool:
       vmImage: 'ubuntu-latest'
@@ -41,6 +43,29 @@ stages:
       inputs:
         containerRegistry: 'aliyunDockerHub'
         repository: 'chiva_mg_namespace/configcenter'
+        command: 'push'
+        tags: |
+          $(tag)
+
+  - job: blog_build
+    condition: eq('$(service)', 'blog')
+    displayName: BlogBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/blog'
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/BlogDockerfile'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/blog'
         command: 'push'
         tags: |
           $(tag)
