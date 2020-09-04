@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.UserCenter", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConfigCenter", "ConfigCenter", "{FE01D550-163B-46CF-985F-204675B8016F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.ConfigCenter.Abstraction", "ConfigCenter\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj", "{B926F1D4-056E-452E-962C-561603B57B9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.ConfigCenter.Abstraction", "ConfigCenter\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj", "{B926F1D4-056E-452E-962C-561603B57B9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Service.ConfigCenter", "ConfigCenter\Mango.Service.ConfigCenter\Mango.Service.ConfigCenter.csproj", "{9C8DE485-28AC-4C01-A7B2-06A843C1984F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Service.ConfigCenter", "ConfigCenter\Mango.Service.ConfigCenter\Mango.Service.ConfigCenter.csproj", "{9C8DE485-28AC-4C01-A7B2-06A843C1984F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test\Test.csproj", "{5703EB4A-384D-4342-8659-CB947390E5D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C8DE485-28AC-4C01-A7B2-06A843C1984F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5703EB4A-384D-4342-8659-CB947390E5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5703EB4A-384D-4342-8659-CB947390E5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5703EB4A-384D-4342-8659-CB947390E5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5703EB4A-384D-4342-8659-CB947390E5D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
