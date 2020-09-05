@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -16,6 +17,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Blog\Mango.Service.Blog\Mango.Service.Blog.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Blog\CategoryService\" />
+    <Folder Include="Blog\UserService\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\Blog\AddArticle.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
