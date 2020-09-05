@@ -1,3 +1,21 @@
+/*--------------------------------------------------------------------------
+//
+//  Copyright 2020 Chiva Chen
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+/*--------------------------------------------------------------------------*/
+
 using Mango.Core.Extension;
 using Mango.EntityFramework.Abstractions;
 using Mango.Service.Blog.Abstractions.Models.Entities;
@@ -58,5 +76,36 @@ namespace Test
         /// <param name="dbContext"></param>
         /// <param name="services"></param>
         public abstract void InitMock(BlogDbContext dbContext, IServiceCollection services);
+
+        /// <summary>
+        /// »ñÈ¡mockµÄlogger
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IMock<ILogger<T>> GetMockLogger<T>()
+        {
+            var log = new Mock<ILogger<T>>();
+            log.Setup(x => x.Log(
+                    It.IsAny<LogLevel>(),
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    It.IsAny<Exception>(),
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()))
+                    .Callback(new InvocationAction(invocation =>
+                    {
+                        var logLevel = (LogLevel)invocation.Arguments[0];
+                        var eventId = (EventId)invocation.Arguments[1];
+                        var state = invocation.Arguments[2];
+                        var exception = (Exception?)invocation.Arguments[3];
+                        var formatter = invocation.Arguments[4];
+
+                        var invokeMethod = formatter.GetType().GetMethod("Invoke");
+                        var logMessage = (string?)invokeMethod?.Invoke(formatter, new[] { state, exception });
+
+                        _output.WriteLine(logMessage);
+                    }));
+
+            return log;
+        }
     }
 }
