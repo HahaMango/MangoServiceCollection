@@ -9,18 +9,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:latest AS build
 WORKDIR /src
-COPY ["Blog/Mango.Service.Blog/Mango.Service.Blog.csproj", "Blog/Mango.Service.Blog/"]
-COPY ["Blog/Mango.Service.Blog.Abstractions/Mango.Service.Blog.Abstractions.csproj", "Blog/Mango.Service.Blog.Abstractions/"]
+COPY ["UserCenter/Mango.Service.UserCenter/Mango.Service.UserCenter.csproj", "UserCenter/Mango.Service.UserCenter/"]
+COPY ["UserCenter/Mango.Service.UserCenter.Abstraction/Mango.Service.UserCenter.Abstraction.csproj", "UserCenter/Mango.Service.UserCenter.Abstraction/"]
 COPY ["ConfigCenter/Mango.Service.ConfigCenter.Abstraction/Mango.Service.ConfigCenter.Abstraction.csproj", "ConfigCenter/Mango.Service.ConfigCenter.Abstraction/"]
-RUN dotnet restore "Blog/Mango.Service.Blog/Mango.Service.Blog.csproj"
+RUN dotnet restore "UserCenter/Mango.Service.UserCenter/Mango.Service.UserCenter.csproj"
 COPY . .
-WORKDIR "/src/Blog/Mango.Service.Blog"
-RUN dotnet build "Mango.Service.Blog.csproj" -c Release -o /app/build
+WORKDIR "/src/UserCenter/Mango.Service.UserCenter"
+RUN dotnet build "Mango.Service.UserCenter.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Mango.Service.Blog.csproj" -c Release -o /app/publish
+RUN dotnet publish "Mango.Service.UserCenter.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Mango.Service.Blog.dll"]
+ENTRYPOINT ["dotnet", "Mango.Service.UserCenter.dll"]
