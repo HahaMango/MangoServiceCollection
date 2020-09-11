@@ -1,22 +1,4 @@
-﻿/*--------------------------------------------------------------------------
-//
-//  Copyright 2020 Chiva Chen
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-//
-/*--------------------------------------------------------------------------*/
-
-using Mango.Core.Enums;
+﻿using Mango.Core.Test;
 using Mango.EntityFramework;
 using Mango.EntityFramework.Abstractions;
 using Mango.Service.Blog.Abstractions.Models.Dto;
@@ -24,10 +6,7 @@ using Mango.Service.Blog.Abstractions.Models.Entities;
 using Mango.Service.Blog.Abstractions.Repositories;
 using Mango.Service.Blog.Abstractions.Services;
 using Mango.Service.Blog.Repositories;
-using Mango.Service.Blog.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -36,12 +15,9 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Test.Blog.ArticleService
+namespace Mango.Service.Blog.Test.ArticleService
 {
-    /// <summary>
-    /// 博客文章单元测试
-    /// </summary>
-    public class BlogArticleServiceTest : TestBaseStartup
+    public class BlogArticleServiceTest : BaseTestStartup<BlogDbContext>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -49,8 +25,6 @@ namespace Test.Blog.ArticleService
         {
             _serviceProvider = InitTestEnv();
         }
-
-        #region 初始化
 
         public override void InitMock(BlogDbContext dbContext, IServiceCollection services)
         {
@@ -72,7 +46,7 @@ namespace Test.Blog.ArticleService
             userRepository.Insert(user);
             work.SaveChanges();
 
-            var articleService = new Mango.Service.Blog.Services.ArticleService(log.Object, articleRepository, articleDetailRepository, work, userRepository, categoryRepository,articleCache.Object);
+            var articleService = new Services.ArticleService(log.Object, articleRepository, articleDetailRepository, work, userRepository, categoryRepository, articleCache.Object);
 
             services.AddSingleton<IEfContextWork>(work);
             services.AddSingleton<IArticleRepository>(articleRepository);
@@ -82,8 +56,6 @@ namespace Test.Blog.ArticleService
             services.AddSingleton<IArticleService>(articleService);
         }
 
-        #endregion
-
         /// <summary>
         /// 测试添加文章
         /// </summary>
@@ -92,8 +64,8 @@ namespace Test.Blog.ArticleService
         /// <param name="code"></param>
         /// <returns></returns>
         [Theory]
-        [MemberData(nameof(BlogTestData.AddArticleData),MemberType = typeof(BlogTestData))]
-        public async Task AddArticleTest(AddArticleRequest request,string userId,int code)
+        [MemberData(nameof(BlogTestData.AddArticleData), MemberType = typeof(BlogTestData))]
+        public async Task AddArticleTest(AddArticleRequest request, string userId, int code)
         {
             #region 数据准备
             var articleServicee = _serviceProvider.GetRequiredService<IArticleService>();
