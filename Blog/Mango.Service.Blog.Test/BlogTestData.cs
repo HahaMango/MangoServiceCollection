@@ -18,6 +18,7 @@
 
 using Mango.Core.Serialization.Extension;
 using Mango.Service.Blog.Abstractions.Models.Dto;
+using Mango.Service.Blog.Abstractions.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +40,7 @@ namespace Mango.Service.Blog.Test
                     var result = new List<object[]>(datas.Count);
                     foreach (var data in datas)
                     {
-                        result.Add(new object[] { data.Request, data.UserId, data.Code });
+                        result.Add(new object[] { data.Request,data.Category, data.UserId, data.Code });
                     }
                     return result;
                 }
@@ -54,6 +55,11 @@ namespace Mango.Service.Blog.Test
             public AddArticleRequest Request { get; set; }
 
             /// <summary>
+            /// 分类
+            /// </summary>
+            public Category Category { get; set; }
+
+            /// <summary>
             /// 用户ID
             /// </summary>
             public string UserId { get; set; }
@@ -64,6 +70,33 @@ namespace Mango.Service.Blog.Test
             public int Code { get; set; }
         }
 
+        #endregion
+
+        #region 点赞文章
+        public static IEnumerable<object[]> LikeData
+        {
+            get
+            {
+                using (var dataFile = new StreamReader("Data/Like.json"))
+                {
+                    var datajson = dataFile.ReadToEnd();
+                    var datas = datajson.ToObjectAsync<List<LikeJson>>().Result;
+                    var result = new List<object[]>(datas.Count);
+                    foreach (var data in datas)
+                    {
+                        result.Add(new object[] { data.Request, data.Code });
+                    }
+                    return result;
+                }
+            }
+        }
+
+        class LikeJson
+        {
+            public ArticleLikeRequest Request { get; set; }
+
+            public int Code { get; set; }
+        }
         #endregion
     }
 }

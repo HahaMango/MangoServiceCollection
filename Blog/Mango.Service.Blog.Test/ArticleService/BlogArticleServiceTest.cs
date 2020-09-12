@@ -24,6 +24,7 @@ using Mango.Service.Blog.Abstractions.Models.Entities;
 using Mango.Service.Blog.Abstractions.Repositories;
 using Mango.Service.Blog.Abstractions.Services;
 using Mango.Service.Blog.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
@@ -53,6 +54,7 @@ namespace Mango.Service.Blog.Test.ArticleService
         {
             var log = GetMockLogger<Mango.Service.Blog.Services.ArticleService>();
             var articleCache = new Mock<IArticleCacheService>();
+            articleCache.Setup(i => i.EditLikeAsync(null)).Throws(new NullReferenceException());
             var work = new EfContextWork<BlogDbContext>(dbContext);
             var articleRepository = new ArticleRepository(dbContext);
             var articleDetailRepository = new ArticleDetailRepository(dbContext);
@@ -84,19 +86,52 @@ namespace Mango.Service.Blog.Test.ArticleService
         /// 测试添加文章
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="category"></param>
         /// <param name="userId"></param>
         /// <param name="code"></param>
         /// <returns></returns>
         [Theory]
         [MemberData(nameof(BlogTestData.AddArticleData), MemberType = typeof(BlogTestData))]
-        public async Task AddArticleTest(AddArticleRequest request, string userId, int code)
+        public async Task AddArticleTest(AddArticleRequest request, Category category, string userId, int code)
         {
             #region 数据准备
             var articleServicee = _serviceProvider.GetRequiredService<IArticleService>();
+            var articleRepository = _serviceProvider.GetRequiredService<IArticleRepository>();
+            if(category != null)
+            {
+                var categoryRepository = _serviceProvider.GetRequiredService<ICategoryRepository>();
+                var work = _serviceProvider.GetRequiredService<IEfContextWork>();
+                await categoryRepository.InsertAsync(category);
+                await work.SaveChangesAsync();
+            }
             #endregion
 
             #region 执行
             var result = await articleServicee.AddArticleAsync(request, Convert.ToInt64(userId));
+            #endregion
+
+            #region 断言
+            Assert.NotNull(result);
+            Assert.Equal(code, (int)result.Code);
+            if (result.Code == Core.Enums.Code.Ok)
+            {
+                var isExist = await articleRepository.TableNotTracking
+                    .AnyAsync(item => item.Title == request.Title && item.Status == 1);
+                Assert.True(isExist);
+            }
+            #endregion
+        }
+
+        [Theory]
+        [MemberData(nameof(BlogTestData.LikeData), MemberType = typeof(BlogTestData))]
+        public async Task TestArticleLikeAsync(ArticleLikeRequest request,int code)
+        {
+            #region 数据准备
+            var articleService = _serviceProvider.GetRequiredService<IArticleService>();
+            #endregion
+
+            #region 执行
+            var result = await articleService.ArticleLikeAsync(request);
             #endregion
 
             #region 断言

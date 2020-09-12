@@ -114,8 +114,9 @@ namespace Mango.Service.Blog.Services
                             Creator = user.UserName
                         };
                         await _categoryRepository.InsertAsync(newCategory);
-                        defaultCategoryId = newCategory.Id;
+                        category = newCategory;
                     }
+                    defaultCategoryId = category.Id;
                 }
 
                 var article = new Article(true)
@@ -150,7 +151,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"添加文章异常;method={nameof(AddArticleAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"添加文章异常;method={nameof(AddArticleAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"添加文章异常：{ex.Message}";
                 return response;
@@ -175,7 +176,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"点赞文章异常;method={nameof(ArticleLikeAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"点赞文章异常;method={nameof(ArticleLikeAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"点赞文章异常：{ex.Message}";
                 return response;

@@ -40,7 +40,18 @@
       "content": "测试内容4",
       "contentType": 0
     },
+    "category": {
+      "userId": 1264467991328854016,
+      "categoryName": "测试分类4",
+      "status": 1,
+      "isDefault": 1,
+      "creator": "testuser"
+    },
     "userId": "1264467991328854016",
     "code": 200
+  },
+  {
+    "userId": "1264467991328854016",
+    "code": -1
   }
 ]
