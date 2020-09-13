@@ -16,6 +16,7 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using Mango.Core.Serialization.Extension;
 using Mango.Core.Test;
 using Mango.EntityFramework;
 using Mango.EntityFramework.Abstractions;
@@ -122,6 +123,12 @@ namespace Mango.Service.Blog.Test.ArticleService
             #endregion
         }
 
+        /// <summary>
+        /// 测试点赞文章
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [Theory]
         [MemberData(nameof(BlogTestData.LikeData), MemberType = typeof(BlogTestData))]
         public async Task TestArticleLikeAsync(ArticleLikeRequest request,int code)
@@ -137,6 +144,53 @@ namespace Mango.Service.Blog.Test.ArticleService
             #region 断言
             Assert.NotNull(result);
             Assert.Equal(code, (int)result.Code);
+            #endregion
+        }
+
+        /// <summary>
+        /// 测试文章详情
+        /// </summary>
+        /// <param name="article"></param>
+        /// <param name="articleDetail"></param>
+        /// <param name="articleId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [Theory]
+        [MemberData(nameof(BlogTestData.DetailData), MemberType = typeof(BlogTestData))]
+        public async Task TestArticleDetail(Article article, ArticleDetail articleDetail, long articleId ,int code)
+        {
+            #region 数据准备
+            var articleRepository = _serviceProvider.GetRequiredService<IArticleRepository>();
+            var detailRepository = _serviceProvider.GetRequiredService<IArticleDetailRepository>();
+            var work = _serviceProvider.GetRequiredService<IEfContextWork>();
+            await articleRepository.InsertAsync(article);
+            await detailRepository.InsertAsync(articleDetail);
+            await work.SaveChangesAsync();
+
+            var articleService = _serviceProvider.GetRequiredService<IArticleService>();
+            #endregion
+
+            #region 执行
+            var result = await articleService.QueryArticleDetailAsync(new ArticleDetailRequest
+            {
+                ArticleId = articleId
+            });
+            #endregion
+
+            #region 断言
+            Assert.NotNull(result);
+            Assert.Equal(code, (int)result.Code);
+            if(result.Code == Core.Enums.Code.Ok)
+            {
+                var response = result.Data;
+                Assert.Equal(articleId.ToString(), response.Id);
+                Assert.Equal(article.Title, response.Title);
+                Assert.Equal(article.UserId, response.UserId);
+                Assert.Equal(articleDetail.Content, response.Content);
+                Assert.Equal(article.CategoryId, response.CategoryId);
+                Assert.Equal(article.Comment, response.Comment);
+                Assert.Equal(article.CreateTime, response.CreateTime);
+            }
             #endregion
         }
     }

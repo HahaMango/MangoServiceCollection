@@ -69,3 +69,26 @@ stages:
         command: 'push'
         tags: |
           $(tag)
+
+  - job: usercenter_build
+    condition: eq('${{variables.service}}', 'usercenter')
+    displayName: UserCenterBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/usercenter'
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/UserCenterDockerfile'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/usercenter'
+        command: 'push'
+        tags: |
+          $(tag)

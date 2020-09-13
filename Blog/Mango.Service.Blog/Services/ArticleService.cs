@@ -203,7 +203,12 @@ namespace Mango.Service.Blog.Services
                 }
                 var detail = await _articleDetailRepository.TableNotTracking
                     .FirstOrDefaultAsync(item => item.ArticleId == request.ArticleId && item.Status == 1);
-
+                if(detail == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无文章详情";
+                    return response;
+                }
                 var userName = await _userRepository.TableNotTracking
                     .Where(item => item.Id == article.UserId && item.Status == 1)
                     .Select(item => item.UserName)
@@ -223,7 +228,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"查询文章详情异常;method={nameof(QueryArticleDetailAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"查询文章详情异常;method={nameof(QueryArticleDetailAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"查询文章详情异常：{ex.Message}";
                 return response;

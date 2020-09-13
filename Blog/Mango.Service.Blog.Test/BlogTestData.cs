@@ -1,4 +1,4 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿/*--------------------------------------------------------------------------
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -16,6 +16,7 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using Mango.Core.Converter;
 using Mango.Core.Serialization.Extension;
 using Mango.Service.Blog.Abstractions.Models.Dto;
 using Mango.Service.Blog.Abstractions.Models.Entities;
@@ -23,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 
 namespace Mango.Service.Blog.Test
 {
@@ -94,6 +96,37 @@ namespace Mango.Service.Blog.Test
         class LikeJson
         {
             public ArticleLikeRequest Request { get; set; }
+
+            public int Code { get; set; }
+        }
+        #endregion
+
+        #region 查询文章详情
+        public static IEnumerable<object[]> DetailData
+        {
+            get
+            {
+                using (var dataFile = new StreamReader("Data/Detail.json"))
+                {
+                    var datajson = dataFile.ReadToEnd();
+                    var datas = datajson.ToObjectAsync<List<DetailJson>>().Result;
+                    var result = new List<object[]>(datas.Count);
+                    foreach (var data in datas)
+                    {
+                        result.Add(new object[] { data.Article, data.ArticleDetail, data.ArticleId, data.Code });
+                    }
+                    return result;
+                }
+            }
+        }
+
+        class DetailJson
+        {
+            public Article Article { get; set; }
+
+            public ArticleDetail ArticleDetail { get; set; }
+
+            public long ArticleId { get; set; }
 
             public int Code { get; set; }
         }

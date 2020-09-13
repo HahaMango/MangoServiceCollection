@@ -21,6 +21,9 @@
     <None Update="Data\AddArticle.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Detail.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Like.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
