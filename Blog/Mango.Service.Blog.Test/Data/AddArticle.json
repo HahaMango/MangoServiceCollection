@@ -1,0 +1,57 @@
+[
+  {
+    "request": {
+      "title": "测试标题1",
+      "describe": "测试描述1",
+      "categoryId": null,
+      "content": "测试内容1",
+      "contentType": 0
+    },
+    "userId": "1264467991328854016",
+    "code": 200
+  },
+  {
+    "request": {
+      "title": "测试标题2",
+      "describe": "测试描述2",
+      "categoryId": 1264467991328874543,
+      "content": "测试内容2",
+      "contentType": 0
+    },
+    "userId": "1264467991328854016",
+    "code": 200
+  },
+  {
+    "request": {
+      "title": "测试标题3",
+      "describe": "测试描述3",
+      "categoryId": 1264467991328874543,
+      "content": "测试内容3",
+      "contentType": 0
+    },
+    "userId": "1264467991328854111",
+    "code": -1
+  },
+  {
+    "request": {
+      "title": "测试标题4",
+      "describe": "测试描述4",
+      "categoryId": null,
+      "content": "测试内容4",
+      "contentType": 0
+    },
+    "category": {
+      "userId": 1264467991328854016,
+      "categoryName": "测试分类4",
+      "status": 1,
+      "isDefault": 1,
+      "creator": "testuser"
+    },
+    "userId": "1264467991328854016",
+    "code": 200
+  },
+  {
+    "userId": "1264467991328854016",
+    "code": -1
+  }
+]

@@ -26,6 +26,11 @@ namespace Mango.Service.Blog.Abstractions.Repositories
 {
     public class BlogDbContext : BaseDbContext
     {
+        public BlogDbContext()
+        {
+
+        }
+
         public BlogDbContext(DbContextOptions options) : base(options)
         {
 

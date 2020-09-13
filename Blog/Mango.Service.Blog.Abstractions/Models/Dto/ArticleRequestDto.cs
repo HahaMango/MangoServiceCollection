@@ -33,11 +33,6 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
     public class AddArticleRequest
     {
         /// <summary>
-        /// 用户Id （目前只个人使用不需要传参）
-        /// </summary>
-        public long UserId { get; set; }
-
-        /// <summary>
         /// 文章标题
         /// </summary>
         public string Title { get; set; }

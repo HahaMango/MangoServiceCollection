@@ -83,6 +83,15 @@ namespace Mango.Service.Blog.Services
             try
             {
                 var defaultCategoryId = default(long);
+
+                var user = await _userRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.Id == userId && item.Status == 1);
+                if(user == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无用户";
+                    return response;
+                }
                 //有传分类Id直接赋值
                 if (request.CategoryId.HasValue)
                 {
@@ -95,15 +104,20 @@ namespace Mango.Service.Blog.Services
                         .FirstOrDefaultAsync(item => item.UserId == userId && item.Status == 1 && item.IsDefault == 1);
                     if (category == null)
                     {
-                        response.Code = Code.Error;
-                        response.Message = "请新建默认分类";
-                        return response;
+                        var newCategory = new Category(true)
+                        {
+                            IsDefault = 1,
+                            Status = 1,
+                            CategoryName = "默认分类",
+                            CreateTime = DateTime.Now,
+                            UserId = userId,
+                            Creator = user.UserName
+                        };
+                        await _categoryRepository.InsertAsync(newCategory);
+                        category = newCategory;
                     }
                     defaultCategoryId = category.Id;
                 }
-
-                var user = await _userRepository.TableNotTracking
-                    .FirstAsync(item => item.Id == userId && item.Status == 1);
 
                 var article = new Article(true)
                 {
@@ -126,13 +140,10 @@ namespace Mango.Service.Blog.Services
                     Status = 1
                 };
 
-                await _work.BeginTransactionAsync();
-
                 await _articleRepository.InsertAsync(article);
                 await _articleDetailRepository.InsertAsync(detail);
 
                 await _work.SaveChangesAsync();
-                _work.Commit();
 
                 response.Code = Code.Ok;
                 response.Message = "添加成功";
@@ -140,8 +151,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _work.Rollback();
-                _logger.LogError($"添加文章异常;method={nameof(AddArticleAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"添加文章异常;method={nameof(AddArticleAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"添加文章异常：{ex.Message}";
                 return response;
@@ -166,7 +176,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"点赞文章异常;method={nameof(ArticleLikeAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"点赞文章异常;method={nameof(ArticleLikeAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"点赞文章异常：{ex.Message}";
                 return response;
@@ -193,7 +203,12 @@ namespace Mango.Service.Blog.Services
                 }
                 var detail = await _articleDetailRepository.TableNotTracking
                     .FirstOrDefaultAsync(item => item.ArticleId == request.ArticleId && item.Status == 1);
-
+                if(detail == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无文章详情";
+                    return response;
+                }
                 var userName = await _userRepository.TableNotTracking
                     .Where(item => item.Id == article.UserId && item.Status == 1)
                     .Select(item => item.UserName)
@@ -213,7 +228,7 @@ namespace Mango.Service.Blog.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"查询文章详情异常;method={nameof(QueryArticleDetailAsync)};param={request.ToJson()};exception messges={ex.Message}");
+                _logger.LogError($"查询文章详情异常;method={nameof(QueryArticleDetailAsync)};param={request?.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"查询文章详情异常：{ex.Message}";
                 return response;
