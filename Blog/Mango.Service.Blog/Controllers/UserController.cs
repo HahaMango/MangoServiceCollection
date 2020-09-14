@@ -33,6 +33,7 @@ namespace Mango.Service.Blog.Controllers
     /// 用户信息controller
     /// </summary>
     [Authorize(Policy = "client")]
+    [Route("api/blog/")]
     public class UserController : MangoUserApiController
     {
         private readonly IUserService _userService;
@@ -46,7 +47,7 @@ namespace Mango.Service.Blog.Controllers
         /// 通过用户Id 查询用户基本信息
         /// </summary>
         /// <returns></returns>
-        [HttpGet("api/user/info")]
+        [HttpGet("user/info")]
         public async Task<ApiResult<UserInfoResponse>> QueryUserByIdAsync()
         {
             var user = GetUser();

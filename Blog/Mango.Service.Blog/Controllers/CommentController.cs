@@ -33,6 +33,7 @@ namespace Mango.Service.Blog.Controllers
     /// <summary>
     /// 评论controller
     /// </summary>
+    [Route("api/blog/")]
     public class CommentController: MangoUserApiController
     {
         private readonly ICommentService _commentService;
@@ -47,7 +48,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/comment/add")]
+        [HttpPost("comment/add")]
         [Authorize(Policy = "client")]
         public async Task<ApiResult> AddCommentAsync([FromBody]CommentRequest request)
         {
@@ -65,7 +66,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/comment/addreply")]
+        [HttpPost("comment/addreply")]
         [Authorize(Policy = "client")]
         public async Task<ApiResult> AddReplyCommentAsync([FromBody]CommentReplyRequest request)
         {
@@ -83,7 +84,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/comment/page")]
+        [HttpPost("comment/page")]
         public async Task<ApiResult<PageList<CommentPageResponse>>> QueryCommentPageAsync([FromBody]CommentPageRequest request)
         {
             return await _commentService.QueryCommentPageAsync(request, null);
@@ -94,7 +95,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/comment/subpage")]
+        [HttpPost("comment/subpage")]
         public async Task<ApiResult<PageList<CommentSubPageResponse>>> QuerySubCommentPageAsync([FromBody]SubCommentPageRequest request)
         {
             return await _commentService.QuerySubCommentPageAsync(request, null);

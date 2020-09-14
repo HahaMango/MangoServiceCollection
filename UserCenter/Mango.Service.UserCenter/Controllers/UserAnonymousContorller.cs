@@ -32,6 +32,7 @@ namespace Mango.Service.UserCenter.Controllers
     /// <summary>
     /// 用户无认证controller（登陆，注册用）
     /// </summary>
+    [Route("api/usercenter/")]
     public class UserAnonymousContorller : MangoUserApiController
     {
         private readonly IUserService _userService;
@@ -46,12 +47,12 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/usercenter/signup")]
+        [HttpPost("signup")]
         public async Task<ApiResult> SignUpWithUserNamePasswordAsync([FromBody]UserNamePasswordSignUpRequest request)
         {
             //core层加一个模型验证错误响应
             if (!ModelState.IsValid)
-                return Error();
+                return InValidModelsError();
             return await _userService.SignUpWithUserNamePasswordAsync(request);
         }
 
@@ -60,7 +61,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/usercenter/login")]
+        [HttpPost("login")]
         public async Task<ApiResult<string>> LoginWithUserNamePasswordAsync([FromBody]UserNamePasswordLoginRequest request)
         {
             if (!ModelState.IsValid)

@@ -30,6 +30,7 @@ namespace Mango.Service.Blog.Controllers
     /// <summary>
     /// 文章Controller
     /// </summary>
+    [Route("api/blog/")]
     public class ArticleController : MangoUserApiController
     {
         private readonly IArticleService _articleService;
@@ -47,7 +48,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [Authorize(Policy = "admin")]
-        [HttpPost("api/admin/article/add")]
+        [HttpPost("admin/article/add")]
         public async Task<ApiResult> AddArticleAsync([FromBody]AddArticleRequest request)
         {
             var user = GetUser();
@@ -64,7 +65,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [Authorize(Policy = "admin")]
-        [HttpPost("api/admin/article/detail")]
+        [HttpPost("admin/article/detail")]
         public async Task<ApiResult<AdminArticleDetailResponse>> QueryAdminArticleDetailAsync(AdminArticleDetailRequest request)
         {
             var user = GetUser();
@@ -82,7 +83,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [Authorize(Policy = "admin")]
-        [HttpPost("api/admin/article/edit")]
+        [HttpPost("admin/article/edit")]
         public async Task<ApiResult> AdminEditArticleAsync(AdminEditArticleRequest request)
         {
             var user = GetUser();
@@ -100,7 +101,7 @@ namespace Mango.Service.Blog.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [Authorize(Policy = "admin")]
-        [HttpPost("api/admin/article/delete")]
+        [HttpPost("admin/article/delete")]
         public async Task<ApiResult> AdminDeleteArticleAsync(AdminDeleteArticleRequest request)
         {
             var user = GetUser();
@@ -121,7 +122,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/article/page")]
+        [HttpPost("article/page")]
         public async Task<ApiResult<PageList<ArticlePageListResponse>>> QueryArticlePageAsync([FromBody]ArticlePageRequest request)
         {
             return await _articleService.QueryArticlePageAsync(request);
@@ -132,7 +133,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/article/detail")]
+        [HttpPost("article/detail")]
         public async Task<ApiResult<ArticleDetailResponse>> QueryArticleDetailAsync([FromBody]ArticleDetailRequest request)
         {
             return await _articleService.QueryArticleDetailAsync(request);
@@ -143,7 +144,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/article/like")]
+        [HttpPost("article/like")]
         public async Task<ApiResult> ArticleLikeAsync([FromBody]ArticleLikeRequest request)
         {
             return await _articleService.ArticleLikeAsync(request);
@@ -154,7 +155,7 @@ namespace Mango.Service.Blog.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/article/incview")]
+        [HttpPost("article/incview")]
         public async Task<ApiResult> ArticleIncViewAsync([FromBody]IncArticleViewRequest request)
         {
             return await _articleService.IncViewAsync(request);

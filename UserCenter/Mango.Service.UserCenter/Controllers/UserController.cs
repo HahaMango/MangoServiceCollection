@@ -33,6 +33,7 @@ namespace Mango.Service.UserCenter.Controllers
     /// 用户controller
     /// </summary>
     [Authorize]
+    [Route("api/usercenter/")]
     public class UserController : MangoUserApiController
     {
         private readonly IUserService _userService;
@@ -51,7 +52,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/usercenter/edit")]
+        [HttpPost("edit")]
         public async Task<ApiResult> EditUserInfoAsync([FromBody]EditUserInfoRequest request)
         {
             var user = GetUser();
@@ -66,7 +67,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("api/usercenter/changepassword")]
+        [HttpPost("changepassword")]
         public async Task<ApiResult> ChangePasswordAsync([FromBody]ChangePasswordRequest request)
         {
             if (!ModelState.IsValid)
