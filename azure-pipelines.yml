@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  service: usercenter
+  service: blog
 
 stages:
 - stage: Build
