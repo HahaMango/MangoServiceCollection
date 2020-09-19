@@ -91,7 +91,7 @@ namespace Mango.Service.Blog.Services
                 response.Message = "评论成功";
                 return response;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"添加评论异常;method={nameof(ArticleCommentAsync)};param={request.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
@@ -121,12 +121,28 @@ namespace Mango.Service.Blog.Services
                     Status = 1
                 };
 
-                if (request.ReplySubCommentId.HasValue)
+                var replyComment = await _commentRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.Id == request.ReplyCommentId);
+                if (replyComment == null)
                 {
+                    response.Code = Code.Error;
+                    response.Message = "查无回复评论";
+                    return response;
+                }
+                if (replyComment.IsReply == 1)
+                {
+                    //回复评论为子评论
                     comment.IsSubReply = 1;
-                    comment.ReplySubCommentId = request.ReplySubCommentId.Value;
-                    comment.ReplySubUserId = request.ReplySubUserId;
-                    comment.ReplySubUserName = request.ReplySubUserName;
+                    comment.ReplySubCommentId = replyComment.Id;
+                    comment.ReplySubUserId = replyComment.UserId;
+                    comment.ReplySubUserName = replyComment.UserName;
+                    comment.ReplyCommentId = replyComment.ReplyCommentId;
+                }
+                else
+                {
+                    //回复评论为主评论
+                    comment.IsSubReply = 0;
+                    comment.ReplyCommentId = replyComment.Id;
                 }
 
                 if (userId.HasValue)
@@ -180,7 +196,7 @@ namespace Mango.Service.Blog.Services
                                           CreateTime = c.CreateTime
                                       }).ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
-                foreach(var c in comments.Data)
+                foreach (var c in comments.Data)
                 {
                     var replyComments = await (from rc in _commentRepository.TableNotTracking
                                                where rc.IsReply == 1 && rc.ReplyCommentId == c.Id && rc.Status == 1
@@ -208,7 +224,7 @@ namespace Mango.Service.Blog.Services
                 response.Data = comments;
                 return response;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"查询评论分页异常;method={nameof(ArticleCommentAsync)};param={request.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;

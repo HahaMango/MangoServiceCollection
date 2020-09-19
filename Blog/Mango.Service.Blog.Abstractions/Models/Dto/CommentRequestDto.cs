@@ -72,21 +72,6 @@ namespace Mango.Service.Blog.Abstractions.Models.Dto
         /// 回复的评论Id
         /// </summary>
         public long ReplyCommentId { get; set; }
-
-        /// <summary>
-        /// 回复的子评论Id（回复子评论时要传）
-        /// </summary>
-        public long? ReplySubCommentId { get; set; }
-
-        /// <summary>
-        /// 回复的子评论用户Id（回复子评论时要传）
-        /// </summary>
-        public long? ReplySubUserId { get; set; }
-
-        /// <summary>
-        /// 回复的子评论的用户名（匿名用户时显示此名称）
-        /// </summary>
-        public string ReplySubUserName { get; set; }
     }
     #endregion
 

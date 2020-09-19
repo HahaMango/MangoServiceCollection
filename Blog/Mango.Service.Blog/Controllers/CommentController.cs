@@ -50,6 +50,7 @@ namespace Mango.Service.Blog.Controllers
         /// <returns></returns>
         [HttpPost("comment/add")]
         [Authorize(Policy = "client")]
+        [AllowAnonymous]
         public async Task<ApiResult> AddCommentAsync([FromBody]CommentRequest request)
         {
             var userId = default(long?);
@@ -68,6 +69,7 @@ namespace Mango.Service.Blog.Controllers
         /// <returns></returns>
         [HttpPost("comment/addreply")]
         [Authorize(Policy = "client")]
+        [AllowAnonymous]
         public async Task<ApiResult> AddReplyCommentAsync([FromBody]CommentReplyRequest request)
         {
             var userId = default(long?);
