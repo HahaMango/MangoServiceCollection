@@ -34,7 +34,7 @@ namespace Mango.Service.Blog.Abstractions.Services
         /// <param name="request"></param>
         /// <param name="userId">当前评论用户的Id,如果未登陆为0</param>
         /// <returns></returns>
-        Task<ApiResult> ArticleCommentAsync(CommentRequest request, long? userId);
+        Task<ApiResult<CommentPageResponse>> ArticleCommentAsync(CommentRequest request, long? userId);
 
         /// <summary>
         /// 文章回复
@@ -42,7 +42,7 @@ namespace Mango.Service.Blog.Abstractions.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult> ArticleSubCommentAsync(CommentReplyRequest request, long? userId);
+        Task<ApiResult<CommentSubPageResponse>> ArticleSubCommentAsync(CommentReplyRequest request, long? userId);
 
         /// <summary>
         /// 查询文章评论分页列表

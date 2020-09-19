@@ -42,17 +42,20 @@ namespace Mango.Service.Blog.Services
     {
         private readonly ILogger<CommentService> _logger;
         private readonly ICommentRepository _commentRepository;
+        private readonly IArticleRepository _articleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEfContextWork _efContextWork;
 
         public CommentService(
             ILogger<CommentService> logger
             , ICommentRepository commentRepository
+            , IArticleRepository articleRepository
             , IUserRepository userRepository
             , IEfContextWork efContextWork)
         {
             _logger = logger;
             _commentRepository = commentRepository;
+            _articleRepository = articleRepository;
             _userRepository = userRepository;
             _efContextWork = efContextWork;
         }
@@ -63,9 +66,9 @@ namespace Mango.Service.Blog.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ApiResult> ArticleCommentAsync(CommentRequest request, long? userId)
+        public async Task<ApiResult<CommentPageResponse>> ArticleCommentAsync(CommentRequest request, long? userId)
         {
-            var response = new ApiResult();
+            var response = new ApiResult<CommentPageResponse>();
             try
             {
                 var comment = new Comment(true)
@@ -84,11 +87,13 @@ namespace Mango.Service.Blog.Services
                 {
                     comment.UserName = request.UserName;
                 }
+                await IncArticleCommentCountAsync(request.ArticleId);
                 await _commentRepository.InsertAsync(comment);
                 await _efContextWork.SaveChangesAsync();
 
                 response.Code = Code.Ok;
                 response.Message = "评论成功";
+                response.Data = comment.MapTo<CommentPageResponse>();
                 return response;
             }
             catch (Exception ex)
@@ -106,9 +111,9 @@ namespace Mango.Service.Blog.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ApiResult> ArticleSubCommentAsync(CommentReplyRequest request, long? userId)
+        public async Task<ApiResult<CommentSubPageResponse>> ArticleSubCommentAsync(CommentReplyRequest request, long? userId)
         {
-            var response = new ApiResult();
+            var response = new ApiResult<CommentSubPageResponse>();
             try
             {
                 var comment = new Comment(true)
@@ -154,11 +159,28 @@ namespace Mango.Service.Blog.Services
                 {
                     comment.UserName = request.UserName;
                 }
+                await IncArticleCommentCountAsync(request.ArticleId);
                 await _commentRepository.InsertAsync(comment);
                 await _efContextWork.SaveChangesAsync();
 
+                var result = new CommentSubPageResponse
+                {
+                    Id = comment.Id,
+                    ArticleId = comment.ArticleId,
+                    UserId = comment.UserId,
+                    UserName = comment.UserName,
+                    Content = comment.Content,
+                    CreateTime = comment.CreateTime,
+                    SubReplyCommentId = comment.ReplySubCommentId,
+                    SubReplyUserId = comment.ReplySubUserId,
+                    SubReplyUserName = comment.ReplySubUserName,
+                    Like = comment.Like,
+                    Reply = comment.Reply
+                };
+
                 response.Code = Code.Ok;
                 response.Message = "评论成功";
+                response.Data = comment.MapTo<CommentSubPageResponse>();
                 return response;
             }
             catch (Exception ex)
@@ -275,6 +297,29 @@ namespace Mango.Service.Blog.Services
                 response.Message = $"查询子评论分页异常：{ex.Message}";
                 return response;
             }
+        }
+
+        /// <summary>
+        /// 更新文章评论数
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
+        private async Task<ApiResult> IncArticleCommentCountAsync(long articleId)
+        {
+            var response = new ApiResult();
+            var article = await _articleRepository.Table
+                .FirstOrDefaultAsync(item => item.Id == articleId);
+            if(article == null)
+            {
+                response.Code = Code.Error;
+                response.Message = "查无文章";
+                return response;
+            }
+            article.Comment++;
+
+            response.Code = Code.Ok;
+            response.Message = "更新成功";
+            return response;
         }
     }
 }
