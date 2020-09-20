@@ -109,11 +109,16 @@ namespace Mango.Service.UserCenter
                 options.DefalutIssuer = ModuleConfig.ValidIssuer;
             });
 
-            services.AddMangoJwtAuthentication(options =>
+            var policyKeyPair = new Dictionary<string, string>
             {
-                options.Key = GlobalConfig.JWTKey;
-                options.Audience = ModuleConfig.ValidAudience;
-                options.Issuer = ModuleConfig.ValidIssuer;
+                {"client",ModuleConfig.ValidAudience },
+                {"admin","mango.admin" }
+            };
+
+            services.AddMangoJwtPolicy(policyKeyPair, opt =>
+            {
+                opt.Key = GlobalConfig.JWTKey;
+                opt.Issuer = ModuleConfig.ValidIssuer;
             });
 
             #endregion
@@ -126,6 +131,7 @@ namespace Mango.Service.UserCenter
             services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IUserAboutRepository, UserAbountRepository>();
             #endregion
 
             #region ·þÎñ×¢Èë

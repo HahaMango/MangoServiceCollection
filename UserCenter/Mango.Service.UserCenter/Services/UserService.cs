@@ -49,6 +49,7 @@ namespace Mango.Service.UserCenter.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserPasswordRepository _userPasswordRepository;
         private readonly IUserExternalLoginRepository _userExternalLoginRepository;
+        private readonly IUserAboutRepository _userAboutRepository;
         private readonly IEfContextWork _work;
 
         private readonly MangoJwtTokenHandler _mangoJwtTokenHandler;
@@ -64,6 +65,7 @@ namespace Mango.Service.UserCenter.Services
             MangoJwtTokenHandler mangoJwtTokenHandler,
             IUserPasswordService userPasswordService,
             IHttpContextAccessor httpContextAccessor,
+            IUserAboutRepository userAboutRepository,
             IEfContextWork work,
             IUserExternalLoginRepository userExternalLoginRepository)
         {
@@ -72,6 +74,7 @@ namespace Mango.Service.UserCenter.Services
             _userPasswordRepository = userPasswordRepository;
             _mangoJwtTokenHandler = mangoJwtTokenHandler;
             _userPasswordService = userPasswordService;
+            _userAboutRepository = userAboutRepository;
             _httpContextAccessor = httpContextAccessor;
             _work = work;
             _userExternalLoginRepository = userExternalLoginRepository;
@@ -195,6 +198,84 @@ namespace Mango.Service.UserCenter.Services
                 _logger.LogError($"更改密码异常;method={nameof(LoginWithUserNamePasswordAsync)};param={request.ToJson()};exception messges={ex.Message}");
                 response.Code = Code.Error;
                 response.Message = $"更改密码异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 查询用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<QueryUserAboutResponse>> QueryUserAboutAsync(QueryUserAboutRequest request)
+        {
+            var response = new ApiResult<QueryUserAboutResponse>();
+            try
+            {
+                var about = await _userAboutRepository.TableNotTracking
+                    .FirstOrDefaultAsync(item => item.UserId == request.UserId);
+                if(about == null || string.IsNullOrEmpty(about.Desc))
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无信息";
+                    return response;
+                }
+
+                response.Code = Code.Ok;
+                response.Message = "查询成功";
+                response.Data = about.MapTo<QueryUserAboutResponse>();
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"查询用户关于页信息异常;method={nameof(QueryUserAboutAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"查询用户关于页信息异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 更新用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> UpdateUserAboutAsync(UpdateUserAboutRequest request,long userId)
+        {
+            var response = new ApiResult();
+            try
+            {
+                var about = await _userAboutRepository.Table
+                    .FirstOrDefaultAsync(item => item.UserId == userId);
+                if (about == null)
+                {
+                    //不存在则新建
+                    var newAbout = new UserAbout(true)
+                    {
+                        Desc = request.Desc,
+                        CreateTime = DateTime.Now,
+                        UserId = userId,
+                    };
+                    await _userAboutRepository.InsertAsync(newAbout);
+                }
+                else
+                {
+                    //存在则修改
+                    about.Desc = request.Desc;
+                    about.UpdateTime = DateTime.Now;
+                }
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"更新用户关于页信息异常;method={nameof(UpdateUserAboutAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"更新用户关于页信息异常：{ex.Message}";
                 return response;
             }
         }

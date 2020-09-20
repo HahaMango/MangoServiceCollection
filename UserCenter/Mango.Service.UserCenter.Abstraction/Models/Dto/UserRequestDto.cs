@@ -134,4 +134,24 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Dto
         public string PasswordConfirm { get; set; }
     }
     #endregion
+
+    #region 查询用户关于页markdown请求
+    public class QueryUserAboutRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UserId { get; set; }
+    }
+    #endregion
+
+    #region 更新用户关于页markdown请求
+    public class UpdateUserAboutRequest
+    {
+        /// <summary>
+        /// 关于页描述（格式：markdown）
+        /// </summary>
+        public string Desc { get; set; }
+    }
+    #endregion
 }

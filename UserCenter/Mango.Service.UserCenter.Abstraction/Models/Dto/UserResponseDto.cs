@@ -88,4 +88,14 @@ namespace Mango.Service.UserCenter.Abstraction.Models.Dto
         public string ProviderImageUrl { get; set; }
     }
     #endregion
+
+    #region 查询用户关于页markdown响应
+    public class QueryUserAboutResponse
+    {
+        /// <summary>
+        /// 用户关于描述（格式：markdown）
+        /// </summary>
+        public string Desc { get; set; }
+    }
+    #endregion
 }

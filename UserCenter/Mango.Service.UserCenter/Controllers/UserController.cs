@@ -32,7 +32,6 @@ namespace Mango.Service.UserCenter.Controllers
     /// <summary>
     /// 用户controller
     /// </summary>
-    [Authorize]
     [Route("api/usercenter/")]
     public class UserController : MangoUserApiController
     {
@@ -52,6 +51,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Policy = "admin")]
         [HttpPost("edit")]
         public async Task<ApiResult> EditUserInfoAsync([FromBody]EditUserInfoRequest request)
         {
@@ -67,6 +67,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Policy = "admin")]
         [HttpPost("changepassword")]
         public async Task<ApiResult> ChangePasswordAsync([FromBody]ChangePasswordRequest request)
         {
@@ -77,6 +78,33 @@ namespace Mango.Service.UserCenter.Controllers
                 return AuthorizeError();
 
             return await _userPasswordService.ChangePasswordAsync(request, user.UserId);
+        }
+
+        /// <summary>
+        /// 查询用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("queryuserabout")]
+        public async Task<ApiResult<QueryUserAboutResponse>> QueryUserAboutAsync([FromBody]QueryUserAboutRequest request)
+        {
+            return await _userService.QueryUserAboutAsync(request);
+        }
+
+        /// <summary>
+        /// 更新用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "admin")]
+        [HttpPost("updateuserabout")]
+        public async Task<ApiResult> UpdateUserAboutAsync(UpdateUserAboutRequest request)
+        {
+            var user = GetUser();
+            if (user == null)
+                return AuthorizeError();
+
+            return await _userService.UpdateUserAboutAsync(request, user.UserId);
         }
     }
 }

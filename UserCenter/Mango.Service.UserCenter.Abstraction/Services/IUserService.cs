@@ -58,5 +58,20 @@ namespace Mango.Service.UserCenter.Abstraction.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<ApiResult<UserInfoResponse>> QueryUserInfoById(long userId);
+
+        /// <summary>
+        /// 查询用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResult<QueryUserAboutResponse>> QueryUserAboutAsync(QueryUserAboutRequest request);
+
+        /// <summary>
+        /// 更新用户关于页信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApiResult> UpdateUserAboutAsync(UpdateUserAboutRequest request,long userId);
     }
 }
