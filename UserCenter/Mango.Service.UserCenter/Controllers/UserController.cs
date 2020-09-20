@@ -98,7 +98,7 @@ namespace Mango.Service.UserCenter.Controllers
         /// <returns></returns>
         [Authorize(Policy = "admin")]
         [HttpPost("updateuserabout")]
-        public async Task<ApiResult> UpdateUserAboutAsync(UpdateUserAboutRequest request)
+        public async Task<ApiResult> UpdateUserAboutAsync([FromBody]UpdateUserAboutRequest request)
         {
             var user = GetUser();
             if (user == null)
