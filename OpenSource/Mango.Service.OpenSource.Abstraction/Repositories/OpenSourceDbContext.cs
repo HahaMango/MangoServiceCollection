@@ -17,20 +17,28 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mango.Service.Blog.Abstractions.Repositories
+namespace Mango.Service.OpenSource.Abstraction.Repositories
 {
-    /// <summary>
-    /// 博客上下文工作单元
-    /// </summary>
-    public class BlogOfWork : EfContextWork<BlogDbContext>
+    public class OpenSourceDbContext: BaseDbContext
     {
-        public BlogOfWork(BlogDbContext context) : base(context)
+        public OpenSourceDbContext()
         {
 
+        }
+
+        public OpenSourceDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

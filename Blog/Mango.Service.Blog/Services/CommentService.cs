@@ -220,6 +220,8 @@ namespace Mango.Service.Blog.Services
 
                 foreach (var c in comments.Data)
                 {
+                    c.Reply = await _commentRepository.TableNotTracking
+                        .CountAsync(item => item.IsReply == 1 && item.ReplyCommentId == c.Id && item.Status == 1);
                     var replyComments = await (from rc in _commentRepository.TableNotTracking
                                                where rc.IsReply == 1 && rc.ReplyCommentId == c.Id && rc.Status == 1
                                                orderby rc.CreateTime descending
@@ -283,6 +285,7 @@ namespace Mango.Service.Blog.Services
                                              Reply = c.Reply,
                                              CreateTime = c.CreateTime
                                          })
+                                         .Skip(1)
                                          .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
 
                 response.Code = Code.Ok;

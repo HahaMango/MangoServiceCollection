@@ -21,14 +21,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mango.Service.Blog.Abstractions.Repositories
+namespace Mango.Service.OpenSource.Abstraction.Repositories
 {
     /// <summary>
-    /// 博客上下文工作单元
+    /// 开源上下文工作单元
     /// </summary>
-    public class BlogOfWork : EfContextWork<BlogDbContext>
+    public class OpenSourceOfWork : EfContextWork<OpenSourceDbContext>
     {
-        public BlogOfWork(BlogDbContext context) : base(context)
+        public OpenSourceOfWork(OpenSourceDbContext context) : base(context)
         {
 
         }

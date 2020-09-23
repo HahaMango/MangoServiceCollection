@@ -18,74 +18,73 @@
 
 using Mango.Core.ApiResponse;
 using Mango.Core.DataStructure;
-using Mango.Service.Blog.Abstractions.Models.Dto;
+using Mango.Service.OpenSource.Abstraction.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mango.Service.Blog.Abstractions.Services
+namespace Mango.Service.OpenSource.Abstraction.Services
 {
     /// <summary>
-    /// 文章服务接口
+    /// 开源仓库服务接口
     /// </summary>
-    public interface IArticleService
+    public interface IOpenSourceService
     {
+        #region 后台
         /// <summary>
-        /// 添加文章
+        /// 添加开源仓库
         /// </summary>
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult> AddArticleAsync(AddArticleRequest request, long userId);
+        Task<ApiResult> AddOpenSourceProjectAdminAsync(AddOpenSourceProjectAdminRequest request,long userId);
 
         /// <summary>
-        /// 查询文章分页数据
+        /// 编辑开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApiResult> EditOpenSourceProjectAdminAsync(EditOpenSourceProjectAdminRequest request, long userId);
+
+        /// <summary>
+        /// 删除开源仓库
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ApiResult<PageList<ArticlePageListResponse>>> QueryArticlePageAsync(ArticlePageRequest request);
+        Task<ApiResult> DeleteOpenSourceProjectAdminAsync(DeleteOpenSourceProjectAdminRequest request);
 
         /// <summary>
-        /// 查询文章详情
+        /// 查询开源详情
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ApiResult<ArticleDetailResponse>> QueryArticleDetailAsync(ArticleDetailRequest request);
+        Task<ApiResult<QueryOpenSourceProjectAdminResponse>> QueryOpenSourceProjectAdminAsync(QueryOpenSourceProjectAdminRequest request);
 
         /// <summary>
-        /// 文章点赞
+        /// 查询开源项目分页
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ApiResult> ArticleLikeAsync(ArticleLikeRequest request);
+        Task<ApiResult<PageList<QueryOpenSourceProjectAdminResponse>>> QueryOpenSourcePageAdminAsync(QueryOpenSourcePageAdminRequest request);
+        #endregion
 
+        #region web端
         /// <summary>
-        /// 递增阅读数
+        /// 查询开源仓库
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ApiResult> IncViewAsync(IncArticleViewRequest request);
+        Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourceProjectAsync(QueryOpenSourceProjectRequest request);
 
         /// <summary>
-        /// 后台-查询文章详情
+        /// 查询开源项目分页列表
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult<AdminArticleDetailResponse>> QueryAdminArticleDetailAsync(AdminArticleDetailRequest request);
-
-        /// <summary>
-        /// 后台-编辑文章
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> AdminEditArticleAsync(AdminEditArticleRequest request,long userId, string userName);
-
-        /// <summary>
-        /// 后台-删除文章
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<ApiResult> AdminDeleteArticleAsync(AdminDeleteArticleRequest request, long userId, string userName);
+        Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourcePageAsync(QueryOpenSourcePageRequest request,long userId);
+        #endregion
     }
 }

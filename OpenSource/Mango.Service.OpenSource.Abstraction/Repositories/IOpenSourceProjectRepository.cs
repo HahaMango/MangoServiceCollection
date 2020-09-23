@@ -16,21 +16,18 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework;
+using Mango.EntityFramework.Abstractions.Repositories;
+using Mango.Service.OpenSource.Abstraction.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mango.Service.Blog.Abstractions.Repositories
+namespace Mango.Service.OpenSource.Abstraction.Repositories
 {
     /// <summary>
-    /// 博客上下文工作单元
+    /// 开源实体仓储接口
     /// </summary>
-    public class BlogOfWork : EfContextWork<BlogDbContext>
+    public interface IOpenSourceProjectRepository : IEfRepository<OpenSourceDbContext, OpenSourceProject>
     {
-        public BlogOfWork(BlogDbContext context) : base(context)
-        {
-
-        }
     }
 }
