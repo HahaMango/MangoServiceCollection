@@ -133,7 +133,7 @@ namespace Mango.Service.Blog
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IJobService, JobService>();
 
-            //services.AddHostedService<ArticleJobService>();
+            services.AddHostedService<ArticleJobService>();
 
             #endregion
         }

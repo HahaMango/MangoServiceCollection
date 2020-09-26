@@ -10,14 +10,16 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  service: blog
+  configcenterservice: '0'
+  blogservice: '1'
+  usercenterservice: '1'
 
 stages:
 - stage: Build
   displayName: Build image
   jobs:  
   - job: config_center_build
-    condition: eq('${{variables.service}}', 'configcenter')
+    condition: eq('${{variables.configcenterservice}}', '1')
     displayName: ConfigCenterBuild
     pool:
       vmImage: 'ubuntu-latest'
@@ -48,7 +50,7 @@ stages:
           $(tag)
 
   - job: blog_build
-    condition: eq('${{variables.service}}', 'blog')
+    condition: eq('${{variables.blogservice}}', '1')
     displayName: BlogBuild
     pool:
       vmImage: 'ubuntu-latest'
@@ -71,7 +73,7 @@ stages:
           $(tag)
 
   - job: usercenter_build
-    condition: eq('${{variables.service}}', 'usercenter')
+    condition: eq('${{variables.usercenterservice}}', '1')
     displayName: UserCenterBuild
     pool:
       vmImage: 'ubuntu-latest'
