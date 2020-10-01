@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mango.Core.ApiResponse;
 using Mango.Core.Authentication.Extension;
+using Mango.Core.Config;
 using Mango.Core.Converter;
+using Mango.Core.DataStructure;
 using Mango.Core.Extension;
 using Mango.Core.HttpService;
 using Mango.Core.Serialization.Extension;
+using Mango.Core.Srd;
+using Mango.Core.Srd.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Infrastructure.Helper;
-using Mango.Infrastructure.HttpService;
 using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
 using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
 using Mango.Service.UserCenter.Abstraction.Models.Entities;
@@ -36,40 +39,9 @@ namespace Mango.Service.UserCenter
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            var globalConfigRespose = HttpHelper.GetAsync<ApiResult<GlobalConfig>>("http://configcenter.hahamango.cn/api/configcenter/global").Result;
-            if (!globalConfigRespose.IsSuccessStatusCode)
-            {
-                throw new Exception("访问配置中心异常");
-            }
-            if (globalConfigRespose.Data.Code != Core.Enums.Code.Ok)
-            {
-                throw new Exception($"查询全局配置异常,{globalConfigRespose.Data.Message}");
-            }
-            GlobalConfig = globalConfigRespose.Data.Data;
-
-            var configRequest = new QueryModuleConfigRequest
-            {
-                ModuleName = "Mango.UserCenter",
-                ModuleSecret = "mango.usercenter"
-            };
-            var moduleConfigResponse = HttpHelper.PostAsync<ApiResult<ModuleConfigResponse>>("http://configcenter.hahamango.cn/api/configcenter/queryconfig", configRequest.ToJson()).Result;
-            if (!moduleConfigResponse.IsSuccessStatusCode)
-            {
-                throw new Exception("访问配置中心异常");
-            }
-            if (moduleConfigResponse.Data.Code != Core.Enums.Code.Ok)
-            {
-                throw new Exception($"查询模块配置异常，{moduleConfigResponse.Data.Message}");
-            }
-            ModuleConfig = moduleConfigResponse.Data.Data;
         }
 
         public IConfiguration Configuration { get; }
-
-        public GlobalConfig GlobalConfig { get; }
-
-        public ModuleConfigResponse ModuleConfig { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -84,6 +56,18 @@ namespace Mango.Service.UserCenter
                     o.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
                     o.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
                 });
+
+            #region 配置中心
+            var token = Configuration["Consul:Token"];
+            var configKey = Configuration["Service:ConfigKey"];
+            var consulIp = Configuration["Consul:Ip"];
+            var port = Configuration["Consul:Port"];
+
+            var config = new MangoConfig($"http://{consulIp}:{port}", token);
+
+            var moduleConfig = config.GetConfig(configKey).Result;
+            var globalConfig = config.GetConfig("mango/global").Result;
+            #endregion
 
             #region 跨域配置
 
@@ -104,28 +88,28 @@ namespace Mango.Service.UserCenter
 
             services.AddMangoJwtHandler(options =>
             {
-                options.Key = GlobalConfig.JWTKey;
-                options.DefalutAudience = ModuleConfig.ValidAudience;
-                options.DefalutIssuer = ModuleConfig.ValidIssuer;
+                options.Key = globalConfig.JwtKey;
+                options.DefalutAudience = moduleConfig.ValidAudience;
+                options.DefalutIssuer = moduleConfig.ValidIssuer;
             });
 
             var policyKeyPair = new Dictionary<string, string>
             {
-                {"client",ModuleConfig.ValidAudience },
+                {"client",moduleConfig.ValidAudience },
                 {"admin","mango.admin" }
             };
 
             services.AddMangoJwtPolicy(policyKeyPair, opt =>
             {
-                opt.Key = GlobalConfig.JWTKey;
-                opt.Issuer = ModuleConfig.ValidIssuer;
+                opt.Key = moduleConfig.JwtKey;
+                opt.Issuer = moduleConfig.ValidIssuer;
             });
 
             #endregion
 
             #region 仓储注入
             //对于mysql和redis连接以后考虑放在配置中心
-            services.AddMangoDbContext<UserCenterDbContext, UserCenterOfWork>(ModuleConfig.MysqlConnectionString);
+            services.AddMangoDbContext<UserCenterDbContext, UserCenterOfWork>(moduleConfig.DbConnectString);
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserExternalLoginRepository, UserExternalLoginRepository>();
             services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
@@ -146,7 +130,7 @@ namespace Mango.Service.UserCenter
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -167,6 +151,33 @@ namespace Mango.Service.UserCenter
             {
                 endpoints.MapControllers();
             });
+
+            #region 服务注册
+            if (env.IsProduction())
+            {
+                var consulIp = Configuration["Consul:Ip"];
+                var port = Configuration["Consul:Port"];
+                var serviceName = Configuration["Service:Name"];
+                var servicePort = Configuration["Service:Port"];
+                var healthCheck = Configuration["Service:HealthCheck"];
+                var currentIp = NetworkHelper.FirstInternalLocalAddress().ToString();
+
+                var rc = new ConsulRegistration($"http://{consulIp}:{port}")
+                {
+                    HealthCheckUrl = $"http://{currentIp}:{servicePort}/{healthCheck}"
+                };
+
+                var se = new MangoService
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    IP = currentIp,
+                    Port = servicePort,
+                    ServiceName = serviceName
+                };
+                app.RegisterConsulService(rc, se, lifetime);
+            }
+            #endregion
+
         }
     }
 }
