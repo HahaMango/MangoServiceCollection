@@ -211,7 +211,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
                 var serviceName = Configuration["Service:Name"];
                 var servicePort = Configuration["Service:Port"];
                 var healthCheck = Configuration["Service:HealthCheck"];
-                var currentIp = NetworkHelper.FirstInternalLocalAddress().ToString();
+                var currentIp = Configuration["Service:Ip"];
 
                 var rc = new ConsulRegistration($"http://{consulIp}:{consulPort}", token)
                 {

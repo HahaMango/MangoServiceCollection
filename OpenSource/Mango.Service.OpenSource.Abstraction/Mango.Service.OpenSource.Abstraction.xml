@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mango.Service.OpenSource.Abstraction</name>
+    </assembly>
+    <members>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.RepositoryUrl">
+            <summary>
+            开源仓库地址
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.Image">
+            <summary>
+            开源项目图片
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.README">
+            <summary>
+            开源项目README文本
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest.Platform">
+            <summary>
+            开源平台
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.Id">
+            <summary>
+            开源仓库id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.RepositoryUrl">
+            <summary>
+            开源仓库地址
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.Image">
+            <summary>
+            开源项目图片
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.README">
+            <summary>
+            开源项目README文本
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest.Platform">
+            <summary>
+            开源平台
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.DeleteOpenSourceProjectAdminRequest.Id">
+            <summary>
+            开源id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminRequest.Id">
+            <summary>
+            开源id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourcePageAdminRequest.PageParm">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectRequest.Id">
+            <summary>
+            开源id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourcePageRequest.PageParm">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.Id">
+            <summary>
+            开源id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.RepositoryUrl">
+            <summary>
+            开源仓库地址
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.Image">
+            <summary>
+            开源项目图片
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.README">
+            <summary>
+            开源项目README文本
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.Platform">
+            <summary>
+            开源平台
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminResponse.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.Id">
+            <summary>
+            开源id
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.RepositoryUrl">
+            <summary>
+            开源仓库地址
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.Image">
+            <summary>
+            开源项目图片
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.README">
+            <summary>
+            开源项目README文本
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.Platform">
+            <summary>
+            开源平台
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectResponse.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.RepositoryUrl">
+            <summary>
+            开源仓库地址
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.Image">
+            <summary>
+            开源项目图片
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.README">
+            <summary>
+            开源项目README文本
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.Platform">
+            <summary>
+            开源平台
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.#ctor">
+            <summary>
+            初始化
+            </summary>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Models.Entities.OpenSourceProject.#ctor(System.Boolean)">
+            <summary>
+            初始化ID
+            </summary>
+            <param name="set"></param>
+        </member>
+        <member name="T:Mango.Service.OpenSource.Abstraction.Repositories.IOpenSourceProjectRepository">
+            <summary>
+            开源实体仓储接口
+            </summary>
+        </member>
+        <member name="T:Mango.Service.OpenSource.Abstraction.Repositories.OpenSourceOfWork">
+            <summary>
+            开源上下文工作单元
+            </summary>
+        </member>
+        <member name="T:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService">
+            <summary>
+            开源仓库服务接口
+            </summary>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.AddOpenSourceProjectAdminAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.AddOpenSourceProjectAdminRequest,System.Int64)">
+            <summary>
+            添加开源仓库
+            </summary>
+            <param name="request"></param>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.EditOpenSourceProjectAdminAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.EditOpenSourceProjectAdminRequest,System.Int64)">
+            <summary>
+            编辑开源仓库
+            </summary>
+            <param name="request"></param>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.DeleteOpenSourceProjectAdminAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.DeleteOpenSourceProjectAdminRequest)">
+            <summary>
+            删除开源仓库
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.QueryOpenSourceProjectAdminAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectAdminRequest)">
+            <summary>
+            查询开源详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.QueryOpenSourcePageAdminAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourcePageAdminRequest)">
+            <summary>
+            查询开源项目分页
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.QueryOpenSourceProjectAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourceProjectRequest)">
+            <summary>
+            查询开源仓库
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mango.Service.OpenSource.Abstraction.Services.IOpenSourceService.QueryOpenSourcePageAsync(Mango.Service.OpenSource.Abstraction.Models.Dto.QueryOpenSourcePageRequest,System.Int64)">
+            <summary>
+            查询开源项目分页列表
+            </summary>
+            <param name="request"></param>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
