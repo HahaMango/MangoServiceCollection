@@ -11,8 +11,8 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   configcenterservice: '0'
-  blogservice: '0'
-  usercenterservice: '1'
+  blogservice: '1'
+  usercenterservice: '0'
 
 stages:
 - stage: Build
