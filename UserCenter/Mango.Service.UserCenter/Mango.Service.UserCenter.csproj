@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ConfigCenter\Mango.Service.ConfigCenter.Abstraction\Mango.Service.ConfigCenter.Abstraction.csproj" />
     <ProjectReference Include="..\Mango.Service.UserCenter.Abstraction\Mango.Service.UserCenter.Abstraction.csproj" />
   </ItemGroup>
 

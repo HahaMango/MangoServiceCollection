@@ -1,22 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mango.Core.ApiResponse;
 using Mango.Core.Authentication.Extension;
 using Mango.Core.Config;
 using Mango.Core.Converter;
 using Mango.Core.DataStructure;
 using Mango.Core.Extension;
-using Mango.Core.HttpService;
-using Mango.Core.Serialization.Extension;
 using Mango.Core.Srd;
 using Mango.Core.Srd.Extension;
 using Mango.EntityFramework.Extension;
-using Mango.Infrastructure.Helper;
-using Mango.Service.ConfigCenter.Abstraction.Models.Dto;
-using Mango.Service.ConfigCenter.Abstraction.Models.Entities;
-using Mango.Service.UserCenter.Abstraction.Models.Entities;
 using Mango.Service.UserCenter.Abstraction.Repositories;
 using Mango.Service.UserCenter.Abstraction.Services;
 using Mango.Service.UserCenter.Repositories;
@@ -25,12 +14,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace Mango.Service.UserCenter
 {
