@@ -43,6 +43,11 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Entities
         public string Platform { get; set; }
 
         /// <summary>
+        /// 状态 0：删除 1：正常
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
@@ -50,7 +55,7 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Entities
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime UpdateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         /// <summary>
         /// 初始化

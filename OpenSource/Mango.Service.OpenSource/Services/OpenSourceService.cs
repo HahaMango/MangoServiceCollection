@@ -18,8 +18,16 @@
 
 using Mango.Core.ApiResponse;
 using Mango.Core.DataStructure;
+using Mango.Core.Enums;
+using Mango.Core.Extension;
+using Mango.Core.Serialization.Extension;
+using Mango.EntityFramework.Abstractions;
 using Mango.Service.OpenSource.Abstraction.Models.Dto;
+using Mango.Service.OpenSource.Abstraction.Models.Entities;
+using Mango.Service.OpenSource.Abstraction.Repositories;
 using Mango.Service.OpenSource.Abstraction.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,39 +40,253 @@ namespace Mango.Service.OpenSource.Services
     /// </summary>
     public class OpenSourceService : IOpenSourceService
     {
-        public Task<ApiResult> AddOpenSourceProjectAdminAsync(AddOpenSourceProjectAdminRequest request, long userId)
+        private readonly ILogger<OpenSourceService> _logger;
+
+        private readonly IOpenSourceProjectRepository _openSourceProjectRepository;
+        private readonly IEfContextWork _work;
+
+        public OpenSourceService(
+            ILogger<OpenSourceService> logger,
+            IOpenSourceProjectRepository openSourceProjectRepository,
+            IEfContextWork efContextWork)
         {
-            throw new NotImplementedException();
+            _logger = logger;
+            _openSourceProjectRepository = openSourceProjectRepository;
+            _work = efContextWork;
         }
 
-        public Task<ApiResult> DeleteOpenSourceProjectAdminAsync(DeleteOpenSourceProjectAdminRequest request)
+        /// <summary>
+        /// 添加开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> AddOpenSourceProjectAdminAsync(AddOpenSourceProjectAdminRequest request, long userId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult();
+            try
+            {
+                var project = request.MapTo<OpenSourceProject>();
+                project.SetId();
+                project.Status = 1;
+                project.CreateTime = DateTime.Now;
+                project.UserId = userId;
+
+                await _openSourceProjectRepository.InsertAsync(project);
+                await _work.SaveChangesAsync();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"添加开源仓库异常;method={nameof(AddOpenSourceProjectAdminAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"添加开源仓库异常：{ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ApiResult> EditOpenSourceProjectAdminAsync(EditOpenSourceProjectAdminRequest request, long userId)
+        /// <summary>
+        /// 删除开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> DeleteOpenSourceProjectAdminAsync(DeleteOpenSourceProjectAdminRequest request)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult();
+            try
+            {
+                var project = await _openSourceProjectRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.Id && item.Status == 1);
+                if(project == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无开源仓库";
+                    return response;
+                }
+                project.Status = 0;
+                project.UpdateTime = DateTime.Now;
+
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"删除开源仓库异常;method={nameof(DeleteOpenSourceProjectAdminAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"删除开源仓库异常：{ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ApiResult<PageList<QueryOpenSourceProjectAdminResponse>>> QueryOpenSourcePageAdminAsync(QueryOpenSourcePageAdminRequest request)
+        /// <summary>
+        /// 编辑开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult> EditOpenSourceProjectAdminAsync(EditOpenSourceProjectAdminRequest request, long userId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult();
+            try
+            {
+                var project = await _openSourceProjectRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.Id && item.Status == 1 && item.UserId == userId);
+                if (project == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无开源仓库";
+                    return response;
+                }
+                project.Title = request.Title;
+                project.Desc = request.Desc;
+                project.RepositoryUrl = request.RepositoryUrl;
+                project.Image = request.Image;
+                project.README = request.README;
+                project.Platform = request.Platform;
+                project.UpdateTime = DateTime.Now;
+
+                await _work.SaveChangesAsync();
+
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"编辑开源仓库异常;method={nameof(EditOpenSourceProjectAdminAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"编辑开源仓库异常：{ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourcePageAsync(QueryOpenSourcePageRequest request, long userId)
+        /// <summary>
+        /// 总后台-查询开源项目分页
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<PageList<QueryOpenSourceProjectAdminResponse>>> QueryOpenSourcePageAdminAsync(QueryOpenSourcePageAdminRequest request)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult<PageList<QueryOpenSourceProjectAdminResponse>>();
+            try
+            {
+                var projects = await (from p in _openSourceProjectRepository.TableNotTracking
+                                      where p.UserId == request.UserId && p.Status == 1
+                                      select p.MapTo<QueryOpenSourceProjectAdminResponse>())
+                                      .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
+
+                response.Data = projects;
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"总后台-查询开源项目分页异常;method={nameof(QueryOpenSourcePageAdminAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"总后台-查询开源项目分页异常：{ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ApiResult<QueryOpenSourceProjectAdminResponse>> QueryOpenSourceProjectAdminAsync(QueryOpenSourceProjectAdminRequest request)
+        /// <summary>
+        /// 查询开源项目分页
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<PageList<QueryOpenSourceProjectResponse>>> QueryOpenSourcePageAsync(QueryOpenSourcePageRequest request, long userId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult<PageList<QueryOpenSourceProjectResponse>>();
+            try
+            {
+                var projects = await(from p in _openSourceProjectRepository.TableNotTracking
+                                     where p.UserId == request.UserId && p.Status == 1
+                                     select p.MapTo<QueryOpenSourceProjectResponse>())
+                                      .ToPageListAsync(request.PageParm.Page, request.PageParm.Size);
+
+                response.Data = projects;
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"查询开源项目分页异常;method={nameof(QueryOpenSourcePageAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"查询开源项目分页异常：{ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourceProjectAsync(QueryOpenSourceProjectRequest request)
+        /// <summary>
+        /// 总后台查询开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<QueryOpenSourceProjectAdminResponse>> QueryOpenSourceProjectAdminAsync(QueryOpenSourceProjectAdminRequest request)
         {
-            throw new NotImplementedException();
+            var response = new ApiResult<QueryOpenSourceProjectAdminResponse>();
+            try
+            {
+                var project = await _openSourceProjectRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.Id && item.Status == 1);
+                if (project == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无开源仓库";
+                    return response;
+                }
+
+                response.Data = project.MapTo<QueryOpenSourceProjectAdminResponse>();
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"总后台查询开源仓库异常;method={nameof(QueryOpenSourceProjectAdminAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"总后台查询开源仓库异常：{ex.Message}";
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// 查询开源仓库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourceProjectAsync(QueryOpenSourceProjectRequest request)
+        {
+            var response = new ApiResult<QueryOpenSourceProjectResponse>();
+            try
+            {
+                var project = await _openSourceProjectRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == request.Id && item.Status == 1);
+                if (project == null)
+                {
+                    response.Code = Code.Error;
+                    response.Message = "查无开源仓库";
+                    return response;
+                }
+
+                response.Data = project.MapTo<QueryOpenSourceProjectResponse>();
+                response.Code = Code.Ok;
+                response.Message = "操作成功";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"查询开源仓库异常;method={nameof(QueryOpenSourceProjectAsync)};param={request?.ToJson()};exception messges={ex.Message}");
+                response.Code = Code.Error;
+                response.Message = $"查询开源仓库异常：{ex.Message}";
+                return response;
+            }
         }
     }
 }

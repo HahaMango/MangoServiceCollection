@@ -84,7 +84,7 @@ namespace Mango.Service.OpenSource.Abstraction.Services
         /// <param name="request"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<ApiResult<QueryOpenSourceProjectResponse>> QueryOpenSourcePageAsync(QueryOpenSourcePageRequest request,long userId);
+        Task<ApiResult<PageList<QueryOpenSourceProjectResponse>>> QueryOpenSourcePageAsync(QueryOpenSourcePageRequest request,long userId);
         #endregion
     }
 }

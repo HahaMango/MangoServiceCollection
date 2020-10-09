@@ -69,7 +69,7 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// <summary>
         /// 开源仓库id
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// 标题
@@ -109,7 +109,7 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// <summary>
         /// 开源id
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
     }
     #endregion
 
@@ -119,7 +119,7 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// <summary>
         /// 开源id
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
     }
     #endregion
 
@@ -130,6 +130,11 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// 分页参数
         /// </summary>
         public PageParm PageParm { get; set; }
+
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public long UserId { get; set; }
     }
     #endregion
 
@@ -140,7 +145,7 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// <summary>
         /// 开源id
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
     }
     #endregion
 
@@ -151,6 +156,11 @@ namespace Mango.Service.OpenSource.Abstraction.Models.Dto
         /// 分页参数
         /// </summary>
         public PageParm PageParm { get; set; }
+
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public long UserId { get; set; }
     }
     #endregion
 }
