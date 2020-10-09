@@ -1,4 +1,4 @@
-﻿/*--------------------------------------------------------------------------*/
+﻿/*--------------------------------------------------------------------------
 //
 //  Copyright 2020 Chiva Chen
 //
@@ -76,6 +76,7 @@ namespace Mango.Service.Blog.Services
             }
             await ReadLikeFromDBAsync(key);
             await RedisHelper.IncrByAsync(key,request.State);
+            await RedisHelper.LPushAsync(ArticleCacheConfig.ARTICLE_LIKE_VIEW_CACHE_KEYS, key);
         }
 
         /// <summary>
@@ -93,6 +94,7 @@ namespace Mango.Service.Blog.Services
             }
             await ReadLikeFromDBAsync(key);
             await RedisHelper.IncrByAsync(key);
+            await RedisHelper.LPushAsync(ArticleCacheConfig.ARTICLE_LIKE_VIEW_CACHE_KEYS, key);
         }
 
 

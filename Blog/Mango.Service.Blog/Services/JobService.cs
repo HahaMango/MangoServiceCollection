@@ -52,6 +52,40 @@ namespace Mango.Service.Blog.Services
         }
 
         /// <summary>
+        /// 同步点赞阅读数
+        /// </summary>
+        /// <returns></returns>
+        public async Task SynLikeAndViewAsync()
+        {
+            var len = await RedisHelper.LLenAsync(ArticleCacheConfig.ARTICLE_LIKE_VIEW_CACHE_KEYS);
+            if (len > 0)
+            {
+                var keyList = new List<string>();
+                while(len > 0)
+                {
+                    var key = await RedisHelper.LPopAsync(ArticleCacheConfig.ARTICLE_LIKE_VIEW_CACHE_KEYS);
+                    keyList.Add(key);
+                    len--;
+                }
+
+                //遍历键值同步到数据库
+                foreach(var k in keyList)
+                {
+                    var fk = k.Split(':')[0];
+                    switch (fk)
+                    {
+                        case ArticleCacheConfig.LIKE_CACHE_KEY:
+                            await WriteBackLikeCacheValue(k);
+                            break;
+                        case ArticleCacheConfig.VIEW_CACHE_KEY:
+                            await WriteBackViewCacheValue(k);
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 点赞数，阅读数写回mysql
         /// </summary>
         /// <returns></returns>
@@ -108,6 +142,46 @@ namespace Mango.Service.Blog.Services
             if(await RedisHelper.ExistsAsync(key))
             {
                 article.View = await RedisHelper.GetAsync<int>(key);
+            }
+        }
+
+        /// <summary>
+        /// 写回点赞数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private async Task WriteBackLikeCacheValue(string key)
+        {
+            if (await RedisHelper.ExistsAsync(key))
+            {
+                var id = key.Split(':')[1];
+                var article = await _articleRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == Convert.ToInt64(id));
+                if (article != null)
+                {
+                    article.Like = await RedisHelper.GetAsync<int>(key);
+                    await _work.SaveChangesAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 写回阅读数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private async Task WriteBackViewCacheValue(string key)
+        {
+            if (await RedisHelper.ExistsAsync(key))
+            {
+                var id = key.Split(':')[1];
+                var article = await _articleRepository.Table
+                    .FirstOrDefaultAsync(item => item.Id == Convert.ToInt64(id));
+                if (article != null)
+                {
+                    article.View = await RedisHelper.GetAsync<int>(key);
+                    await _work.SaveChangesAsync();
+                }
             }
         }
     }

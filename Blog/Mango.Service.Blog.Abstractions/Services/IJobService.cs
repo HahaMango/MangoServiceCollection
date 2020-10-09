@@ -32,5 +32,11 @@ namespace Mango.Service.Blog.Abstractions.Services
         /// 写回
         /// </summary>
         Task WriteBackAsync();
+
+        /// <summary>
+        /// 同步点赞阅读数
+        /// </summary>
+        /// <returns></returns>
+        Task SynLikeAndViewAsync();
     }
 }

@@ -30,21 +30,26 @@ namespace Mango.Service.Blog.CacheConfig
         /// <summary>
         /// 阅读数键值
         /// </summary>
-        public static string VIEW_CACHE_KEY = "viewcachekey:";
+        public const string VIEW_CACHE_KEY = "viewcachekey:";
 
         /// <summary>
         /// 点赞数键值
         /// </summary>
-        public static string LIKE_CACHE_KEY = "likecachekey:";
+        public const string LIKE_CACHE_KEY = "likecachekey:";
+
+        /// <summary>
+        /// 文章点赞，阅读数缓存键列表（辅助计算）
+        /// </summary>
+        public const string ARTICLE_LIKE_VIEW_CACHE_KEYS = "articlelikeviewcachekeys";
 
         /// <summary>
         /// 阅读数持久化阈值
         /// </summary>
-        public static int LIMIT_VIEW = 30;
+        public const int LIMIT_VIEW = 30;
 
         /// <summary>
         /// 点赞数持久化阈值
         /// </summary>
-        public static int LIMIT_LIKE = 5;
+        public const int LIMIT_LIKE = 5;
     }
 }

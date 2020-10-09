@@ -68,7 +68,7 @@ namespace Mango.Service.Blog.Job
             {
                 using var scope = _service.CreateScope();
                 var jobService = scope.ServiceProvider.GetService<IJobService>();
-                jobService.WriteBackAsync().Wait();
+                jobService.SynLikeAndViewAsync().Wait();
                 RedisHelper.LPushAsync("joblog", $"作业执行成功：{DateTime.Now}");
             }
             catch(Exception ex)
