@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mango.Service.OpenSource.Domain\Mango.Service.OpenSource.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
