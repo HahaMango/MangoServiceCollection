@@ -22,15 +22,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mango.Service.OpenSource.Api.Application.Commands
 {
-    /// <summary>
-    /// 创建项目命令
-    /// </summary>
-    public class CreateProjectCommand : IRequest<ApiResult>
+    public class EditProjectCommand : IRequest<ApiResult>
     {
         /// <summary>
-        /// 用户ID
+        /// 项目Id
         /// </summary>
-        public long UserId { get; set; }
+        [Required(ErrorMessage = "项目ID不能为空")]
+        public long Id { get; set; }
 
         /// <summary>
         /// 项目名称

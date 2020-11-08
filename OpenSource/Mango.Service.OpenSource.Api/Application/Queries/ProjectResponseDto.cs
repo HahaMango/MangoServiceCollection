@@ -16,53 +16,62 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Core.ApiResponse;
-using MediatR;
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Mango.Service.OpenSource.Api.Application.Commands
+namespace Mango.Service.OpenSource.Api.Application.Queries
 {
-    /// <summary>
-    /// 创建项目命令
-    /// </summary>
-    public class CreateProjectCommand : IRequest<ApiResult>
+    public class ProjectResponseDto
+    {
+    }
+
+    public class QueryProjectResponseDto
     {
         /// <summary>
-        /// 用户ID
+        /// 开源项目Id
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
+        /// 项目拥有者
         /// </summary>
         public long UserId { get; set; }
 
         /// <summary>
         /// 项目名称
         /// </summary>
-        [Required(ErrorMessage = "项目名称不能为空")]
-        public string ProjectName { get; set; }
+        public string ProjectName { get; private set; }
 
         /// <summary>
-        /// 项目描述
+        /// 描述
         /// </summary>
-        [Required(ErrorMessage = "项目描述不能为空")]
-        public string Desc { get; set; }
+        public string Desc { get; private set; }
 
         /// <summary>
-        /// 项目URL
+        /// 开源仓库地址
         /// </summary>
         public string RepositoryUrl { get; set; }
 
         /// <summary>
-        /// 项目主图
+        /// 开源项目图片
         /// </summary>
         public string Image { get; set; }
 
         /// <summary>
-        /// 项目readme
+        /// 开源项目README文本
         /// </summary>
-        public string Readme { get; set; }
+        public string README { get; set; }
 
         /// <summary>
-        /// 项目平台
+        /// 开源平台
         /// </summary>
-        [Required(ErrorMessage = "项目平台不能为空")]
         public string Platform { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }

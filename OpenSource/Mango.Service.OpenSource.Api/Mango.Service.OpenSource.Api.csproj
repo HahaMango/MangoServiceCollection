@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mango.Core" Version="2.0.25" />
+    <PackageReference Include="Mango.Core" Version="2.0.27" />
   </ItemGroup>
 
 

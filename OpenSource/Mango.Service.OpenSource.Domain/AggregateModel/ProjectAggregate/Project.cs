@@ -86,7 +86,6 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         public void Disable()
         {
             Status = ProjectStatusEnum.Close;
-            RefreshUpdateTime();
         }
 
         /// <summary>
@@ -95,7 +94,6 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         public void Enable()
         {
             Status = ProjectStatusEnum.Open;
-            RefreshUpdateTime();
         }
 
         /// <summary>
@@ -110,15 +108,6 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         public void EditProjectInfo(string projectName, string desc, string repositoryUrl, string image, string readme, string platform)
         {
             ProjectInfo = new ProjectInfo(projectName, desc, repositoryUrl, image, readme, platform);
-            RefreshUpdateTime();
-        }
-
-        /// <summary>
-        /// 刷新更新时间
-        /// </summary>
-        private void RefreshUpdateTime()
-        {
-            //_updateTime = DateTime.Now;
         }
     }
 }
