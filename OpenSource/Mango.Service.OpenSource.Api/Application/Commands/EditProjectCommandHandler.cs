@@ -1,6 +1,5 @@
 ﻿using Mango.Core.ApiResponse;
-using Mango.Core.Enums;
-using Mango.Core.Serialization.Extension;
+using Mango.Service.Infrastructure.Helper;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 /*--------------------------------------------------------------------------
 //
@@ -21,10 +20,6 @@ using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 /*--------------------------------------------------------------------------*/
 
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,15 +28,13 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
     /// <summary>
     /// 编辑项目命令Handler
     /// </summary>
-    public class EditProjectCommandHandler : IRequestHandler<EditProjectCommand, ApiResult>
+    public class EditProjectCommandHandler : ApiResultHepler, IRequestHandler<EditProjectCommand, ApiResult>
     {
-        private readonly ILogger<EditProjectCommandHandler> _log;
         private readonly IProjectRepository _projectRepository;
 
-        public EditProjectCommandHandler(ILogger<EditProjectCommandHandler> log,
+        public EditProjectCommandHandler(
             IProjectRepository projectRepository)
         {
-            _log = log;
             _projectRepository = projectRepository;
         }
 
@@ -53,24 +46,16 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
         /// <returns></returns>
         public async Task<ApiResult> Handle(EditProjectCommand request, CancellationToken cancellationToken)
         {
-            var response = new ApiResult();
-            try
+            var project = await _projectRepository.GetByIdAsync(request.Id);
+            if(project == null)
             {
-                var project = await _projectRepository.GetByIdAsync(request.Id);
-                project.EditProjectInfo(request.ProjectName, request.Desc, request.RepositoryUrl, request.Image, request.Readme, request.Platform);
-                await _projectRepository.UnitOfWork.SaveChangesAsync();
+                return NotFound("查无项目");
+            }
 
-                response.Code = Code.Ok;
-                response.Message = "操作成功";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"编辑项目异常;method={nameof(EditProjectCommandHandler)};param={request?.ToJson()};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"编辑项目异常：{ex.Message}";
-                return response;
-            }
+            project.EditProjectInfo(request.ProjectName, request.Desc, request.RepositoryUrl, request.Image, request.Readme, request.Platform);
+            await _projectRepository.UnitOfWork.SaveChangesAsync();
+
+            return Ok("操作成功");
         }
     }
 }

@@ -17,14 +17,9 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
-using Mango.Core.Enums;
-using Mango.Core.Serialization.Extension;
+using Mango.Service.Infrastructure.Helper;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,15 +28,13 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
     /// <summary>
     /// 删除项目命令Handler
     /// </summary>
-    public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, ApiResult>
+    public class DeleteProjectCommandHandler : ApiResultHepler, IRequestHandler<DeleteProjectCommand, ApiResult>
     {
-        private readonly ILogger<DeleteProjectCommandHandler> _log;
         private readonly IProjectRepository _projectRepository;
 
-        public DeleteProjectCommandHandler(ILogger<DeleteProjectCommandHandler> log,
+        public DeleteProjectCommandHandler(
             IProjectRepository projectRepository)
         {
-            _log = log;
             _projectRepository = projectRepository;
         }
 
@@ -53,24 +46,15 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
         /// <returns></returns>
         public async Task<ApiResult> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
         {
-            var response = new ApiResult();
-            try
+            var project = await _projectRepository.GetByIdAsync(request.Id);
+            if(project == null)
             {
-                var project = await _projectRepository.GetByIdAsync(request.Id);
-                project.Disable();
-                await _projectRepository.UnitOfWork.SaveChangesAsync();
+                return NotFound("查无项目");
+            }
+            project.Disable();
+            await _projectRepository.UnitOfWork.SaveChangesAsync();
 
-                response.Code = Code.Ok;
-                response.Message = "操作成功";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"删除项目异常;method={nameof(DeleteProjectCommandHandler)};param={request?.ToJson()};exception messges={ex.Message}");
-                response.Code = Code.Error;
-                response.Message = $"删除项目异常：{ex.Message}";
-                return response;
-            }
+            return Ok("查询成功");
         }
     }
 }

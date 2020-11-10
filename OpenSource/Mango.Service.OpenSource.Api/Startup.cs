@@ -5,10 +5,12 @@ using Mango.Core.Dapper.Extension;
 using Mango.Core.DataStructure;
 using Mango.Core.Extension;
 using Mango.EntityFramework.Extension;
+using Mango.Service.Infrastructure.Behaviors;
 using Mango.Service.OpenSource.Api.Application.Queries;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 using Mango.Service.OpenSource.Infrastructure.DbContext;
 using Mango.Service.OpenSource.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -142,13 +144,15 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             #region ²Ö´¢ÅäÖÃ
 
             services.AddMangoDbContext<OpenSourceDbContext>(moduleConfig.DbConnectString);
-            services.AddDapperUseMysql(moduleConfig.DbConnectString, typeof(MySqlConnection));
+            services.AddDapper(moduleConfig.DbConnectString, typeof(MySqlConnection));
 
             #endregion
 
             #region ·þÎñ×¢Èë
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectQueries, ProjectQueries>();
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TryCatchBehaviors<,>));
             #endregion
         }
 

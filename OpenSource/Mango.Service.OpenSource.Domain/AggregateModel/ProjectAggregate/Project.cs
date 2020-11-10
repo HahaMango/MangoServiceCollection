@@ -18,6 +18,7 @@
 
 using Mango.EntityFramework.Abstractions;
 using Mango.EntityFramework.BaseEntity;
+using Mango.Service.Infrastructure.Persistence;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate.Enum;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
     /// <summary>
     /// 开源项目聚合根
     /// </summary>
-    public class Project : SnowFlakeEntity, IAggregateRoot
+    public class Project : AggregateRoot
     {
         /// <summary>
         /// 项目信息

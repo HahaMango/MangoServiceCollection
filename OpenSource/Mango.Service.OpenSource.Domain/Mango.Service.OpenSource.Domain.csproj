@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mango.EntityFramework" Version="2.0.25" />
+    <ProjectReference Include="..\..\Infrastructure\Mango.Service.Infrastructure\Mango.Service.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

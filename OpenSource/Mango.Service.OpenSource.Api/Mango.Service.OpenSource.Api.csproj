@@ -9,9 +9,5 @@
     <ProjectReference Include="..\Mango.Service.OpenSource.Infrastructure\Mango.Service.OpenSource.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Mango.Core" Version="2.0.27" />
-  </ItemGroup>
-
 
 </Project>
