@@ -66,7 +66,7 @@ namespace Mango.Service.OpenSource.Controllers
                 return InValidModelsError();
             }
             var user = GetUser();
-            if(user == null)
+            if (user == null)
             {
                 return AuthorizeError();
             }

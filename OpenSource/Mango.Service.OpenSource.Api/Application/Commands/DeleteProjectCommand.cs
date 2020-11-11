@@ -17,6 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
+using Mango.Service.Infrastructure.Behaviors;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Api.Application.Commands
 {
-    public class DeleteProjectCommand : IRequest<ApiResult>
+    public class DeleteProjectCommand : ITryCatchRequest
     {
         /// <summary>
         /// 项目ID

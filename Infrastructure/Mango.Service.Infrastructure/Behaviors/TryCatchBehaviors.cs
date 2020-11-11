@@ -2,13 +2,13 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.Infrastructure.Behaviors
 {
     public class TryCatchBehaviors<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IBaseRequest
         where TResponse : ApiResult
     {
         private readonly ILogger<TryCatchBehaviors<TRequest, TResponse>> _logger;

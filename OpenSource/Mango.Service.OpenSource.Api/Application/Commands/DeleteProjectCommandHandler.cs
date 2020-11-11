@@ -54,7 +54,7 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
             project.Disable();
             await _projectRepository.UnitOfWork.SaveChangesAsync();
 
-            return Ok("查询成功");
+            return Ok("操作成功");
         }
     }
 }

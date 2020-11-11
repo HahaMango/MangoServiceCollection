@@ -17,6 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Core.ApiResponse;
+using Mango.Service.Infrastructure.Behaviors;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,7 +26,7 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
     /// <summary>
     /// 创建项目命令
     /// </summary>
-    public class CreateProjectCommand : IRequest<ApiResult>
+    public class CreateProjectCommand : ITryCatchRequest
     {
         /// <summary>
         /// 用户ID

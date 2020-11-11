@@ -169,6 +169,8 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("all");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
