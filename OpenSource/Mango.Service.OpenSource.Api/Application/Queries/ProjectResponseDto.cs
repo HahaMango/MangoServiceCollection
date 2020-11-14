@@ -42,12 +42,12 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
         /// <summary>
         /// 项目名称
         /// </summary>
-        public string ProjectName { get; private set; }
+        public string ProjectName { get; set; }
 
         /// <summary>
         /// 描述
         /// </summary>
-        public string Desc { get; private set; }
+        public string Desc { get; set; }
 
         /// <summary>
         /// 开源仓库地址

@@ -11,8 +11,9 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   configcenterservice: '0'
-  blogservice: '1'
+  blogservice: '0'
   usercenterservice: '0'
+  opensourceservice: "1"
 
 stages:
 - stage: Build
@@ -91,6 +92,29 @@ stages:
       inputs:
         containerRegistry: 'aliyunDockerHub'
         repository: 'chiva_mg_namespace/usercenter'
+        command: 'push'
+        tags: |
+          $(tag)
+
+  - job: opensource_build
+    condition: eq('${{variables.opensourceservice}}', '1')
+    displayName: UserCenterBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/opensource'
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/OpenSourceDockerfile'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+      inputs:
+        containerRegistry: 'aliyunDockerHub'
+        repository: 'chiva_mg_namespace/opensource'
         command: 'push'
         tags: |
           $(tag)

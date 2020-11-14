@@ -16,25 +16,23 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework;
-using Mango.EntityFramework.Abstractions;
+using FreeRedis;
 using Mango.EntityFramework.BaseEntity;
 using Mango.Service.Infrastructure.Persistence;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
+using Mango.Service.OpenSource.Infrastructure.Config;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Infrastructure.DbContext
 {
     public class OpenSourceDbContext: DefalutDbContext
     {
+        private readonly RedisClient _redisClient;
+
         public DbSet<Project> Projects { get; set; }
 
         public OpenSourceDbContext()
@@ -42,9 +40,22 @@ namespace Mango.Service.OpenSource.Infrastructure.DbContext
 
         }
 
-        public OpenSourceDbContext(DbContextOptions options) : base(options)
+        public OpenSourceDbContext(DbContextOptions options, RedisClient redisClient, IMediator mediator) : base(options, mediator)
         {
+            _redisClient = redisClient;
+        }
 
+        public async override Task<int> SaveChangesAsync()
+        {
+            #region 清除缓存
+            await _redisClient.DelAsync(CacheKeyConfig.ProjectList);
+            var es = base.ChangeTracker.Entries<Entity>().Where(item => item.Entity != null);
+            foreach(var e in es)
+            {
+                await _redisClient.DelAsync($"{CacheKeyConfig.ProjectDetail}:{e.Entity.Id}");
+            }
+            #endregion
+            return await base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

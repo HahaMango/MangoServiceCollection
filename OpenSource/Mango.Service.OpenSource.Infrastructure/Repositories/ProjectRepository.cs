@@ -16,8 +16,10 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using FreeRedis;
 using Mango.EntityFramework.Abstractions;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
+using Mango.Service.OpenSource.Infrastructure.Config;
 using Mango.Service.OpenSource.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,6 +36,7 @@ namespace Mango.Service.OpenSource.Infrastructure.Repositories
     public class ProjectRepository : IProjectRepository
     {
         private readonly OpenSourceDbContext _dbContext;
+        private readonly RedisClient _redisClient;
 
         public IEfContextWork UnitOfWork
         {
@@ -43,9 +46,10 @@ namespace Mango.Service.OpenSource.Infrastructure.Repositories
             }
         }
 
-        public ProjectRepository(OpenSourceDbContext openSourceDbContext)
+        public ProjectRepository(OpenSourceDbContext openSourceDbContext,RedisClient redisClient)
         {
             _dbContext = openSourceDbContext;
+            _redisClient = redisClient;
         }
 
         public async Task AddAsync(Project o)

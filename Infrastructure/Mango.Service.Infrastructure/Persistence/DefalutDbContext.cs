@@ -1,6 +1,7 @@
 ﻿using Mango.EntityFramework;
 using Mango.EntityFramework.Abstractions;
 using Mango.EntityFramework.BaseEntity;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyModel;
@@ -15,35 +16,47 @@ namespace Mango.Service.Infrastructure.Persistence
 {
     public abstract class DefalutDbContext : BaseDbContext, IEfContextWork
     {
+        private readonly IMediator _mediator;
+
         public DefalutDbContext() { }
 
-        public DefalutDbContext(DbContextOptions options) : base(options)
+        public DefalutDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
-
+            _mediator = mediator;
         }
 
-        public IDbContextTransaction BeginTransaction()
+        public virtual IDbContextTransaction BeginTransaction()
         {
             return base.Database.BeginTransaction();
         }
 
-        public Task<IDbContextTransaction> BeginTransactionAsync()
+        public virtual Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return base.Database.BeginTransactionAsync();
         }
 
-        public void Commit()
+        public virtual void Commit()
         {
             base.Database.CommitTransaction();
         }
 
-        public void Rollback()
+        public virtual void Rollback()
         {
             base.Database.RollbackTransaction();
         }
 
-        public async Task<int> SaveChangesAsync()
+        public virtual async Task<int> SaveChangesAsync()
         {
+            var es = base.ChangeTracker.Entries<AggregateRoot>()
+                .Where(item => item.Entity != null && item.Entity.DomainEvents != null && item.Entity.DomainEvents.Any())
+                .Select(item => item.Entity.DomainEvents);
+            foreach(var e in es)
+            {
+                foreach(var domainEvent in e)
+                {
+                    await _mediator.Publish(domainEvent);
+                }
+            }
             return await base.SaveChangesAsync();
         }
 

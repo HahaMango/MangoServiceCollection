@@ -17,8 +17,11 @@
 /*--------------------------------------------------------------------------*/
 
 using Dapper;
+using FreeRedis;
 using Mango.Core.Dapper;
 using Mango.Core.DataStructure;
+using Mango.Service.Infrastructure.Helper;
+using Mango.Service.OpenSource.Infrastructure.Config;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
@@ -35,13 +38,16 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
     {
         private readonly ILogger<ProjectQueries> _logger;
         private readonly IDapperHelper _dapperHelper;
+        private readonly RedisClient _redisClient;
 
         public ProjectQueries(
             ILogger<ProjectQueries> logger,
-            IDapperHelper dapper)
+            IDapperHelper dapper,
+            RedisClient redisClient)
         {
             _logger = logger;
             _dapperHelper = dapper;
+            _redisClient = redisClient;
         }
 
         /// <summary>
@@ -51,12 +57,20 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
         /// <returns></returns>
         public async Task<QueryProjectResponseDto> QueryProjectDetailAsync(long id)
         {
+            var key = $"{CacheKeyConfig.ProjectDetail}:{id}";
+            if (await _redisClient.ExistsAsync(key))
+            {
+                return await _redisClient.GetAsync<QueryProjectResponseDto>(key);
+            }
             var sql = $@"
             select * 
             from project
             where Id = {id}
             ";
-            return await _dapperHelper.QueryFirstOrDefaultAsync<QueryProjectResponseDto>(sql);
+
+            var result = await _dapperHelper.QueryFirstOrDefaultAsync<QueryProjectResponseDto>(sql);
+            await _redisClient.SetAsync(key, result, DateHelper.SecondOfDay(7));
+            return result;
         }
 
         /// <summary>
@@ -69,7 +83,7 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
             var sql = $@"
             select * 
             from project
-            where UserId = {request.UserId}
+            where UserId = {request.UserId} and Status = 1
             order by CreateTime desc
             limit {(request.PageParm.Page - 1) * request.PageParm.Size}, {request.PageParm.Size}
             ";
@@ -77,12 +91,13 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
             var countSql = $@"
             select count(*)
             from project
-            where UserId = {request.UserId}
+            where UserId = {request.UserId} and Status = 1
             ";
 
             var result = await _dapperHelper.QueryAsync<QueryProjectResponseDto>(sql);
             var count = await _dapperHelper.QueryFirstAsync<int>(countSql);
             var pagerlist = new PageList<QueryProjectResponseDto>(request.PageParm.Page, request.PageParm.Size, count, result);
+
             return pagerlist;
         }
     }

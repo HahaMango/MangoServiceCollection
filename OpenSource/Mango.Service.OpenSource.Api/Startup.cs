@@ -19,6 +19,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using Mango.Service.Infrastructure.Extension;
+using Mango.Core.Cache.Extension;
+using Mango.Core.Srd;
+using System;
+using Mango.Core.Srd.Extension;
 
 namespace Mango.Service.OpenSource.Api
 {
@@ -92,7 +97,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
                     ValidIssuer = "test.cn",
                     ValidAudience = "mango.opensource",
                     DbConnectString = "server=localhost;database=mytest;user=root;password=228887",
-                    RedisConnectString = "localhost:6379,password=228887"
+                    RedisConnectString = "192.168.99.100:6379"
                 };
             }
             else
@@ -145,7 +150,10 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
 
             services.AddMangoDbContext<OpenSourceDbContext>(moduleConfig.DbConnectString);
             services.AddDapper(moduleConfig.DbConnectString, typeof(MySqlConnection));
-
+            services.AddFreeRedis(o =>
+            {
+                o.ConnectionString = moduleConfig.RedisConnectString;
+            });
             #endregion
 
             #region 服务注入
@@ -157,7 +165,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -182,6 +190,33 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             {
                 endpoints.MapControllers();
             });
+
+            #region 服务注册
+            if (Env.IsProduction())
+            {
+                var token = Configuration["Consul:Token"];
+                var consulIp = Configuration["Consul:Ip"];
+                var consulPort = Configuration["Consul:Port"];
+                var serviceName = Configuration["Service:Name"];
+                var servicePort = Configuration["Service:Port"];
+                var healthCheck = Configuration["Service:HealthCheck"];
+                var currentIp = Configuration["Service:Ip"];
+
+                var rc = new ConsulRegistration($"http://{consulIp}:{consulPort}", token)
+                {
+                    HealthCheckUrl = $"http://{currentIp}:{servicePort}/{healthCheck}"
+                };
+
+                var se = new MangoService
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    IP = currentIp,
+                    Port = servicePort,
+                    ServiceName = serviceName
+                };
+                app.RegisterConsulService(rc, se, lifetime);
+            }
+            #endregion
         }
     }
 }
