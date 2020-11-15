@@ -75,6 +75,7 @@ namespace Mango.Service.OpenSource.Infrastructure.DbContext
             e.Property<long>("_userId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UserId");
             e.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             e.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
+            e.Property<int>("_sortId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("SortId");
         }
     }
 }

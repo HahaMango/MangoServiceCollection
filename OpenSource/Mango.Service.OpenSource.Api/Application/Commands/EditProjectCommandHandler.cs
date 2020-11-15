@@ -52,7 +52,7 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
                 return NotFound("查无项目");
             }
 
-            project.EditProjectInfo(request.ProjectName, request.Desc, request.RepositoryUrl, request.Image, request.Readme, request.Platform);
+            project.EditProjectInfo(request.ProjectName, request.Desc, request.RepositoryUrl, request.Image, request.Readme, request.Platform, request.SortId);
             await _projectRepository.UnitOfWork.SaveChangesAsync();
 
             return Ok("操作成功");

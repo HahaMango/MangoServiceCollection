@@ -16,14 +16,9 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.Abstractions;
-using Mango.EntityFramework.BaseEntity;
 using Mango.Service.Infrastructure.Persistence;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate.Enum;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
 {
@@ -57,6 +52,11 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// </summary>
         private DateTime? _updateTime;
 
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        private int _sortId { get; set; }
+
         public Project()
         {
 
@@ -72,10 +72,11 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// <param name="image"></param>
         /// <param name="readme"></param>
         /// <param name="platform"></param>
-        public Project(long userId, string projectName, string desc, string repositoryUrl, string image, string readme, string platform)
+        public Project(long userId, string projectName, string desc, string repositoryUrl, string image, string readme, string platform, int sortId = 0)
         {
             _userId = userId;
             ProjectInfo = new ProjectInfo(projectName, desc, repositoryUrl, image, readme, platform);
+            _sortId = sortId;
             _createTime = DateTime.Now;
             Enable();
             SetId();
@@ -106,9 +107,10 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// <param name="image"></param>
         /// <param name="readme"></param>
         /// <param name="platform"></param>
-        public void EditProjectInfo(string projectName, string desc, string repositoryUrl, string image, string readme, string platform)
+        public void EditProjectInfo(string projectName, string desc, string repositoryUrl, string image, string readme, string platform, int sortId = 0)
         {
             ProjectInfo = new ProjectInfo(projectName, desc, repositoryUrl, image, readme, platform);
+            _sortId = sortId;
         }
     }
 }

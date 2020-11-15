@@ -84,7 +84,7 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
             select * 
             from project
             where UserId = {request.UserId} and Status = 1
-            order by CreateTime desc
+            order by SortId desc, CreateTime desc
             limit {(request.PageParm.Page - 1) * request.PageParm.Size}, {request.PageParm.Size}
             ";
 

@@ -65,5 +65,10 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
         /// </summary>
         [Required(ErrorMessage = "项目平台不能为空")]
         public string Platform { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int SortId { get; set; }
     }
 }

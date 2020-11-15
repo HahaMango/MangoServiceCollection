@@ -53,7 +53,8 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
                 request.RepositoryUrl,
                 request.Image,
                 request.Readme,
-                request.Platform);
+                request.Platform,
+                request.SortId);
 
             await _projectRepository.AddAsync(project);
             await _projectRepository.UnitOfWork.SaveChangesAsync();
