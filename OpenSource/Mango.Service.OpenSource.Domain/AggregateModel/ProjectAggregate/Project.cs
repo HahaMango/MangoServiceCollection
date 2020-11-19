@@ -57,7 +57,7 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// </summary>
         private int _sortId { get; set; }
 
-        public Project()
+        protected Project()
         {
 
         }
@@ -74,6 +74,8 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// <param name="platform"></param>
         public Project(long userId, string projectName, string desc, string repositoryUrl, string image, string readme, string platform, int sortId = 0)
         {
+            Verification(projectName, desc, platform);
+
             _userId = userId;
             ProjectInfo = new ProjectInfo(projectName, desc, repositoryUrl, image, readme, platform);
             _sortId = sortId;
@@ -109,8 +111,26 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
         /// <param name="platform"></param>
         public void EditProjectInfo(string projectName, string desc, string repositoryUrl, string image, string readme, string platform, int sortId = 0)
         {
+            Verification(projectName, desc, platform);
+
             ProjectInfo = new ProjectInfo(projectName, desc, repositoryUrl, image, readme, platform);
             _sortId = sortId;
+        }
+
+        private void Verification(string projectName,string desc,string platform)
+        {
+            if (projectName == null)
+            {
+                throw new ArgumentNullException(nameof(projectName));
+            }
+            if (desc == null)
+            {
+                throw new ArgumentNullException(nameof(desc));
+            }
+            if (platform == null)
+            {
+                throw new ArgumentNullException(nameof(platform));
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Mango.Service.Infrastructure.Helper
         {
             return new ApiResult
             {
-                Code = Core.Enums.Code.Error,
+                Code = Core.Enums.Code.NoFound,
                 Message = message
             };
         }
@@ -23,7 +23,7 @@ namespace Mango.Service.Infrastructure.Helper
         {
             return new ApiResult<T>
             {
-                Code = Core.Enums.Code.Error,
+                Code = Core.Enums.Code.NoFound,
                 Message = message
             };
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.Infrastructure.Persistence
@@ -17,6 +18,8 @@ namespace Mango.Service.Infrastructure.Persistence
     public abstract class DefalutDbContext : BaseDbContext, IEfContextWork
     {
         private readonly IMediator _mediator;
+
+        private IDbContextTransaction _dbContextTransaction;
 
         public DefalutDbContext() { }
 
@@ -27,22 +30,102 @@ namespace Mango.Service.Infrastructure.Persistence
 
         public virtual IDbContextTransaction BeginTransaction()
         {
-            return base.Database.BeginTransaction();
+            if (_dbContextTransaction != null)
+            {
+                return _dbContextTransaction;
+            }
+            _dbContextTransaction = Database.BeginTransaction();
+            return _dbContextTransaction;
         }
 
-        public virtual Task<IDbContextTransaction> BeginTransactionAsync()
+        public virtual async Task<IDbContextTransaction> BeginTransactionAsync()
         {
-            return base.Database.BeginTransactionAsync();
+            if (_dbContextTransaction != null)
+            {
+                return _dbContextTransaction;
+            }
+            _dbContextTransaction = await Database.BeginTransactionAsync();
+            return _dbContextTransaction;
         }
 
         public virtual void Commit()
         {
-            base.Database.CommitTransaction();
+            if (_dbContextTransaction == null) throw new ArgumentNullException(nameof(_dbContextTransaction));
+
+            try
+            {
+                base.SaveChanges();
+                _dbContextTransaction.Commit();
+            }
+            catch
+            {
+                this.Rollback();
+                throw;
+            }
+            finally
+            {
+                if(_dbContextTransaction != null)
+                {
+                    _dbContextTransaction.Dispose();
+                    _dbContextTransaction = null;
+                }
+            }
+        }
+
+        public virtual async Task CommitAsync()
+        {
+            if (_dbContextTransaction == null) throw new ArgumentNullException(nameof(_dbContextTransaction));
+
+            try
+            {
+                await base.SaveChangesAsync();
+                await _dbContextTransaction.CommitAsync();
+            }
+            catch
+            {
+                await this.RollbackAsync();
+                throw;
+            }
+            finally
+            {
+                if (_dbContextTransaction != null)
+                {
+                    await _dbContextTransaction.DisposeAsync();
+                    _dbContextTransaction = null;
+                }
+            }
         }
 
         public virtual void Rollback()
         {
-            base.Database.RollbackTransaction();
+            try
+            {
+                _dbContextTransaction?.Rollback();
+            }
+            catch
+            {
+                if (_dbContextTransaction != null)
+                {
+                    _dbContextTransaction.Dispose();
+                    _dbContextTransaction = null;
+                }
+            }
+        }
+
+        public virtual async Task RollbackAsync()
+        {
+            try
+            {
+                await _dbContextTransaction?.RollbackAsync();
+            }
+            catch
+            {
+                if (_dbContextTransaction != null)
+                {
+                    await _dbContextTransaction.DisposeAsync();
+                    _dbContextTransaction = null;
+                }
+            }
         }
 
         public virtual async Task<int> SaveChangesAsync()
