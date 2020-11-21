@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FreeRedis" Version="0.1.0" />
-    <PackageReference Include="Mango.Core" Version="2.0.28" />
-    <PackageReference Include="Mango.EntityFramework" Version="2.0.25" />
+    <PackageReference Include="FreeRedis" Version="0.1.3" />
+    <PackageReference Include="Mango.Core" Version="2.0.29" />
+    <PackageReference Include="Mango.EntityFramework" Version="2.0.29" />
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 

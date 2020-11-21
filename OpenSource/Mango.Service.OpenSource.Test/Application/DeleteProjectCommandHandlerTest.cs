@@ -25,7 +25,7 @@ namespace Mango.Service.OpenSource.Test.Application
             _projectRepository.Setup(p => p.GetByIdAsync(It.Is<long>(i => i == 123)))
                 .Returns(Task.FromResult(new Project(12334113,"测试","测试描述",null,null,null,"github")));
 
-            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync())
+            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync(default))
                 .Returns(Task.FromResult(1));
 
             var command = new DeleteProjectCommand
@@ -46,7 +46,7 @@ namespace Mango.Service.OpenSource.Test.Application
             _projectRepository.Setup(p => p.GetByIdAsync(It.Is<long>(i => i == 123)))
                 .Returns(Task.FromResult(new Project(12334113, "测试", "测试描述", null, null, null, "github")));
 
-            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync())
+            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync(default))
                 .Returns(Task.FromResult(1));
 
             var command = new DeleteProjectCommand

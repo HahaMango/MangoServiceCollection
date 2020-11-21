@@ -38,7 +38,7 @@ namespace Mango.Service.OpenSource.Infrastructure.Repositories
         private readonly OpenSourceDbContext _dbContext;
         private readonly RedisClient _redisClient;
 
-        public IEfContextWork UnitOfWork
+        public IUnitOfWork UnitOfWork
         {
             get
             {

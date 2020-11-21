@@ -5,6 +5,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -25,7 +26,7 @@ namespace Mango.Service.OpenSource.Test.Application
             _projectRepository.Setup(p => p.AddAsync(It.IsAny<Project>()))
                 .Returns(Task.CompletedTask);
 
-            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync())
+            _projectRepository.Setup(p => p.UnitOfWork.SaveChangesAsync(default))
                 .Returns(Task.FromResult(1));
 
             var command = new CreateProjectCommand

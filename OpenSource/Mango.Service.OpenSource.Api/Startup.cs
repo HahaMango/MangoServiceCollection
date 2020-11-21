@@ -1,11 +1,15 @@
 using Mango.Core.Authentication.Extension;
+using Mango.Core.Cache.Extension;
 using Mango.Core.Config;
 using Mango.Core.Converter;
 using Mango.Core.Dapper.Extension;
 using Mango.Core.DataStructure;
 using Mango.Core.Extension;
+using Mango.Core.Srd;
+using Mango.Core.Srd.Extension;
 using Mango.EntityFramework.Extension;
 using Mango.Service.Infrastructure.Behaviors;
+using Mango.Service.Infrastructure.Services;
 using Mango.Service.OpenSource.Api.Application.Queries;
 using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 using Mango.Service.OpenSource.Infrastructure.DbContext;
@@ -18,12 +22,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic;
-using Mango.Service.Infrastructure.Extension;
-using Mango.Core.Cache.Extension;
-using Mango.Core.Srd;
 using System;
-using Mango.Core.Srd.Extension;
+using System.Collections.Generic;
 
 namespace Mango.Service.OpenSource.Api
 {
@@ -157,8 +157,11 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             #endregion
 
             #region ·þÎñ×¢Èë
+            services.AddHttpContextAccessor();
+
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectQueries, ProjectQueries>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TryCatchBehaviors<,>));
             #endregion

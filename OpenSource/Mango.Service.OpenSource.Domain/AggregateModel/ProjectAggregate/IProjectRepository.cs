@@ -29,6 +29,6 @@ namespace Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate
     /// </summary>
     public interface IProjectRepository : IAggregateRepository<Project,long>
     {
-        IEfContextWork UnitOfWork { get; }
+        IUnitOfWork UnitOfWork { get; }
     }
 }

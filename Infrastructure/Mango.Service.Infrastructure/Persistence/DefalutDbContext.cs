@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Mango.Service.Infrastructure.Persistence
 {
-    public abstract class DefalutDbContext : BaseDbContext, IEfContextWork
+    public abstract class DefalutDbContext : BaseDbContext, IUnitOfWork
     {
         private readonly IMediator _mediator;
 
@@ -38,7 +38,7 @@ namespace Mango.Service.Infrastructure.Persistence
             return _dbContextTransaction;
         }
 
-        public virtual async Task<IDbContextTransaction> BeginTransactionAsync()
+        public virtual async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
             if (_dbContextTransaction != null)
             {
@@ -72,7 +72,7 @@ namespace Mango.Service.Infrastructure.Persistence
             }
         }
 
-        public virtual async Task CommitAsync()
+        public virtual async Task CommitAsync(CancellationToken cancellationToken = default)
         {
             if (_dbContextTransaction == null) throw new ArgumentNullException(nameof(_dbContextTransaction));
 
@@ -112,7 +112,7 @@ namespace Mango.Service.Infrastructure.Persistence
             }
         }
 
-        public virtual async Task RollbackAsync()
+        public virtual async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
             try
             {

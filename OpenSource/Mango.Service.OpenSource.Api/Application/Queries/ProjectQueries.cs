@@ -22,11 +22,7 @@ using Mango.Core.Dapper;
 using Mango.Core.DataStructure;
 using Mango.Service.Infrastructure.Helper;
 using Mango.Service.OpenSource.Infrastructure.Config;
-using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Api.Application.Queries
@@ -36,16 +32,13 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
     /// </summary>
     public class ProjectQueries : IProjectQueries
     {
-        private readonly ILogger<ProjectQueries> _logger;
         private readonly IDapperHelper _dapperHelper;
         private readonly RedisClient _redisClient;
 
         public ProjectQueries(
-            ILogger<ProjectQueries> logger,
             IDapperHelper dapper,
             RedisClient redisClient)
         {
-            _logger = logger;
             _dapperHelper = dapper;
             _redisClient = redisClient;
         }
@@ -55,7 +48,7 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<QueryProjectResponseDto> QueryProjectDetailAsync(long id)
+        public async Task<QueryProjectResponseDto> QueryProjectDetailAsync(long id, CancellationToken cancellationToken = default)
         {
             var key = $"{CacheKeyConfig.ProjectDetail}:{id}";
             if (await _redisClient.ExistsAsync(key))
@@ -68,7 +61,7 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
             where Id = {id}
             ";
 
-            var result = await _dapperHelper.QueryFirstOrDefaultAsync<QueryProjectResponseDto>(sql);
+            var result = await _dapperHelper.QueryFirstOrDefaultAsync<QueryProjectResponseDto>(sql, null, CommandFlags.None, cancellationToken);
             await _redisClient.SetAsync(key, result, DateHelper.SecondOfDay(7));
             return result;
         }
@@ -78,7 +71,7 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<PageList<QueryProjectResponseDto>> QueryProjectPageAsync(QueryProjectPageRequestDto request)
+        public async Task<PageList<QueryProjectResponseDto>> QueryProjectPageAsync(QueryProjectPageRequestDto request, CancellationToken cancellationToken = default)
         {
             var sql = $@"
             select * 
@@ -94,8 +87,8 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
             where UserId = {request.UserId} and Status = 1
             ";
 
-            var result = await _dapperHelper.QueryAsync<QueryProjectResponseDto>(sql);
-            var count = await _dapperHelper.QueryFirstAsync<int>(countSql);
+            var result = await _dapperHelper.QueryAsync<QueryProjectResponseDto>(sql, null, CommandFlags.None, cancellationToken);
+            var count = await _dapperHelper.QueryFirstAsync<int>(countSql, null, CommandFlags.None, cancellationToken);
             var pagerlist = new PageList<QueryProjectResponseDto>(request.PageParm.Page, request.PageParm.Size, count, result);
 
             return pagerlist;

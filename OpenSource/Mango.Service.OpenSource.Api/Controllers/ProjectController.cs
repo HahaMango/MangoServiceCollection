@@ -19,14 +19,15 @@
 using Mango.Core.ApiResponse;
 using Mango.Core.ControllerAbstractions;
 using Mango.Core.DataStructure;
+using Mango.Service.Infrastructure.Services;
 using Mango.Service.OpenSource.Api.Application.Commands;
 using Mango.Service.OpenSource.Api.Application.Queries;
-using Mango.Service.OpenSource.Domain.AggregateModel.ProjectAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Controllers
@@ -39,16 +40,19 @@ namespace Mango.Service.OpenSource.Controllers
     {
         private readonly ILogger<ProjectController> _log;
         private readonly IMediator _mediator;
+        private readonly IAuthenticationService _authorizationService;
 
         private readonly IProjectQueries _projectQueries;
 
         public ProjectController(
             IMediator mediator,
             ILogger<ProjectController> log,
+            IAuthenticationService authorizationService,
             IProjectQueries projectQueries)
         {
             _mediator = mediator;
             _log = log;
+            _authorizationService = authorizationService;
             _projectQueries = projectQueries;
         }
 
@@ -65,7 +69,7 @@ namespace Mango.Service.OpenSource.Controllers
             {
                 return InValidModelsError();
             }
-            var user = GetUser();
+            var user = _authorizationService.GetUser();
             if (user == null)
             {
                 return AuthorizeError();
@@ -90,7 +94,7 @@ namespace Mango.Service.OpenSource.Controllers
             {
                 return InValidModelsError();
             }
-            var user = GetUser();
+            var user = _authorizationService.GetUser();
             if (user == null)
             {
                 return AuthorizeError();
@@ -114,7 +118,7 @@ namespace Mango.Service.OpenSource.Controllers
             {
                 return InValidModelsError();
             }
-            var user = GetUser();
+            var user = _authorizationService.GetUser();
             if (user == null)
             {
                 return AuthorizeError();
@@ -131,7 +135,7 @@ namespace Mango.Service.OpenSource.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("list")]
-        public async Task<ApiResult<PageList<QueryProjectResponseDto>>> QueryProjectPageAsync([FromBody]QueryProjectPageRequestDto request)
+        public async Task<ApiResult<PageList<QueryProjectResponseDto>>> QueryProjectPageAsync([FromBody]QueryProjectPageRequestDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -142,7 +146,7 @@ namespace Mango.Service.OpenSource.Controllers
             try
             {
                 _log.LogInformation("执行QueryProjectPageAsync...控制器方法");
-                var result = await _projectQueries.QueryProjectPageAsync(request);
+                var result = await _projectQueries.QueryProjectPageAsync(request, cancellationToken);
                 response.Code = Core.Enums.Code.Ok;
                 response.Message = "查询成功";
                 response.Data = result;
@@ -163,13 +167,13 @@ namespace Mango.Service.OpenSource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("detail")]
-        public async Task<ApiResult<QueryProjectResponseDto>> QueryProjectDetailAsync(long id)
+        public async Task<ApiResult<QueryProjectResponseDto>> QueryProjectDetailAsync(long id, CancellationToken cancellationToken)
         {
             var response = new ApiResult<QueryProjectResponseDto>();
             try
             {
                 _log.LogInformation("执行QueryProjectDetailAsync...控制器方法");
-                var result = await _projectQueries.QueryProjectDetailAsync(id);
+                var result = await _projectQueries.QueryProjectDetailAsync(id, cancellationToken);
                 response.Code = Core.Enums.Code.Ok;
                 response.Message = "查询成功";
                 response.Data = result;

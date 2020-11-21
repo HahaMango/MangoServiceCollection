@@ -20,6 +20,7 @@ using Mango.Core.DataStructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Api.Application.Queries
@@ -34,13 +35,13 @@ namespace Mango.Service.OpenSource.Api.Application.Queries
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<PageList<QueryProjectResponseDto>> QueryProjectPageAsync(QueryProjectPageRequestDto request);
+        Task<PageList<QueryProjectResponseDto>> QueryProjectPageAsync(QueryProjectPageRequestDto request, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 查询开源项目详情
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<QueryProjectResponseDto> QueryProjectDetailAsync(long id);
+        Task<QueryProjectResponseDto> QueryProjectDetailAsync(long id, CancellationToken cancellationToken = default);
     }
 }
