@@ -14,19 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mango.Service.Blog\Mango.Service.Blog.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\AddArticle.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Detail.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Like.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\Mango.Service.Blog.Domain\Mango.Service.Blog.Domain.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties data_4addarticle_1json__JsonSchema="https://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
