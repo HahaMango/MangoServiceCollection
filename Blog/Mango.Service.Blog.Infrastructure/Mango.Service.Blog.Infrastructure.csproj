@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Mango.Service.Infrastructure\Mango.Service.Infrastructure.csproj" />
+    <ProjectReference Include="..\Mango.Service.Blog.Domain\Mango.Service.Blog.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

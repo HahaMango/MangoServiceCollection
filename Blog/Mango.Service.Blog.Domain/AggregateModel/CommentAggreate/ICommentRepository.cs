@@ -18,29 +18,11 @@
 
 using Mango.EntityFramework.Abstractions;
 using Mango.EntityFramework.Abstractions.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
+namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
 {
-    public interface ICategoryRepository : IAggregateRepository<Category, long>
+    public interface ICommentRepository : IAggregateRepository<Comment, long>
     {
         IUnitOfWork UnitOfWork { get; }
-
-        /// <summary>
-        /// 查询用户的默认文章分类
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<Category> QueryUserDefaultCategoryAsync(long userId);
-
-        /// <summary>
-        /// 查询某用户的分类列表
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<IEnumerable<Category>> QueryUserCategoryAsync(long userId);
     }
 }

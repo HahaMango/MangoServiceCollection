@@ -52,7 +52,6 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
         /// </summary>
         public string CategoryName { get; private set; }
 
-
         protected Category()
         {
 
