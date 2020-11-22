@@ -38,7 +38,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
 
         private DateTime _createTime;
 
-        private DateTime _updateTime;
+        private DateTime? _updateTime;
 
         public EntityStatusEnum Status { get; private set; }
 

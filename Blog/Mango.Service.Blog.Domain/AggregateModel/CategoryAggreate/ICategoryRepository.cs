@@ -16,34 +16,19 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.Service.Infrastructure.Persistence;
+using Mango.EntityFramework.Abstractions;
+using Mango.EntityFramework.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
+namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
 {
-    /// <summary>
-    /// 文章信息值对象
-    /// </summary>
-    public class ArticleInfo : IValueObject
+    public interface ICategoryRepository : IAggregateRepository<Category, long>
     {
-        /// <summary>
-        /// 标题
-        /// </summary>
-        public string Title { get; }
+        IUnitOfWork UnitOfWork { get; }
 
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string Describe { get; }
-
-        public ArticleInfo() { }
-
-        public ArticleInfo(string title,string desc)
-        {
-            Title = title;
-            Describe = desc;
-        }
+        Task<Category> QueryUserDefaultCategoryAsync(long userId);
     }
 }

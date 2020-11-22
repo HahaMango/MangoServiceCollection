@@ -23,8 +23,25 @@ using System.Text;
 
 namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
 {
+    /// <summary>
+    /// 文章分类关联实体
+    /// </summary>
     public class CategoryAssociation : SnowFlakeEntity
     {
+        public long ArticleId { get; private set; }
 
+        public long CategoryId { get; private set; }
+
+        protected CategoryAssociation() { }
+
+        /// <summary>
+        /// 创建文章分类关联
+        /// </summary>
+        /// <param name="categoryId"></param>
+        public CategoryAssociation(long articleId, long categoryId)
+        {
+            ArticleId = articleId;
+            CategoryId = categoryId;
+        }
     }
 }

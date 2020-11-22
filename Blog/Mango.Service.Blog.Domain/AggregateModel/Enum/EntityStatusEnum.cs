@@ -6,7 +6,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.Enum
 {
     public enum EntityStatusEnum
     {
-        Available,
-        Deleted
+        Deleted,
+        Available
     }
 }
