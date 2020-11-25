@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 
 namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
 {
+    /// <summary>
+    /// 文章分类仓储接口
+    /// </summary>
     public interface ICategoryRepository : IAggregateRepository<Category, long>
     {
         IUnitOfWork UnitOfWork { get; }

@@ -26,7 +26,7 @@ namespace Mango.Service.OpenSource.Api.Application.Commands
     /// <summary>
     /// 创建项目命令
     /// </summary>
-    public class CreateProjectCommand : ITryCatchRequest
+    public class CreateProjectCommand : ITryCatchRequest<ApiResult>
     {
         /// <summary>
         /// 用户ID

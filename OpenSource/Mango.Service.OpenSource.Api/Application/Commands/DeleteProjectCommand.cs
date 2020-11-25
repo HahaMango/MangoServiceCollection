@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Api.Application.Commands
 {
-    public class DeleteProjectCommand : ITryCatchRequest
+    public class DeleteProjectCommand : ITryCatchRequest<ApiResult>
     {
         /// <summary>
         /// 项目ID

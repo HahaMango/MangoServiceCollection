@@ -1,5 +1,6 @@
 ﻿using Mango.EntityFramework.Abstractions;
 using Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate;
+using Mango.Service.Blog.Domain.AggregateModel.BloggerAggreate;
 using Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,18 @@ namespace Mango.Service.Blog.Domain.Service
 
         private readonly ICategoryRepository _categoryRepository;
 
+        private readonly IBloggerRepository _bloggerRepository;
+
         private IUnitOfWork UnitOfWork => _articleRepository.UnitOfWork;
 
         public ArticleDomainService(
             IArticleRepository articleRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IBloggerRepository bloggerRepository)
         {
             _articleRepository = articleRepository;
             _categoryRepository = categoryRepository;
+            _bloggerRepository = bloggerRepository;
         }
 
         /// <summary>
@@ -42,8 +47,8 @@ namespace Mango.Service.Blog.Domain.Service
             {
                 category = new Category(userId, "默认分类");
                 category.SetDefault();
+                await _categoryRepository.AddAsync(category);
             }
-            await _categoryRepository.AddAsync(category);
 
             var article = new Article(userId, title, desc, content, new List<Category>
             {

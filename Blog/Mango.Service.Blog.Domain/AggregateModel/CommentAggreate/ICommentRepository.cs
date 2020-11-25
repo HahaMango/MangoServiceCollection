@@ -21,6 +21,9 @@ using Mango.EntityFramework.Abstractions.Repositories;
 
 namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
 {
+    /// <summary>
+    /// 文章评论仓储接口
+    /// </summary>
     public interface ICommentRepository : IAggregateRepository<Comment, long>
     {
         IUnitOfWork UnitOfWork { get; }

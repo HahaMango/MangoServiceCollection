@@ -17,6 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate;
+using Mango.Service.Blog.Domain.AggregateModel.BloggerAggreate;
 using Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate;
 using Mango.Service.Blog.Domain.AggregateModel.CommentAggreate;
 using Mango.Service.Infrastructure.Persistence;
@@ -38,6 +39,8 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<Blogger> Bloggers { get; set; }
+
         public BlogDbContext() { }
 
         public BlogDbContext(DbContextOptions options, IMediator mediator) : base(options, mediator)
@@ -51,6 +54,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             modelBuilder.ApplyConfiguration(new CategoryAssociationEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CommentEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new BloggerEntityConfiguration());
         }
     }
 
@@ -69,12 +73,17 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             builder.Property<int>("_comment").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Comment");
             builder.Property<int>("_like").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Like");
 
-            var navigation = builder.Metadata.FindNavigation("_categories");
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            //var navigation = builder.Metadata.FindNavigation(nameof(Article.Categories));
+            //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            //关于支持字段，EF会按照默认的命名规则寻找只读属性的支持字段，一般来说按照命名规格是不需要上面的代码配置，
+            //而且上面的代码配置不够灵活，外键和删除模式等都无法配置。
+            //在遵守支持字段的命名规则的情况下使用下面的代码来配置一对多关系会更加的灵活，代码清晰
+
             builder
-                .HasMany<CategoryAssociation>()
+                .HasMany(c => c.Categories)
                 .WithOne()
-                .HasForeignKey("ArticleId");
+                .HasForeignKey(c => c.ArticleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             var ai = builder.OwnsOne(p => p.ArticleInfo);
             ai.Property(a => a.Title).HasColumnName("Title");
@@ -107,7 +116,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.ToTable("category");
-            builder.Property<long>("_userId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UserId");
+            builder.Property(a => a.UserId).HasColumnName("UserId");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
             builder.Property(a => a.Status).HasColumnName("Status");
@@ -142,6 +151,20 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
 
             builder.Property<int>("_like").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Like");
             builder.Property<int>("_reply").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Reply");
+
+            builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
+            builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
+        }
+    }
+
+    /// <summary>
+    /// 博客用户配置
+    /// </summary>
+    internal class BloggerEntityConfiguration : IEntityTypeConfiguration<Blogger>
+    {
+        public void Configure(EntityTypeBuilder<Blogger> builder)
+        {
+            builder.ToTable("blogger");
 
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");

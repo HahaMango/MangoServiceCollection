@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mango.Service.Blog.Domain\Mango.Service.Blog.Domain.csproj" />
+    <ProjectReference Include="..\Mango.Service.Blog.Infrastructure\Mango.Service.Blog.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+</Project>

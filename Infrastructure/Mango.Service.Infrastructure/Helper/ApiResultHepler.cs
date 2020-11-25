@@ -45,5 +45,23 @@ namespace Mango.Service.Infrastructure.Helper
                 Message = message
             };
         }
+
+        public virtual ApiResult Fail(string message = "操作失败")
+        {
+            return new ApiResult
+            {
+                Code = Core.Enums.Code.Error,
+                Message = message
+            };
+        }
+
+        public virtual ApiResult<T> Fail<T>(string messsage = "操作失败")
+        {
+            return new ApiResult<T>
+            {
+                Code = Core.Enums.Code.Error,
+                Message = messsage
+            };
+        }
     }
 }

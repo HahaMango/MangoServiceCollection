@@ -16,12 +16,13 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using Mango.Core.ApiResponse;
 using Mango.Service.Infrastructure.Behaviors;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mango.Service.OpenSource.Api.Application.Commands
 {
-    public class EditProjectCommand : ITryCatchRequest
+    public class EditProjectCommand : ITryCatchRequest<ApiResult>
     {
         /// <summary>
         /// 项目Id

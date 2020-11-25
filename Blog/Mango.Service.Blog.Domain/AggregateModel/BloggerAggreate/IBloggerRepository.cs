@@ -16,34 +16,19 @@
 //
 /*--------------------------------------------------------------------------*/
 
-using Mango.EntityFramework.BaseEntity;
-using Mango.Service.Blog.Domain.AggregateModel.Enum;
+using Mango.EntityFramework.Abstractions;
+using Mango.EntityFramework.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
+namespace Mango.Service.Blog.Domain.AggregateModel.BloggerAggreate
 {
     /// <summary>
-    /// 文章分类关联实体
+    /// 博客用户仓储接口
     /// </summary>
-    public class CategoryAssociation : SnowFlakeEntity
+    public interface IBloggerRepository : IAggregateRepository<Blogger, long>
     {
-        public long CategoryId { get; private set; }
-
-        public long ArticleId { get; private set; }
-
-        protected CategoryAssociation() { }
-
-        /// <summary>
-        /// 创建文章分类关联
-        /// </summary>
-        /// <param name="categoryId"></param>
-        public CategoryAssociation(long articleId, long categoryId)
-        {
-            SetId();
-            ArticleId = articleId;
-            CategoryId = categoryId;
-        }
+        IUnitOfWork UnitOfWork { get; }
     }
 }

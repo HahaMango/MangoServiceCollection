@@ -9,7 +9,8 @@ namespace Mango.Service.Infrastructure.Behaviors
     /// <summary>
     /// Try Catch MediatR请求接口
     /// </summary>
-    public interface ITryCatchRequest : IRequest<ApiResult>
+    public interface ITryCatchRequest<TResponse> : IRequest<TResponse>
+        where TResponse : ApiResult
     {
 
     }

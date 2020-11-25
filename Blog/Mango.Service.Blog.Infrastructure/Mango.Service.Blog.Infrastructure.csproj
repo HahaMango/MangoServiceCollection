@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Mango.Service.Blog.Domain\Mango.Service.Blog.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
