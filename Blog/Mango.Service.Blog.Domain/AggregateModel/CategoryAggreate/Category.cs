@@ -34,7 +34,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
         /// <summary>
         /// 用户Id
         /// </summary>
-        public long UserId { get; private set; }
+        public long BloggerId { get; private set; }
 
         private DateTime _createTime;
 
@@ -67,7 +67,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
             Verification(categoryName);
 
             SetId();
-            UserId = userId;
+            BloggerId = userId;
             CategoryName = categoryName;
             _createTime = DateTime.Now;
             Status = EntityStatusEnum.Available;

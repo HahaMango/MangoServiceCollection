@@ -36,7 +36,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
         /// <summary>
         /// 评论用户信息
         /// </summary>
-        public UserInfo UserInfo { get; private set; }
+        public BloggerInfo BloggerInfo { get; private set; }
 
         /// <summary>
         /// 评论内容
@@ -61,7 +61,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
         /// <summary>
         /// 回复的评论的用户信息
         /// </summary>
-        public UserInfo ReplySubUserInfo { get; private set; }
+        public BloggerInfo ReplySubBloggerInfo { get; private set; }
 
         private int _like;
 
@@ -86,7 +86,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
             if (string.IsNullOrEmpty(content)) throw new ArgumentNullException(nameof(content));
 
             SetId();
-            UserInfo = new UserInfo(userId, userName);
+            BloggerInfo = new BloggerInfo(userId, userName);
             _articleId = articleId;
             Content = content;
             Status = EntityStatusEnum.Available;
@@ -121,7 +121,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
                 //回复的是子评论
                 ReplyMainCommentId = comment.ReplyMainCommentId;
                 ReplySubCommentId = comment.Id;
-                ReplySubUserInfo = new UserInfo(comment.UserInfo.UserId, comment.UserInfo.UserName);
+                ReplySubBloggerInfo = new BloggerInfo(comment.BloggerInfo.UserId, comment.BloggerInfo.UserName);
             }
         }
     }

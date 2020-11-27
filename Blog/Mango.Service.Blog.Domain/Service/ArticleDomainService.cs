@@ -42,6 +42,12 @@ namespace Mango.Service.Blog.Domain.Service
         /// <returns></returns>
         public async Task<Article> CreateArticleNoCategory(long userId, string title, string desc, string content)
         {
+            var blogger = await _bloggerRepository.GetByIdAsync(userId);
+            if(blogger == null)
+            {
+                return null;
+            }
+
             var category = await _categoryRepository.QueryUserDefaultCategoryAsync(userId);
             if (category == null)
             {

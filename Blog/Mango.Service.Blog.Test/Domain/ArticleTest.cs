@@ -1,9 +1,11 @@
 ﻿using Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate;
 using Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate;
 using Mango.Service.Blog.Domain.AggregateModel.Enum;
+using Mango.Service.Blog.Domain.Event;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using System.Linq;
 
 namespace Mango.Service.Blog.Test.Domain
 {
@@ -15,12 +17,15 @@ namespace Mango.Service.Blog.Test.Domain
             var category = new Category(123, "测试分类");
             var article = new Article(123, "测试标题", "描述", "内容", new List<Category> { category });
 
+            var domainEvent = article.DomainEvents.FirstOrDefault();
+
             Assert.NotNull(article);
             Assert.Equal("测试标题", article.ArticleInfo.Title);
             Assert.Equal("描述", article.ArticleInfo.Describe);
             Assert.Equal("内容", article.Content);
             Assert.InRange(article.Id, 1, long.MaxValue);
             Assert.Equal(EntityStatusEnum.Available, article.Status);
+            Assert.IsType<CreateArticleEvent>(domainEvent);
         }
 
         [Fact]

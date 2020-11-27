@@ -19,6 +19,7 @@
 using Mango.EntityFramework.BaseEntity;
 using Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate;
 using Mango.Service.Blog.Domain.AggregateModel.Enum;
+using Mango.Service.Blog.Domain.Event;
 using Mango.Service.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
     /// </summary>
     public class Article: AggregateRoot
     {
-        private long _userId;
+        private long _bloggerId;
 
         private DateTime _createTime;
 
@@ -86,12 +87,14 @@ namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
             VerifyCategories(categories);
             SetId();
 
-            _userId = userId;
+            _bloggerId = userId;
             Content = content;
             ArticleInfo = new ArticleInfo(title, desc);
             Status = EntityStatusEnum.Available;
             EditCategory(categories);
             _createTime = DateTime.Now;
+
+            AddDomainEvent(new CreateArticleEvent(_bloggerId, Id));
         }
 
         /// <summary>

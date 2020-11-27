@@ -15,8 +15,8 @@ namespace Mango.Service.Blog.Test.Domain
             var comment = new Comment(123, "mango", 456, "测试内容");
 
             Assert.NotNull(comment);
-            Assert.Equal(123, comment.UserInfo.UserId);
-            Assert.Equal("mango", comment.UserInfo.UserName);
+            Assert.Equal(123, comment.BloggerInfo.UserId);
+            Assert.Equal("mango", comment.BloggerInfo.UserName);
             Assert.Equal("测试内容", comment.Content);
         }
 
@@ -52,8 +52,8 @@ namespace Mango.Service.Blog.Test.Domain
             Assert.Equal(1, replyComment.IsSubComment);
             Assert.Equal(mainComment.Id, replyComment.ReplyMainCommentId);
             Assert.Equal(subComment.Id, replyComment.ReplySubCommentId);
-            Assert.Equal(890, replyComment.ReplySubUserInfo.UserId);
-            Assert.Equal("chiva", replyComment.ReplySubUserInfo.UserName);
+            Assert.Equal(890, replyComment.ReplySubBloggerInfo.UserId);
+            Assert.Equal("chiva", replyComment.ReplySubBloggerInfo.UserName);
         }
 
         [Fact]

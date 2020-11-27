@@ -57,14 +57,14 @@ namespace Mango.Service.Blog.Infrastructure.Repositories
         public async Task<IEnumerable<Category>> QueryUserCategoryAsync(long userId)
         {
             return await _context.Categories
-                .Where(item => item.UserId == userId && item.Status == EntityStatusEnum.Available)
+                .Where(item => item.BloggerId == userId && item.Status == EntityStatusEnum.Available)
                 .ToListAsync();
         }
 
         public async Task<Category> QueryUserDefaultCategoryAsync(long userId)
         {
             return await _context.Categories
-                .FirstOrDefaultAsync(item => item.UserId == userId && item.IsDefault == 1);
+                .FirstOrDefaultAsync(item => item.BloggerId == userId && item.IsDefault == 1);
         }
 
         public Task RemoveAsync(Category o)

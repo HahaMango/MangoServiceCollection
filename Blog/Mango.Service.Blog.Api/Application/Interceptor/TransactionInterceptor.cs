@@ -21,6 +21,12 @@ namespace Mango.Service.Blog.Api.Application.Interceptor
             _context = (BlogDbContext)context.ServiceProvider.GetService(typeof(BlogDbContext));
             var returnType = context.ImplementationMethod.ReturnType;
 
+            if(_context.DbContextTransaction != null)
+            {
+                await next(context);
+                return;
+            }
+
             try
             {
                 await _context.BeginTransactionAsync();

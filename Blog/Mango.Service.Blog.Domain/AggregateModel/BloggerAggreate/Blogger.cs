@@ -62,16 +62,34 @@ namespace Mango.Service.Blog.Domain.AggregateModel.BloggerAggreate
 
         }
 
+        /// <summary>
+        /// 创建博客用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
         public Blogger(long userId,string userName)
         {
+            ThrowIfNameEmpty(userName);
+
             Id = userId;
             BloggerName = userName;
             _createTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// 编辑博客用户名
+        /// </summary>
+        /// <param name="bloggerName"></param>
         public void EditName(string bloggerName)
         {
+            ThrowIfNameEmpty(bloggerName);
+
             BloggerName = bloggerName;
+        }
+
+        private void ThrowIfNameEmpty(string userName)
+        {
+            if(string.IsNullOrWhiteSpace(userName)) throw new ArgumentNullException(nameof(userName));
         }
     }
 }

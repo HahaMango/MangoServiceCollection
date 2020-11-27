@@ -19,7 +19,7 @@ namespace Mango.Service.Infrastructure.Persistence
     {
         private readonly IMediator _mediator;
 
-        private IDbContextTransaction _dbContextTransaction;
+        public IDbContextTransaction DbContextTransaction { get; private set; }
 
         public DefalutDbContext() { }
 
@@ -30,32 +30,32 @@ namespace Mango.Service.Infrastructure.Persistence
 
         public virtual IDbContextTransaction BeginTransaction()
         {
-            if (_dbContextTransaction != null)
+            if (DbContextTransaction != null)
             {
-                return _dbContextTransaction;
+                return DbContextTransaction;
             }
-            _dbContextTransaction = Database.BeginTransaction();
-            return _dbContextTransaction;
+            DbContextTransaction = Database.BeginTransaction();
+            return DbContextTransaction;
         }
 
         public virtual async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            if (_dbContextTransaction != null)
+            if (DbContextTransaction != null)
             {
-                return _dbContextTransaction;
+                return DbContextTransaction;
             }
-            _dbContextTransaction = await Database.BeginTransactionAsync();
-            return _dbContextTransaction;
+            DbContextTransaction = await Database.BeginTransactionAsync();
+            return DbContextTransaction;
         }
 
         public virtual void Commit()
         {
-            if (_dbContextTransaction == null) throw new ArgumentNullException(nameof(_dbContextTransaction));
+            if (DbContextTransaction == null) throw new ArgumentNullException(nameof(DbContextTransaction));
 
             try
             {
                 base.SaveChanges();
-                _dbContextTransaction.Commit();
+                DbContextTransaction.Commit();
             }
             catch
             {
@@ -64,22 +64,22 @@ namespace Mango.Service.Infrastructure.Persistence
             }
             finally
             {
-                if(_dbContextTransaction != null)
+                if(DbContextTransaction != null)
                 {
-                    _dbContextTransaction.Dispose();
-                    _dbContextTransaction = null;
+                    DbContextTransaction.Dispose();
+                    DbContextTransaction = null;
                 }
             }
         }
 
         public virtual async Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            if (_dbContextTransaction == null) throw new ArgumentNullException(nameof(_dbContextTransaction));
+            if (DbContextTransaction == null) throw new ArgumentNullException(nameof(DbContextTransaction));
 
             try
             {
                 await base.SaveChangesAsync();
-                await _dbContextTransaction.CommitAsync();
+                await DbContextTransaction.CommitAsync();
             }
             catch
             {
@@ -88,10 +88,10 @@ namespace Mango.Service.Infrastructure.Persistence
             }
             finally
             {
-                if (_dbContextTransaction != null)
+                if (DbContextTransaction != null)
                 {
-                    await _dbContextTransaction.DisposeAsync();
-                    _dbContextTransaction = null;
+                    await DbContextTransaction.DisposeAsync();
+                    DbContextTransaction = null;
                 }
             }
         }
@@ -100,14 +100,14 @@ namespace Mango.Service.Infrastructure.Persistence
         {
             try
             {
-                _dbContextTransaction?.Rollback();
+                DbContextTransaction?.Rollback();
             }
             catch
             {
-                if (_dbContextTransaction != null)
+                if (DbContextTransaction != null)
                 {
-                    _dbContextTransaction.Dispose();
-                    _dbContextTransaction = null;
+                    DbContextTransaction.Dispose();
+                    DbContextTransaction = null;
                 }
             }
         }
@@ -116,19 +116,19 @@ namespace Mango.Service.Infrastructure.Persistence
         {
             try
             {
-                await _dbContextTransaction?.RollbackAsync();
+                await DbContextTransaction?.RollbackAsync();
             }
             catch
             {
-                if (_dbContextTransaction != null)
+                if (DbContextTransaction != null)
                 {
-                    await _dbContextTransaction.DisposeAsync();
-                    _dbContextTransaction = null;
+                    await DbContextTransaction.DisposeAsync();
+                    DbContextTransaction = null;
                 }
             }
         }
 
-        public virtual async Task<int> SaveChangesAsync()
+        public virtual new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var es = base.ChangeTracker.Entries<AggregateRoot>()
                 .Where(item => item.Entity != null && item.Entity.DomainEvents != null && item.Entity.DomainEvents.Any())
@@ -140,7 +140,7 @@ namespace Mango.Service.Infrastructure.Persistence
                     await _mediator.Publish(domainEvent);
                 }
             }
-            return await base.SaveChangesAsync();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

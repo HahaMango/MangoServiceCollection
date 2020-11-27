@@ -66,7 +66,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
         public void Configure(EntityTypeBuilder<Article> builder)
         {
             builder.ToTable("article");
-            builder.Property<long>("_userId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UserId");
+            builder.Property<long>("_bloggerId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("BloggerId");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
             builder.Property<int>("_view").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("View");
@@ -116,7 +116,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.ToTable("category");
-            builder.Property(a => a.UserId).HasColumnName("UserId");
+            builder.Property(a => a.BloggerId).HasColumnName("BloggerId");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
             builder.Property(a => a.Status).HasColumnName("Status");
@@ -136,18 +136,18 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             builder.Property<long>("_articleId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("ArticleId");
             builder.Property(c => c.Status).HasColumnName("Status");
 
-            var ui = builder.OwnsOne(c => c.UserInfo);
-            ui.Property(u => u.UserId).HasColumnName("UserId");
-            ui.Property(u => u.UserName).HasColumnName("UserName");
+            var ui = builder.OwnsOne(c => c.BloggerInfo);
+            ui.Property(u => u.UserId).HasColumnName("BloggerId");
+            ui.Property(u => u.UserName).HasColumnName("BloggerName");
 
             builder.Property(c => c.Content).HasColumnName("Content");
             builder.Property(c => c.IsSubComment).HasCollation("IsSubComment");
             builder.Property(c => c.ReplyMainCommentId).HasColumnName("ReplyMainCommentId");
             builder.Property(c => c.ReplySubCommentId).HasColumnName("ReplySubCommentId");
 
-            var rui = builder.OwnsOne(c => c.ReplySubUserInfo);
-            rui.Property(u => u.UserId).HasColumnName("ReplyUserId");
-            rui.Property(u => u.UserName).HasColumnName("ReplyUserName");
+            var rui = builder.OwnsOne(c => c.ReplySubBloggerInfo);
+            rui.Property(u => u.UserId).HasColumnName("ReplyBloggerId");
+            rui.Property(u => u.UserName).HasColumnName("ReplyBloggerName");
 
             builder.Property<int>("_like").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Like");
             builder.Property<int>("_reply").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Reply");
@@ -166,6 +166,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
         {
             builder.ToTable("blogger");
 
+            builder.Property(b => b.BloggerName).HasColumnName("BloggerName");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
         }
