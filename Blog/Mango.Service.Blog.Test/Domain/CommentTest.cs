@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using System.Linq;
+using Mango.Service.Blog.Domain.Event;
 
 namespace Mango.Service.Blog.Test.Domain
 {
@@ -14,10 +16,13 @@ namespace Mango.Service.Blog.Test.Domain
         {
             var comment = new Comment(123, "mango", 456, "测试内容");
 
+            var domainEvent = comment.DomainEvents.FirstOrDefault();
+
             Assert.NotNull(comment);
             Assert.Equal(123, comment.BloggerInfo.UserId);
             Assert.Equal("mango", comment.BloggerInfo.UserName);
             Assert.Equal("测试内容", comment.Content);
+            Assert.IsType<CreateCommentEvent>(domainEvent);
         }
 
         [Fact]

@@ -17,6 +17,7 @@
 /*--------------------------------------------------------------------------*/
 
 using Mango.Service.Blog.Domain.AggregateModel.Enum;
+using Mango.Service.Blog.Domain.Event;
 using Mango.Service.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,8 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CommentAggreate
             Status = EntityStatusEnum.Available;
             ReplyComment(replyComment);
             _createTime = DateTime.Now;
+
+            AddDomainEvent(new CreateCommentEvent(BloggerInfo.UserId, _articleId));
         }
 
         /// <summary>
