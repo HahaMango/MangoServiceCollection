@@ -52,12 +52,12 @@ namespace Mango.Service.Blog.Api
                     o.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
                 });
 
-            #region 配置中心
+            #region 閰嶇疆涓績
             var moduleConfig = default(MangoServiceConfiguration);
             var globalConfig = default(MangoServiceConfiguration);
             if (Env.IsDevelopment())
             {
-                //测试环境
+                //娴嬭瘯鐜
                 globalConfig = new MangoServiceConfiguration
                 {
                     JwtKey = @"MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDJQJY/vIlQV8Hm
@@ -97,7 +97,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             }
             else
             {
-                //生产环境
+                //鐢熶骇鐜
                 var token = Configuration["Consul:Token"];
                 var configKey = Configuration["Service:ConfigKey"];
                 var consulIp = Configuration["Consul:Ip"];
@@ -110,7 +110,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             }
             #endregion
 
-            #region 授权配置
+            #region 鎺堟潈閰嶇疆
 
             var policyKeyPair = new Dictionary<string, string>
             {
@@ -126,7 +126,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
 
             #endregion
 
-            #region 跨域配置
+            #region 璺ㄥ煙閰嶇疆
 
             services.AddCors(config =>
             {
@@ -141,7 +141,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
 
             #endregion
 
-            #region 仓储配置
+            #region 浠撳偍閰嶇疆
 
             services.AddMangoDbContext<BlogDbContext>(moduleConfig.DbConnectString);
             services.AddDapper(moduleConfig.DbConnectString, typeof(MySqlConnection));
@@ -153,7 +153,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
 
             #endregion
 
-            #region 服务配置
+            #region 鏈嶅姟閰嶇疆
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -164,7 +164,7 @@ tN9fcep4jGpay5xZ0Nj2fSWygw=="
             services.AddScoped<ArticleDomainService>();
             #endregion
 
-            #region AOP配置
+            #region AOP閰嶇疆
             services.ConfigureDynamicProxy();
             #endregion
         }

@@ -33,22 +33,65 @@ namespace Mango.Service.Blog.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        //[Authorize(Policy = "admin")]
-        public virtual async Task<ApiResult> CreateArticleAsync([FromBody]CreateArticleCommand command)
+        [Authorize(Policy = "admin")]
+        public async Task<ApiResult> CreateArticleAsync([FromBody]CreateArticleCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return InValidModelsError();
             }
 
-            //var user = _authorizationService.GetUser();
-            //if (user == null)
-            //{
-            //    return AuthorizeError();
-            //}
-            command.UserId = 123;
+            var user = _authorizationService.GetUser();
+            if (user == null)
+            {
+                return AuthorizeError();
+            }
 
             _log.LogInformation("执行CreateArticleAsync...控制器方法");
+
+            return await _mediator.Send(command);
+        }
+
+        /// <summary>
+        /// 编辑文章
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("edit")]
+        [Authorize(Policy = "admin")]
+        public async Task<ApiResult> EditArticleAsync([FromBody] EditArticleCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return InValidModelsError();
+            }
+
+            var user = _authorizationService.GetUser();
+            if (user == null)
+            {
+                return AuthorizeError();
+            }
+
+            _log.LogInformation("执行EditArticleAsync...控制器方法");
+
+            return await _mediator.Send(command);
+        }
+
+        /// <summary>
+        /// 删除文章
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("delete")]
+        [Authorize(Policy =  "admin")]
+        public async Task<ApiResult> DeleteArticleAsync([FromBody] DeleteArticleCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return InValidModelsError();
+            }
+            
+            _log.LogInformation("执行DeleteArticleAsync...控制器方法");
 
             return await _mediator.Send(command);
         }

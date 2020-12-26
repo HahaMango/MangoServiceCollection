@@ -44,7 +44,7 @@ namespace Mango.Service.Infrastructure.Persistence
             {
                 return DbContextTransaction;
             }
-            DbContextTransaction = await Database.BeginTransactionAsync();
+            DbContextTransaction = await Database.BeginTransactionAsync(cancellationToken);
             return DbContextTransaction;
         }
 
@@ -78,12 +78,12 @@ namespace Mango.Service.Infrastructure.Persistence
 
             try
             {
-                await base.SaveChangesAsync();
-                await DbContextTransaction.CommitAsync();
+                await base.SaveChangesAsync(cancellationToken);
+                await DbContextTransaction.CommitAsync(cancellationToken);
             }
             catch
             {
-                await this.RollbackAsync();
+                await this.RollbackAsync(cancellationToken);
                 throw;
             }
             finally
@@ -112,11 +112,11 @@ namespace Mango.Service.Infrastructure.Persistence
             }
         }
 
-        public virtual async Task RollbackAsync(CancellationToken cancellationToken = default)
+        public virtual async Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
-                await DbContextTransaction?.RollbackAsync();
+                await DbContextTransaction?.RollbackAsync(cancellationToken);
             }
             catch
             {
@@ -128,7 +128,7 @@ namespace Mango.Service.Infrastructure.Persistence
             }
         }
 
-        public virtual new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public new virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var es = base.ChangeTracker.Entries<AggregateRoot>()
                 .Where(item => item.Entity != null && item.Entity.DomainEvents != null && item.Entity.DomainEvents.Any())
@@ -137,7 +137,7 @@ namespace Mango.Service.Infrastructure.Persistence
             {
                 foreach(var domainEvent in e)
                 {
-                    await _mediator.Publish(domainEvent);
+                    await _mediator.Publish(domainEvent,cancellationToken);
                 }
             }
             return await base.SaveChangesAsync(cancellationToken);

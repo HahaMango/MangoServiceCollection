@@ -1,5 +1,4 @@
 ﻿using Mango.Core.ApiResponse;
-using Mango.Service.Infrastructure.Behaviors;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,12 +8,18 @@ using System.Threading.Tasks;
 
 namespace Mango.Service.Blog.Api.Application.Commands
 {
-    public class CreateArticleCommand : IRequest<ApiResult>
+    public class EditArticleCommand : IRequest<ApiResult>
     {
         /// <summary>
         /// 用户Id
         /// </summary>
         public long UserId { get; set; }
+
+        /// <summary>
+        /// 文章ID
+        /// </summary>
+        [Required(ErrorMessage = "文章ID不能为空")]
+        public long ArticleId { get; set; }
 
         /// <summary>
         /// 文章标题
@@ -35,5 +40,10 @@ namespace Mango.Service.Blog.Api.Application.Commands
         /// </summary>
         [Required(ErrorMessage = "文章内容不能为空")]
         public string Content { get; set; }
+        
+        /// <summary>
+        /// 文章分类ID
+        /// </summary>
+        public List<string> CategoryIds { get; set; }
     }
 }

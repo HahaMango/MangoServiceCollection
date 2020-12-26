@@ -25,6 +25,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mango.Service.OpenSource.Infrastructure.DbContext
@@ -45,7 +46,7 @@ namespace Mango.Service.OpenSource.Infrastructure.DbContext
             _redisClient = redisClient;
         }
 
-        public async override Task<int> SaveChangesAsync()
+        public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             #region 清除缓存
             await _redisClient.DelAsync(CacheKeyConfig.ProjectList);
@@ -55,7 +56,7 @@ namespace Mango.Service.OpenSource.Infrastructure.DbContext
                 await _redisClient.DelAsync($"{CacheKeyConfig.ProjectDetail}:{e.Entity.Id}");
             }
             #endregion
-            return await base.SaveChangesAsync();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

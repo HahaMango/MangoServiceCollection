@@ -45,5 +45,12 @@ namespace Mango.Service.Blog.Domain.AggregateModel.CategoryAggreate
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<IEnumerable<Category>> QueryUserCategoryAsync(long userId);
+
+        /// <summary>
+        /// 批量查询
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Category>> GetByIdsAsync(params long[] ids);
     }
 }

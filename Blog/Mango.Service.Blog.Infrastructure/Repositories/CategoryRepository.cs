@@ -61,6 +61,13 @@ namespace Mango.Service.Blog.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Category>> GetByIdsAsync(params long[] ids)
+        {
+            return await _context.Categories
+                .Where(item => ids.Contains(item.Id))
+                .ToListAsync();
+        }
+
         public async Task<Category> QueryUserDefaultCategoryAsync(long userId)
         {
             return await _context.Categories
