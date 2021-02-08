@@ -39,12 +39,6 @@ namespace Mango.Service.Blog.Domain.AggregateModel.ArticleAggregate
 
         private DateTime? _updateTime;
 
-        private int _view;
-
-        private int _comment;
-
-        private int _like;
-
         private List<CategoryAssociation> _categories;
 
         /// <summary>

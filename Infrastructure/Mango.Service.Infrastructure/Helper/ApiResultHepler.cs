@@ -10,7 +10,7 @@ namespace Mango.Service.Infrastructure.Helper
     /// </summary>
     public abstract class ApiResultHepler
     {
-        public virtual ApiResult NotFound(string message = null)
+        public virtual ApiResult NotFound(string message = "找不到资源")
         {
             return new ApiResult
             {
@@ -19,7 +19,7 @@ namespace Mango.Service.Infrastructure.Helper
             };
         }
 
-        public virtual ApiResult<T> NotFound<T>(string message = null)
+        public virtual ApiResult<T> NotFound<T>(string message = "找不到资源")
         {
             return new ApiResult<T>
             {

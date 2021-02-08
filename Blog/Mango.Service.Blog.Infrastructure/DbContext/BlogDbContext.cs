@@ -26,6 +26,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using Mango.Service.Blog.Domain.AggregateModel.ArticleDataAggregate;
 
 namespace Mango.Service.Blog.Infrastructure.DbContext
 {
@@ -40,6 +41,8 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Blogger> Bloggers { get; set; }
+        
+        public DbSet<ArticleData> ArticleData { get; set; }
 
         public BlogDbContext() { }
 
@@ -55,6 +58,7 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CommentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new BloggerEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ArticleDataEntityConfiguration());
         }
     }
 
@@ -69,9 +73,9 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             builder.Property<long>("_bloggerId").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("BloggerId");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
-            builder.Property<int>("_view").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("View");
-            builder.Property<int>("_comment").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Comment");
-            builder.Property<int>("_like").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Like");
+            //builder.Property<int>("_view").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("View");
+            //builder.Property<int>("_comment").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Comment");
+            //builder.Property<int>("_like").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("Like");
 
             //var navigation = builder.Metadata.FindNavigation(nameof(Article.Categories));
             //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
@@ -169,6 +173,23 @@ namespace Mango.Service.Blog.Infrastructure.DbContext
             builder.Property(b => b.BloggerName).HasColumnName("BloggerName");
             builder.Property<DateTime>("_createTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("CreateTime");
             builder.Property<DateTime?>("_updateTime").UsePropertyAccessMode(PropertyAccessMode.Field).HasColumnName("UpdateTime");
+        }
+    }
+    
+    /// <summary>
+    /// 文章数据配置
+    /// </summary>
+    internal class ArticleDataEntityConfiguration : IEntityTypeConfiguration<ArticleData>
+    {
+        public void Configure(EntityTypeBuilder<ArticleData> builder)
+        {
+            builder.ToTable("article");
+            builder.Property(a => a.Like).HasColumnName("Like");
+            builder.Property(a => a.Comment).HasColumnName("Comment");
+            builder.Property(a => a.View).HasColumnName("View");
+            builder.Ignore(a => a.LikeInc);
+            builder.Ignore(a => a.CommentInc);
+            builder.Ignore(a => a.ViewInc);
         }
     }
 }

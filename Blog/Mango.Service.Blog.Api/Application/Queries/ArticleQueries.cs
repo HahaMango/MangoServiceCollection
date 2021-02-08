@@ -16,11 +16,14 @@
 //
 /*--------------------------------------------------------------------------*/
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Mango.Core.Dapper;
 using Mango.Core.DataStructure;
+using Mango.Service.Blog.Domain.AggregateModel.ArticleDataAggregate;
+using Mango.Service.Blog.Infrastructure.Repositories;
 
 namespace Mango.Service.Blog.Api.Application.Queries
 {
@@ -31,9 +34,12 @@ namespace Mango.Service.Blog.Api.Application.Queries
     {
         private readonly IDapperHelper _dapperHelper;
 
-        public ArticleQueries(IDapperHelper dapperHelper)
+        private readonly IArticleDataRepository _articleDataRepository;
+
+        public ArticleQueries(IDapperHelper dapperHelper, ArticleDataRepository articleDataRepository)
         {
             _dapperHelper = dapperHelper;
+            _articleDataRepository = articleDataRepository;
         }
         
         /// <summary>
@@ -53,20 +59,27 @@ namespace Mango.Service.Blog.Api.Application.Queries
             };
             var list = await _dapperHelper.QueryAsync<QueryArticlePageResponse>(sql, param, CommandFlags.None,
                 cancellationToken);
-            //查询分类
+            //查询分类和文章数据缓存
             if (list == null) return null;
             foreach (var a in list)
             {
+                //查询分类
                 var categorySql = @"select c.Id as CategoryId,c.CategoryName 
                                     from category_association as ca
                                     join category as c on ca.CategoryId = c.Id
                                     where ca.ArticleId=@ArticleId";
                 var cParam = new
                 {
-                    ArticleId=a.Id
+                    ArticleId=Convert.ToInt64(a.Id)
                 };
                 var cl = await _dapperHelper.QueryAsync<QueryCategoryResponse>(categorySql, cParam, CommandFlags.None,
                     cancellationToken);
+                
+                //查询文章数据缓存
+                var articleData = await _articleDataRepository.GetByIdAsync(Convert.ToInt64(a.Id));
+                a.Like = articleData.Like;
+                a.Comment = articleData.Comment;
+                a.View = articleData.View;
             }
             //计算分页总数
             var countSql = "select count(*) from article where BloggerId=@BloggerId limit @Skip,@Take";
@@ -84,8 +97,15 @@ namespace Mango.Service.Blog.Api.Application.Queries
         public async Task<QueryArticleDetailResponse> QueryArticleDetailAsync(QueryArticleDetailRequest request, CancellationToken cancellationToken = default)
         {
             var sql = "select * from article where Id=@ArticleId";
-            return await _dapperHelper.QueryFirstOrDefaultAsync<QueryArticleDetailResponse>(sql,
+            var article = await _dapperHelper.QueryFirstOrDefaultAsync<QueryArticleDetailResponse>(sql,
                 new {request.ArticleId}, CommandFlags.None, cancellationToken);
+
+            //查询文章数据缓存
+            var articleData = await _articleDataRepository.GetByIdAsync(Convert.ToInt64(article.Id));
+            article.Like = articleData.Like;
+            article.Comment = articleData.Comment;
+            article.View = articleData.View;
+            return article;
         }
     }
 }
