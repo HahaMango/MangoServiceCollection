@@ -26,13 +26,13 @@ using MediatR;
 namespace Mango.Service.Blog.Api.Application.Commands
 {
     /// <summary>
-    /// 文章点赞
+    /// 增加文章阅读数命令Handler
     /// </summary>
-    public class ArticleLikeCommandHandler : ApiResultHepler, IRequestHandler<ArticleLikeCommand,ApiResult>
+    public class ArticleViewCommandHandler : ApiResultHepler, IRequestHandler<ArticleViewCommand,ApiResult>
     {
         private readonly IArticleDataRepository _articleDataRepository;
 
-        public ArticleLikeCommandHandler(IArticleDataRepository articleDataRepository)
+        public ArticleViewCommandHandler(IArticleDataRepository articleDataRepository)
         {
             _articleDataRepository = articleDataRepository;
         }
@@ -43,11 +43,11 @@ namespace Mango.Service.Blog.Api.Application.Commands
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<ApiResult> Handle(ArticleLikeCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult> Handle(ArticleViewCommand request, CancellationToken cancellationToken)
         {
             var article = await _articleDataRepository.GetByIdAsync(request.ArticleId);
             if (article == null) return NotFound();
-            article.IncLike(request.State);
+            article.IncView(1);
             await _articleDataRepository.UpdateAsync(article);
             //await _articleDataRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             return Ok();

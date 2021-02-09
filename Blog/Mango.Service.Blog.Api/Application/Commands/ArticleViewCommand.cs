@@ -23,12 +23,12 @@ using MediatR;
 namespace Mango.Service.Blog.Api.Application.Commands
 {
     /// <summary>
-    /// 增加阅读数命令
+    /// 增加文章阅读数命令
     /// </summary>
-    public class IncArticleCommand : IRequest<ApiResult>
+    public class ArticleViewCommand: IRequest<ApiResult>
     {
         /// <summary>
-        /// 文章Id
+        /// 文章ID
         /// </summary>
         [Required(ErrorMessage = "文章Id不能为空")]
         public long ArticleId { get; set; }
